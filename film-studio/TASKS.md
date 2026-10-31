@@ -13,7 +13,8 @@ The Plannotator Board is the active task surface. This checklist records impleme
 - [ ] Bind final native payloads to the canonical producer release, quote, expiry and upload scope.
 - [ ] Bind native task/result/trace provenance into the local ledger while retaining unknown outcomes.
 - [ ] Compile explicit dialogue, acting beats, camera and continuity into supported motion/dialogue requests.
-- [ ] Add inspector controls for prepared jobs and recorded results.
+- [x] Add inspector controls for prepared video jobs and recorded results; software delivered, workflow review pending.
+- [ ] Harden inspector recovery: announce job-load failures, redact filesystem error paths and add deterministic overlapping review/job regression.
 - [x] Connect explicit candidate choices to a new edit via authored placement plans; software delivered, review pending.
 - [ ] Add byte-preserving manual Higgsfield/ComfyUI/local candidate intake and retain image metadata.
 - [ ] Qualify the Higgsfield execution adapter after manual intake and job/result prerequisites.
@@ -24,4 +25,4 @@ The Plannotator Board is the active task surface. This checklist records impleme
 - [ ] Stress concurrent preparation/failure recovery without overwriting outputs.
 - [ ] Review a complete film exchange for picture, identity, historical-face restrictions, dialogue, sound and continuity.
 
-Implementation references: PLAN.md, IMPORT.md, REVIEW.md, INSPECTOR.md, JOBS.md and KLING-HANDOFF-PLAN.md. Existing foundation is draft PR #1. The Kling handoff increment uses an isolated branch because the original checkout contains staged work from another stream. Board reconciliation added explicit qualification/release/result, compiler, adapter, integration, timing/concurrency and film-acceptance tasks. No merge or provider activation is implied by a checked implementation item.
+Implementation references: PLAN.md, IMPORT.md, REVIEW.md, INSPECTOR.md, JOB-CONTROLS.md, JOBS.md, PLACEMENT.md and KLING-HANDOFF-PLAN.md. Existing foundation is draft PR #1. The Kling handoff increment uses an isolated branch because the original checkout contains staged work from another stream. Board reconciliation added explicit qualification/release/result, compiler, adapter, integration, timing/concurrency and film-acceptance tasks. No merge or provider activation is implied by a checked implementation item.

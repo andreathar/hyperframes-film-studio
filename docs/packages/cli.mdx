@@ -27,6 +27,9 @@ This fork also provides checkout-local film commands: `bun run film:import`,
 `bun run film:kling-handoff`, `bun run film:place` and `bun run film:prepare`.
 See [film production](/guides/film-production) for their separate intake,
 review, inspector, job tracking and composition-preparation workflow.
+`film:inspect --jobs <existing-store>` enables durable video-intent controls;
+optional `--results-workspace <existing-directory>` enables local receipt recording
+and requires `--jobs`. Review downloads remain separate from automatic job saves.
 
 | You want to              | Use                                                                                                                                                                                                                              |
 | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

@@ -12,6 +12,8 @@ bun run film:inspect --import .film-workspace/import-v1/import.json --workspace 
 
 Open the printed loopback URL. Choose a free port if 9362 is occupied. `--import` is required. `--workspace` is optional: without it the review works, but media previews are unavailable. To resume a downloaded review against the same import, add `--state .film-workspace/review.json`.
 
+Add `--jobs <existing-store>` to connect durable local job controls. Add `--results-workspace <existing-directory>` to allow saved receipt recording; this flag requires `--jobs`. Both roots are fixed at startup. See [job controls](JOB-CONTROLS.md) for setup, video intent and recovery. Job records save automatically; review proposals still need Download review.
+
 The server binds to `127.0.0.1` only. Its configured import and review files are read at startup. The browser cannot choose arbitrary filesystem paths. Stop this process with Ctrl+C when finished.
 
 ## Review records
@@ -37,6 +39,7 @@ The inspector does not fetch provider URLs, submit jobs, load models, mutate sou
 ```sh
 bun run film:test
 node scripts/film-production/inspector-browser.mjs
+node scripts/film-production/inspector-jobs-browser.mjs
 ```
 
 The browser runner uses the repository's headless Chrome helper and isolated synthetic records. It checks keyboard access, mapping, take selection/removal, download contents, session reload, stale-revision recovery and desktop/mobile overflow. It closes its temporary server and browser. Screenshots and its result JSON go under ignored `.film-workspace/inspector-browser/`. These checks exercise software behavior; the producer still reviews actual film content.

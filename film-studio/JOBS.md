@@ -4,6 +4,8 @@
 
 This stage uses Node built-ins and the existing Bun workspace. Continue using Claude Code or Codex for local authoring through your existing sessions. No embedded paid agent API or HeyGen generation is required.
 
+Use [inspector job controls](JOB-CONTROLS.md) for selected-shot video intent and saved receipt forms backed by this same store. The CLI remains available for image intent and operator inspection.
+
 ## Initialize and inspect
 
 ```sh

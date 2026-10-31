@@ -2,7 +2,8 @@ import { createServer } from "node:http";
 import { randomBytes, createHash } from "node:crypto";
 import { readFile, realpath, stat } from "node:fs/promises";
 import { resolve, relative, isAbsolute, sep, extname } from "node:path";
-import { createReview, restoreReview, applyReview } from "./review.mjs";
+import { createReview, restoreReview, applyReview, reviewFingerprint } from "./review.mjs";
+import { createJobControls } from "./inspector-jobs.mjs";
 const types = {
   ".png": "image/png",
   ".jpg": "image/jpeg",
@@ -17,9 +18,22 @@ const types = {
 };
 const text = (v) => (typeof v === "string" ? v : "");
 /** Companion session only. No arbitrary browser paths or source writes. */
-export function createInspectorServer({ bundle, state, workspace } = {}) {
+export function createInspectorServer({
+  bundle,
+  state,
+  workspace,
+  jobStore,
+  resultsWorkspace,
+} = {}) {
   let review = state ? restoreReview(bundle, state) : createReview(bundle);
   const csrf = randomBytes(24).toString("hex");
+  const jobs = createJobControls({ bundle, jobStore, resultsWorkspace, getReview: () => review });
+  let pending = Promise.resolve();
+  const mutate = (operation) => {
+    const next = pending.then(operation);
+    pending = next.catch(() => {});
+    return next;
+  };
   const mediaUrl = (kind, r) =>
     workspace &&
     ["verified", "observed-unverified"].includes(r.media?.state) &&
@@ -30,6 +44,7 @@ export function createInspectorServer({ bundle, state, workspace } = {}) {
     projectId: bundle.projectId,
     csrf,
     review,
+    reviewFingerprint: reviewFingerprint(review),
     shots: bundle.shots.map((s) => ({
       key: s.key,
       source: s.source,
@@ -91,9 +106,9 @@ export function createInspectorServer({ bundle, state, workspace } = {}) {
       send(403, { error: "Only the local inspector origin is allowed" });
       return;
     }
-    const path = new URL(req.url, origin).pathname;
     try {
-      if (req.method === "GET" && ["/", "/app.mjs", "/style.css"].includes(path)) {
+      const path = new URL(req.url, origin).pathname;
+      if (req.method === "GET" && ["/", "/app.mjs", "/jobs.mjs", "/style.css"].includes(path)) {
         const name = path === "/" ? "index.html" : path.slice(1);
         const bytes = await readFile(
           new URL(`../../film-studio/inspector/${name}`, import.meta.url),
@@ -116,6 +131,10 @@ export function createInspectorServer({ bundle, state, workspace } = {}) {
       if (req.method === "GET" && path === "/api/review") {
         res.setHeader("Content-Disposition", 'attachment; filename="film-review.json"');
         send(200, review);
+        return;
+      }
+      if (req.method === "GET" && path === "/api/jobs") {
+        send(200, await jobs.view());
         return;
       }
       const match = /^\/api\/media\/(reference|take)\/([^/]+)$/.exec(path);
@@ -153,7 +172,10 @@ export function createInspectorServer({ bundle, state, workspace } = {}) {
         send(200, bytes, type);
         return;
       }
-      if (req.method === "POST" && path === "/api/propose") {
+      if (
+        req.method === "POST" &&
+        ["/api/propose", "/api/jobs/prepare", "/api/jobs/observe"].includes(path)
+      ) {
         if (
           req.headers.origin !== origin ||
           req.headers["x-film-csrf"] !== csrf ||
@@ -171,8 +193,14 @@ export function createInspectorServer({ bundle, state, workspace } = {}) {
         }
         const body = Buffer.concat(chunks).toString("utf8");
         try {
-          review = applyReview(bundle, review, JSON.parse(body));
-          send(200, projection());
+          const command = JSON.parse(body);
+          const result = await mutate(async () => {
+            if (path === "/api/jobs/prepare") return jobs.prepare(command);
+            if (path === "/api/jobs/observe") return jobs.observe(command);
+            review = applyReview(bundle, review, command);
+            return projection();
+          });
+          send(200, result);
         } catch (e) {
           send(409, { error: e.message });
         }

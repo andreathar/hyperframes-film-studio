@@ -139,13 +139,12 @@ export async function updateJobStore(bundle, store, command, { workspace } = {})
     if (command.expectedRevision !== state.revision) throw new Error("Stale job revision");
     let action = command.action;
     if (action?.type === "observe") {
-      if (Object.keys(action).some((k) => !["type", "receiptPath", "reason"].includes(k)))
+      if (Object.keys(action).some((k) => !["type", "receiptPath", "reason", "jobId"].includes(k)))
         throw new Error("Observation requires a local receipt path");
-      action = {
-        type: "observe",
-        ...(await inspectJobReceipt(workspace, action.receiptPath)),
-        reason: action.reason,
-      };
+      const inspected = await inspectJobReceipt(workspace, action.receiptPath);
+      if (action.jobId !== undefined && inspected.receipt.jobId !== action.jobId)
+        throw new Error("Receipt belongs to a different selected job");
+      action = { type: "observe", ...inspected, reason: action.reason };
     }
     const next = applyJob(bundle, state, { ...command, action });
     await publish(store, next);

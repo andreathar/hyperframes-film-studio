@@ -1,6 +1,10 @@
+import { renderJobControls } from "./jobs.mjs";
+
 export async function mountInspector(doc, request = globalThis.fetch.bind(globalThis)) {
   const $ = (id) => doc.getElementById(id);
   let view,
+    jobs,
+    jobError,
     selected,
     busy = false;
   const make = (tag, value, className) => {
@@ -77,6 +81,45 @@ export async function mountInspector(doc, request = globalThis.fetch.bind(global
       showStatus("Proposal applied to this session. Download review to keep it.");
     } catch (e) {
       error(e.message + " — use Reload session if the review has changed.");
+    } finally {
+      lock(false);
+    }
+  }
+  async function submitJob(path, payload) {
+    if (busy) return;
+    const command = {
+      projectId: view.projectId,
+      sourceFingerprint: view.review.sourceFingerprint,
+      expectedRevision: jobs.revision,
+      ...payload,
+      ...(path === "/api/jobs/prepare"
+        ? {
+            expectedReviewRevision: view.review.revision,
+            expectedReviewFingerprint: view.reviewFingerprint,
+          }
+        : {}),
+    };
+    lock(true);
+    error("");
+    try {
+      jobs = await json(path, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Film-CSRF": view.csrf },
+        body: JSON.stringify(command),
+      });
+      renderDetail();
+      showStatus(
+        "Job record saved. No provider was run. Shot review still needs Download review to keep it.",
+      );
+      const target = [...doc.querySelectorAll("[data-job-id]")].find(
+        (row) => row.dataset.jobId === (payload.request?.id || payload.jobId),
+      );
+      target?.focus();
+    } catch (e) {
+      error(
+        e.message +
+          " — your input is kept. Use Reload session to refresh revisions before retrying.",
+      );
     } finally {
       lock(false);
     }
@@ -293,6 +336,14 @@ export async function mountInspector(doc, request = globalThis.fetch.bind(global
         shotKey: shot.key,
       }));
     }
+    renderJobControls({
+      doc,
+      parent: section("Production jobs"),
+      shotKey: shot.key,
+      jobs,
+      jobError,
+      submit: submitJob,
+    });
   }
   function renderShots() {
     const search = $("search").value.toLowerCase(),
@@ -351,6 +402,13 @@ export async function mountInspector(doc, request = globalThis.fetch.bind(global
     error("");
     try {
       view = await json("/api/view");
+      jobError = "";
+      try {
+        jobs = await json("/api/jobs");
+      } catch (e) {
+        jobs = undefined;
+        jobError = "Job tracking could not be loaded. " + e.message;
+      }
       if (!selected) selected = view.shots[0]?.key;
       render();
       showStatus("Review session loaded. Source declarations remain evidence.");

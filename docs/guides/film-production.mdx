@@ -9,7 +9,7 @@ This guide describes the **hyperframes-film-studio fork**. Its first production 
 
 Use preparation when selected footage already exists and you want to assemble picture and sound with repeatable frame timing. It runs locally and makes no provider calls. Existing film approvals remain authoritative.
 
-The first version supports one continuous picture track, independent audio tracks, source trims and constant playback rates. Provider execution, automated ComfyUI jobs and a production inspector UI are subsequent work.
+The first version supports one continuous picture track, independent audio tracks, source trims and constant playback rates. The companion production inspector also supports explicit shot review and durable local job controls. Provider execution and automated ComfyUI jobs remain subsequent work.
 
 ## Prepare, check and render
 
@@ -60,7 +60,7 @@ bun run film:inspect --import .film-workspace/import-v1/import.json --workspace 
 
 Open the printed loopback URL to search shots, inspect direction notes and propose mappings, reference assignments and candidate takes. Every change requires a reason and uses the same revision-checked review service. Local previews require the optional workspace and unchanged imported media hashes.
 
-Session changes stay in memory. Use **Download review** to save them, then add `--state <saved-review.json>` on a later startup to resume against the same import. **Reload session** refreshes the browser from the running server. This companion screen does not submit provider jobs or change the timeline. See the fork's `film-studio/INSPECTOR.md` for startup, persistence and preview limits.
+Session changes stay in memory. Use **Download review** to save them, then add `--state <saved-review.json>` on a later startup to resume against the same import. **Reload session** refreshes the browser from the running server. Add `--jobs <existing-store>` to prepare selected-shot video intent and view saved job states. Add `--results-workspace <existing-directory>` to record local external receipts; it requires `--jobs`. The roots are fixed at startup, receipts must match the explicitly selected job and successful outputs remain hash-checked candidates. Jobs save automatically; review proposals still require Download review. Refused writes retain the typed form until you reload or switch shots. This companion screen does not submit provider jobs or change the timeline. See the fork's `film-studio/INSPECTOR.md` for startup, persistence and preview limits.
 
 ## Track prepared jobs and external results
 

@@ -458,3 +458,45 @@ footer {
     min-height: 48px;
   }
 }
+
+.job-list {
+  margin: 20px 0;
+}
+.job-row {
+  padding: 20px 0;
+  border-top: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+.job-row h4 {
+  margin: 0 0 8px;
+}
+.job-prompt {
+  white-space: pre-wrap;
+}
+details {
+  border-top: 1px solid var(--line);
+  margin-top: 16px;
+  padding-top: 12px;
+}
+summary {
+  cursor: pointer;
+  padding: 12px 0;
+  font-weight: 600;
+}
+summary:focus-visible,
+.job-row:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 4px;
+}
+fieldset {
+  min-width: 0;
+  margin: 12px 0;
+  padding: 16px;
+  border: 1px solid var(--line);
+  display: grid;
+  gap: 8px;
+}
+legend {
+  padding: 0 6px;
+  font-weight: 600;
+}
