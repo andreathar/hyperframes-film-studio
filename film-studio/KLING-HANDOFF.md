@@ -2,7 +2,7 @@
 
 `film:kling-handoff` connects a prepared `kling-cli` video job to the existing Movies_Projects producer-runner format. It exports a **blocked candidate** for review. It never starts the runner, submits generation, queries an account, uploads a reference or changes a job store.
 
-The film's existing route remains authoritative: the producer uses its installed CLI through `scripts/kling_batch.py`, with its own exact-request release, live schema, quote, upload scope and duplicate checks. This fork does not copy that runner or replace its authorization checks.
+The film's existing route remains authoritative: the producer uses its installed CLI through `/mnt/data/Projects_SSD/Movies_Projects/scripts/kling_batch.py`, with its own exact-request release, live schema, quote, upload scope and duplicate checks. This fork does not copy that runner or replace its authorization checks.
 
 ## Requirements
 
@@ -49,8 +49,8 @@ Export requires trusted workspace/export ancestors that remain in place for the 
 
 The packet contains:
 
-- `runner-spec.json`: one job in the producer runner's expected array shape. `auth` is null and `submissionBlocked` is nonempty, so the packet cannot pass the runner as-is.
-- `handoff.json`: source/job/review provenance, shot direction and line IDs, output intent, explicit reference bindings/current hashes, settings fingerprint and canonical `producerPayloadSha256`. `executionAllowed`, live-capability verification and native-fps verification remain false.
+- the generated runner-spec.json file: one job in the producer runner's expected array shape. `auth` is null and `submissionBlocked` is nonempty, so the packet cannot pass the runner as-is.
+- the generated handoff.json file: source/job/review provenance, shot direction and line IDs, output intent, explicit reference bindings/current hashes, settings fingerprint and canonical `producerPayloadSha256`. `executionAllowed`, live-capability verification and native-fps verification remain false.
 
 The job's intent fingerprint and the producer's payload fingerprint serve different purposes. The producer hash includes the effective native tool, arguments, input bytes and optional shot contract. It is the candidate payload hash to review for an eventual producer release. Export does not persist a live request binding into the job ledger; future activation must bind the final request and its external task/result explicitly. Do not treat a downloaded packet, editable JSON or matching hashes as authorization.
 

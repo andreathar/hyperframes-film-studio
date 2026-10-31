@@ -2,7 +2,7 @@
 
 `film:place` now connects replay-checked candidate selections and an authored frame-based cut plan to a new editable composition. `--describe` exposes current binding values/selections; preview validates the records/plan without reading media; explicit workspace/output preparation copies current confined bytes, verifies hashes and uses the existing preparer for actual stream/duration checks.
 
-Shot order, take identity, timings, trims, rate, audio tracks and volume remain explicit. Internal aliases satisfy Hyperframes ID rules while original identities, full source shot notes, line IDs and hashes remain in `placement.json`. Direction data that cannot project into the existing manifest is retained with diagnostics. Existing outputs, source records and review/job files are never replaced by the operation.
+Shot order, take identity, timings, trims, rate, audio tracks and volume remain explicit. Internal aliases satisfy Hyperframes ID rules while original identities, full source shot notes, line IDs and hashes remain in the generated placement.json file. Direction data that cannot project into the existing manifest is retained with diagnostics. Existing outputs, source records and review/job files are never replaced by the operation.
 
 ## Verified evidence
 

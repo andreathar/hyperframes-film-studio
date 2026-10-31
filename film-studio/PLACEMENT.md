@@ -75,10 +75,10 @@ Default preview validates the supplied records/plan and prints the compiled mani
 
 The new directory contains:
 
-- `index.html`, `assets/`, `production.json`, `preparation.json`: the ordinary editable composition and existing preparation receipt.
-- `placement.json`: original shot/take identities, full source shot records, source/review/plan fingerprints, safe alias mappings, clip provenance and direction diagnostics. Candidate status grants no creative or execution approval.
+- `index.html`, `assets/`, the generated production.json file, the generated preparation.json file: the ordinary editable composition and existing preparation receipt.
+- the generated placement.json file: original shot/take identities, full source shot records, source/review/plan fingerprints, safe alias mappings, clip provenance and direction diagnostics. Candidate status grants no creative or execution approval.
 
-Safe internal aliases such as `shot-1` and `take-1` keep source identifiers containing punctuation out of HTML IDs. Original IDs remain exact in provenance. Dialogue line IDs are preserved; values the current manifest cannot represent are refused. Supported string camera/acting/dialogue/lighting/continuity fields project into `production.json`. Other direction fields remain in full source records in `placement.json` with explicit diagnostics; they are not silently converted into acting or camera instructions.
+Safe internal aliases such as `shot-1` and `take-1` keep source identifiers containing punctuation out of HTML IDs. Original IDs remain exact in provenance. Dialogue line IDs are preserved; values the current manifest cannot represent are refused. Supported string camera/acting/dialogue/lighting/continuity fields project into the generated production.json file. Other direction fields remain in full source records in the generated placement.json file with explicit diagnostics; they are not silently converted into acting or camera instructions.
 
 ## Preserve work and verify
 

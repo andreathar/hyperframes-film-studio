@@ -95,7 +95,7 @@ Outputs are recorded as **candidates**, with `executionAllowed: false` throughou
 
 ## Persistence and recovery
 
-The store writes `state.json` with private permissions, flushing the replacement file before atomic rename and syncing its directory. A writer holds `.write.lock`; concurrent writers fail rather than steal it. Invalid commands, missing/changed output bytes and stale revisions leave the published state unchanged. JSON inputs/state are capped at 32 MiB and history at 10,000 transitions.
+The store writes the generated state.json file with private permissions, flushing the replacement file before atomic rename and syncing its directory. A writer holds `.write.lock`; concurrent writers fail rather than steal it. Invalid commands, missing/changed output bytes and stale revisions leave the published state unchanged. JSON inputs/state are capped at 32 MiB and history at 10,000 transitions.
 
 A crash can leave a lock or an unreferenced temporary state file. Inspect the recorded PID and actual owner before manual recovery; the command never removes another writer's lock automatically. If a write reports an I/O failure, reread the store before deciding what happened: failure after publication can leave the new revision visible. These local safeguards do not provide provider submission authority or coordinate cloned stores.
 

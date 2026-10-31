@@ -18,7 +18,7 @@ The report includes record counts, source-document hashes and reconciliation dia
 bun run film:import --workspace /path/to/Movies_Projects --output .film-workspace/import-v1
 ```
 
-The output directory must be new. The tool re-inspects source documents and media before saving and rejects a changed snapshot. It writes `import.json` with the exact source text and parsed JSON declarations, original reference/take records and media observations, plus `report.json`. Originals and their approvals remain external authority. Keep the output private under ignored `.film-workspace/`.
+The output directory must be new. The tool re-inspects source documents and media before saving and rejects a changed snapshot. It writes the generated import.json file with the exact source text and parsed JSON declarations, original reference/take records and media observations, plus the generated report.json file. Originals and their approvals remain external authority. Keep the output private under ignored `.film-workspace/`.
 
 This is a captured observation, not a transactional backup or a lock on the source workspace. Source files can change after inspection; re-inspect before subsequent consequential use. Missing files are reported, never restored. Archived takes stay archived; their archived destinations are not searched. File extensions are not treated as media-format validation; this inventory hashes bytes only. `film:prepare` performs separate stream/duration checks for an explicit edit.
 
