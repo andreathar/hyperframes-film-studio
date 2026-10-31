@@ -72,3 +72,10 @@ bun run film:jobs --import .film-workspace/import-v1/import.json --store .film-w
 The checkout-local `film:jobs` command creates a private durable ledger; its default operation only shows saved state. `prepare` binds explicitly authored generation intent to a shot and saved review. `observe` records a matching external receipt, verifying any supplied local output hashes. Both require a current `--expected-revision` and a reason. Duplicate intent, conflicting external IDs, stale writes and invalid result paths are refused.
 
 Routes are handoff labels; this stage does not call providers, compile vendor payloads, load models or grant execution/creative approval. Unknown outcomes stay on the same job for explicit reconciliation. Output bytes remain candidate evidence and are not placed on the timeline. The complete request/receipt schemas, commands and recovery limits are in the fork's `film-studio/JOBS.md`.
+
+
+## Prepare a Kling producer handoff
+
+The checkout-local `bun run film:kling-handoff` command previews or exports one blocked candidate from a prepared Kling video job. Supply the current store revision/request fingerprint, saved review, explicit native settings, canonical workspace and film path. It preserves the recorded model/prompt and rechecks local reference hashes.
+
+Exported `runner-spec.json` retains null authorization and a submission block. The existing Movies producer release runner remains responsible for exact-payload approval, live capability checks, quotes/upload scope and submission. No provider calls occur here. Linux descriptor verification and Python 3 standard-library canonical hashing are required. See the fork's `film-studio/KLING-HANDOFF.md` for the full command/settings contract and `film-studio/TASKS.md` for remaining integration work.

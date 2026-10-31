@@ -8,6 +8,8 @@ Open the [production inspector](INSPECTOR.md) to search imported shots, read dir
 
 Use the [local job ledger](JOBS.md) to retain prepared generation intent and reconcile external result receipts with source/review provenance, duplicate checks and verified local output hashes. It records candidate observations; live provider execution remains a later integration.
 
+The [Kling producer handoff](KLING-HANDOFF.md) exports a verified, blocked candidate from a prepared job for the existing film release runner. See [the task checklist](TASKS.md) for completed modules and remaining live/timeline integration.
+
 ## Prepare an edit
 
 From the fork checkout:

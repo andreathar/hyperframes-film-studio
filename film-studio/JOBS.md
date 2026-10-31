@@ -46,6 +46,10 @@ Output supports `video` with integer width/height (1–16384), fps (1–120) and
 
 Duplicate intent is refused within this store. Its fingerprint uses route, model, exact prompt, output specification and distinct reference role/hash pairs. Renaming the job, changing the shot label, changing only review history/reasons or using aliases for the same reference bytes does not create a new intent. A changed effective prompt/settings/input can create a separate job. Identical intentional reruns, including failed requests, need a later retry policy; there is no retry command now. Copying stores defeats store-local duplicate protection, so this is not global exactly-once execution.
 
+## Prepare a Kling producer handoff
+
+Use [film:kling-handoff](KLING-HANDOFF.md) to export a prepared Kling video job with explicit native settings and verified canonical film references. It creates a blocked review packet and does not mutate this store or activate a provider.
+
 ## Record an external observation
 
 An external tool or operator supplies a receipt JSON under an explicit workspace root. Use the exact `requestFingerprint` printed for the prepared job:

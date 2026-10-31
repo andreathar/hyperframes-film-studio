@@ -145,3 +145,16 @@ export async function updateJobStore(bundle, store, command, { workspace } = {})
     return next;
   });
 }
+
+/** Verify current media against captured intent without copying or granting approval. */
+export async function verifyJobMedia(workspace, path, expectedSha256) {
+  if (process.platform !== "linux")
+    throw new Error("Verified media inspection requires Linux descriptor paths");
+  if (typeof expectedSha256 !== "string" || !/^[a-f0-9]{64}$/.test(expectedSha256))
+    throw new Error("Expected media hash required");
+  const root = await realpath(workspace),
+    actual = await confined(root, path),
+    proof = await fileDigest(actual, 2 * 1024 * 1024 * 1024, false, root);
+  if (proof.sha256 !== expectedSha256) throw new Error("Current reference hash mismatch");
+  return { path, sha256: proof.sha256 };
+}
