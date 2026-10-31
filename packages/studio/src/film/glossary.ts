@@ -179,6 +179,17 @@ export const NEXT_ACTION_TERMS: Record<StepId, string> = {
 export const PATTERN_FIRST_HINT =
   "Choose a scene pattern first. It decides which pictures are needed.";
 
+/** The control that opens the long pattern text. `hint` names it for assistive tech. */
+export const PATTERN_MORE_TERM: Term = {
+  label: "More",
+  hint: "More about scene patterns",
+};
+
+export const PATTERN_NONE_HINT =
+  "Choose a pattern to apply its constraints. The line stays as written.";
+
+export const PATTERN_NEEDS_LABEL = "Needs pictures for";
+
 export const PROPOSAL_HINT =
   "The assistant wrote a proposal. Apply it, or edit the direction yourself.";
 

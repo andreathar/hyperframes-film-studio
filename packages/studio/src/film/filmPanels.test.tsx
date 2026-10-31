@@ -1,10 +1,16 @@
 // @vitest-environment happy-dom
 
-import { act, type ReactNode } from "react";
+import { act, useState, type ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { CompilationV1, SceneBriefV1 } from "@hyperframes/film-production/browser";
+import {
+  SCENE_PATTERNS,
+  scenePattern,
+  type ScenePatternId,
+} from "@hyperframes/film-production/browser";
 import { AssistantPanel, ProductionPanel } from "./index";
+import { PatternChoice } from "./PatternChoice";
 import type { AssistantPanelProps, ProductionPanelProps } from "./types";
 import { dialogue, expandAll, sceneBrief, shot, snapshot } from "./testFixtures";
 import { resolveVisibleProposal, type ProposalMemory } from "./visibleProposal";
@@ -103,6 +109,10 @@ async function click(el: Element | null) {
   await act(async () => {
     el.click();
   });
+  // Base UI mounts popups after a frame.
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 30));
+  });
 }
 
 function button(host: ParentNode, name: string) {
@@ -176,10 +186,10 @@ describe("ProductionPanel", () => {
     expandAll(host);
     await click(button(host, "Listening reaction"));
     expect(host.querySelector("[data-shot-dialogue]")?.textContent).toBe(dialogue);
-    expect(host.textContent).toContain("Stay on the listener. Do not whip back to the speaker.");
-    expect(host.textContent).toContain(
-      "The incoming line can be off-screen. Do not invent a reply.",
-    );
+    await click(host.querySelector('button[aria-label="More about scene patterns"]'));
+    const popup = document.querySelector('[role="dialog"]')?.textContent;
+    expect(popup).toContain("Stay on the listener. Do not whip back to the speaker.");
+    expect(popup).toContain("The incoming line can be off-screen. Do not invent a reply.");
     expect(onBriefChange).toHaveBeenCalledTimes(1);
     const next = onBriefChange.mock.calls[0]?.[0];
     expect(next?.dialogue).toBe(brief.dialogue);
@@ -314,5 +324,114 @@ describe("Production and Assistant actions", () => {
     expect(onSend).toHaveBeenCalledTimes(1);
     expect(onPrepare).toHaveBeenCalledTimes(1);
     expect(onApply).not.toHaveBeenCalled();
+  });
+});
+
+describe("PatternChoice keyboard", () => {
+  const ids = SCENE_PATTERNS.map((pattern) => pattern.id);
+  const last = ids.length - 1;
+
+  function radios(host: ParentNode): HTMLElement[] {
+    return [...host.querySelectorAll<HTMLElement>('[role="radio"]')];
+  }
+
+  async function press(el: Element, key: string) {
+    await act(async () => {
+      el.dispatchEvent(new KeyboardEvent("keydown", { key, bubbles: true }));
+    });
+  }
+
+  async function mountChoice(initial: ScenePatternId | null) {
+    const picks: ScenePatternId[] = [];
+    function Harness() {
+      const [id, setId] = useState<ScenePatternId | null>(initial);
+      return (
+        <PatternChoice
+          pattern={id ? scenePattern(id) : null}
+          onPick={(next) => {
+            picks.push(next);
+            setId(next);
+          }}
+        />
+      );
+    }
+    const { host } = await mount(<Harness />);
+    return { host, picks };
+  }
+
+  function focused(host: ParentNode, index: number): HTMLElement {
+    const node = radios(host)[index];
+    if (!node) throw new Error("missing radio");
+    node.focus();
+    return node;
+  }
+
+  function tabStops(host: ParentNode): number[] {
+    return radios(host).flatMap((el, i) => (el.tabIndex === 0 ? [i] : []));
+  }
+
+  it.each([
+    ["ArrowDown", 1],
+    ["ArrowRight", 1],
+    ["ArrowUp", last],
+    ["ArrowLeft", last],
+  ])("%s from the first option focuses and picks index %i", async (key, to) => {
+    const { host, picks } = await mountChoice(ids[0] ?? null);
+    await press(focused(host, 0), key);
+    expect(document.activeElement).toBe(radios(host)[to]);
+    expect(picks).toEqual([ids[to]]);
+    expect(tabStops(host)).toEqual([to]);
+  });
+
+  it.each([
+    ["ArrowDown", 0],
+    ["ArrowRight", 0],
+    ["ArrowUp", last - 1],
+    ["ArrowLeft", last - 1],
+  ])("%s from the last option focuses and picks index %i", async (key, to) => {
+    const { host, picks } = await mountChoice(ids[last] ?? null);
+    await press(focused(host, last), key);
+    expect(document.activeElement).toBe(radios(host)[to]);
+    expect(picks).toEqual([ids[to]]);
+    expect(tabStops(host)).toEqual([to]);
+  });
+
+  it("keeps one tab stop: the selected option, or the first when none is selected", async () => {
+    const chosen = await mountChoice(ids[2] ?? null);
+    expect(tabStops(chosen.host)).toEqual([2]);
+    const none = await mountChoice(null);
+    expect(tabStops(none.host)).toEqual([0]);
+  });
+
+  it("walks the whole ring once per keypress", async () => {
+    const { host, picks } = await mountChoice(ids[0] ?? null);
+    let current: Element = focused(host, 0);
+    for (let i = 1; i <= ids.length; i++) {
+      await press(current, "ArrowDown");
+      current = radios(host)[i % ids.length] ?? current;
+      expect(document.activeElement).toBe(radios(host)[i % ids.length]);
+    }
+    expect(picks).toEqual([...ids.slice(1), ids[0]]);
+  });
+
+  it("ignores other keys", async () => {
+    const { host, picks } = await mountChoice(ids[0] ?? null);
+    await press(focused(host, 0), "a");
+    expect(picks).toEqual([]);
+  });
+
+  it("shows one plain line, and the full text only behind a named More button", async () => {
+    const { host } = await mountChoice("listening-reaction");
+    const pattern = scenePattern("listening-reaction");
+    expect(host.textContent).toContain(pattern.summary);
+    expect(host.textContent).not.toContain(pattern.cameraConstraint);
+    const more = host.querySelector('button[aria-label="More about scene patterns"]');
+    expect(more?.textContent?.trim()).toBe("More");
+    await click(more);
+    const popup = document.querySelector('[role="dialog"]');
+    expect(popup?.textContent).toContain(pattern.cameraConstraint);
+    expect(popup?.textContent).toContain(pattern.soundConstraint);
+    expect(popup?.textContent).toContain("Who it is");
+    expect(popup?.textContent).not.toContain("identity");
   });
 });
