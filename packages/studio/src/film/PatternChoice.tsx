@@ -60,6 +60,7 @@ function PatternButtons({
   onPick: (id: ScenePatternId) => void;
 }) {
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
     const current = SCENE_PATTERNS.findIndex(
       (pattern) =>
         event.target instanceof HTMLElement && pattern.id === event.target.dataset.patternId,

@@ -335,10 +335,12 @@ describe("PatternChoice keyboard", () => {
     return [...host.querySelectorAll<HTMLElement>('[role="radio"]')];
   }
 
-  async function press(el: Element, key: string) {
+  async function press(el: Element, key: string, mods: KeyboardEventInit = {}) {
+    const event = new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true, ...mods });
     await act(async () => {
-      el.dispatchEvent(new KeyboardEvent("keydown", { key, bubbles: true }));
+      el.dispatchEvent(event);
     });
+    return event;
   }
 
   async function mountChoice(initial: ScenePatternId | null) {
@@ -416,9 +418,32 @@ describe("PatternChoice keyboard", () => {
 
   it("ignores other keys", async () => {
     const { host, picks } = await mountChoice(ids[0] ?? null);
-    await press(focused(host, 0), "a");
+    const start = focused(host, 0);
+    const event = await press(start, "a");
     expect(picks).toEqual([]);
+    expect(document.activeElement).toBe(start);
+    expect(event.defaultPrevented).toBe(false);
   });
+
+  it("marks handled arrows as default-prevented", async () => {
+    const { host } = await mountChoice(ids[0] ?? null);
+    const event = await press(focused(host, 0), "ArrowDown");
+    expect(event.defaultPrevented).toBe(true);
+  });
+
+  it.each(["altKey", "ctrlKey", "metaKey", "shiftKey"])(
+    "leaves %s plus an arrow to the browser",
+    async (mod) => {
+      const { host, picks } = await mountChoice(ids[0] ?? null);
+      const start = focused(host, 0);
+      for (const key of ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"]) {
+        const event = await press(start, key, { [mod]: true });
+        expect(event.defaultPrevented).toBe(false);
+      }
+      expect(picks).toEqual([]);
+      expect(document.activeElement).toBe(start);
+    },
+  );
 
   it("shows one plain line, and the full text only behind a named More button", async () => {
     const { host } = await mountChoice("listening-reaction");
