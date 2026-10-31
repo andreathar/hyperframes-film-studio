@@ -1,16 +1,16 @@
 import { memo } from "react";
 import type { DialogueLineV1, SceneBriefV1 } from "@hyperframes/film-production/browser";
-import { Button } from "../components/ui";
-import { headingClass, panelClass, textAreaClass } from "./chrome";
+import { Button, TextArea } from "../components/ui";
+import { headingClass, mutedClass, panelClass } from "./chrome";
 import type { AssistantPanelProps, AssistantReadinessView } from "./types";
 import { useVisibleProposal } from "./visibleProposal";
 
 function ReadinessLine({ readiness }: { readiness: AssistantReadinessView }) {
   return (
     <p>
-      <span className="text-neutral-500">Readiness </span>
-      <span className="text-neutral-100">{readiness.state}</span>
-      <span className="text-neutral-400"> {readiness.evidence}</span>
+      <span className="text-panel-text-4">Readiness </span>
+      <span className="text-panel-text-0">{readiness.state}</span>
+      <span className="text-panel-text-3"> {readiness.evidence}</span>
     </p>
   );
 }
@@ -23,16 +23,16 @@ function InstructionField({
   onInstructionChange: (text: string) => void;
 }) {
   return (
-    <label className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1">
       <span className={headingClass}>Instruction</span>
-      <textarea
+      <TextArea
         aria-label="Instruction"
-        className={textAreaClass}
         rows={4}
         value={value}
-        onChange={(event) => onInstructionChange(event.target.value)}
+        onDraft={onInstructionChange}
+        onCommit={onInstructionChange}
       />
-    </label>
+    </div>
   );
 }
 
@@ -78,8 +78,8 @@ function AssistantActions({
 function ProposalLine({ line }: { line: DialogueLineV1 }) {
   return (
     <li>
-      <span className="text-neutral-500">{line.speakerId} </span>
-      <span data-proposal-dialogue className="whitespace-pre-wrap text-neutral-100">
+      <span className="text-panel-text-4">{line.speakerId} </span>
+      <span data-proposal-dialogue className="whitespace-pre-wrap text-panel-text-0">
         {line.text}
       </span>
     </li>
@@ -88,7 +88,7 @@ function ProposalLine({ line }: { line: DialogueLineV1 }) {
 
 function ProposalLines({ proposal }: { proposal: SceneBriefV1 | null }) {
   if (!proposal || proposal.dialogue.length === 0) {
-    return <p className="text-neutral-500">No proposal for this context.</p>;
+    return <p className={mutedClass}>No proposal for this context.</p>;
   }
   return (
     <ul className="flex flex-col gap-1">
@@ -110,7 +110,7 @@ function DialogueCompare({
     <div className="grid grid-cols-2 gap-2">
       <div className="min-w-0">
         <h3 className={headingClass}>Shot dialogue</h3>
-        <p data-current-dialogue className="wrap-break-word whitespace-pre-wrap text-neutral-100">
+        <p data-current-dialogue className="wrap-break-word whitespace-pre-wrap text-panel-text-0">
           {shotDialogue}
         </p>
       </div>
@@ -137,8 +137,8 @@ export const AssistantPanel = memo(function AssistantPanel({
   const visible = useVisibleProposal(contextLabel, proposal);
   return (
     <div className={panelClass} aria-label="Assistant">
-      <h2 className="text-[12px] font-medium text-neutral-100">Assistant</h2>
-      <p className="text-neutral-100">{contextLabel}</p>
+      <h2 className="text-step-12 font-medium text-panel-text-0">Assistant</h2>
+      <p className="text-panel-text-0">{contextLabel}</p>
       <ReadinessLine readiness={readiness} />
       <InstructionField value={draftInstruction} onInstructionChange={onInstructionChange} />
       <AssistantActions

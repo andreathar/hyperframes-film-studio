@@ -1,7 +1,9 @@
 import { REFERENCE_ROLES, type SceneBriefV1 } from "@hyperframes/film-production/browser";
 import type { SceneReferenceBinding } from "./contractTypes";
 import { isReferenceRole, withReferenceRole } from "./briefEdit";
-import { headingClass, selectClass } from "./chrome";
+import { Select } from "../components/ui";
+import { headingClass, mutedClass } from "./chrome";
+import { REFERENCE_ROLE_TERMS } from "./glossary";
 import type { ProductionShot } from "./types";
 
 function changeRole(
@@ -13,6 +15,11 @@ function changeRole(
   if (!isReferenceRole(value)) return;
   onBriefChange(withReferenceRole(brief, referenceId, value));
 }
+
+const ROLE_OPTIONS = REFERENCE_ROLES.map((role) => ({
+  value: role,
+  label: REFERENCE_ROLE_TERMS[role].label,
+}));
 
 function RoleSelect({
   brief,
@@ -27,21 +34,16 @@ function RoleSelect({
 }) {
   if (!brief || !binding) return null;
   return (
-    <label className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1">
       <span className={headingClass}>Brief role</span>
-      <select
-        aria-label={`Brief role for ${referenceId}`}
-        className={selectClass}
+      <Select
+        label={`Brief role for ${referenceId}`}
         value={binding.role}
-        onChange={(event) => changeRole(brief, referenceId, event.target.value, onBriefChange)}
-      >
-        {REFERENCE_ROLES.map((role) => (
-          <option key={role} value={role}>
-            {role}
-          </option>
-        ))}
-      </select>
-    </label>
+        options={ROLE_OPTIONS}
+        onCommit={(value) => changeRole(brief, referenceId, value, onBriefChange)}
+      />
+      <span className={mutedClass}>{REFERENCE_ROLE_TERMS[binding.role].hint}</span>
+    </div>
   );
 }
 
@@ -57,8 +59,8 @@ function ReferenceRow({
   const binding = brief?.references.find((item) => item.referenceId === reference.id) ?? null;
   return (
     <li className="flex flex-col gap-1">
-      <span className="text-neutral-100">{reference.role}</span>
-      <span className="font-mono text-[10px] text-neutral-500">
+      <span className="text-panel-text-0">{reference.role}</span>
+      <span className="font-mono text-step-11 text-panel-text-4">
         {reference.mediaKind} · {reference.id}
       </span>
       <RoleSelect
@@ -81,7 +83,7 @@ export function ReferenceRoles({
   onBriefChange: (brief: SceneBriefV1) => void;
 }) {
   if (shot.references.length === 0) {
-    return <p className="text-neutral-500">No references on this shot.</p>;
+    return <p className={mutedClass}>No references on this shot.</p>;
   }
   return (
     <ul className="flex flex-col gap-2">

@@ -4,7 +4,8 @@ import {
   type ScenePatternV1,
 } from "@hyperframes/film-production/browser";
 import { Button } from "../components/ui";
-import { Block } from "./chrome";
+import { Section } from "../components/editor/propertyPanelPrimitives";
+import { mutedClass } from "./chrome";
 
 function PatternButton({
   id,
@@ -56,13 +57,13 @@ function PatternButtons({
 function PatternHelp({ pattern }: { pattern: ScenePatternV1 | null }) {
   if (!pattern) {
     return (
-      <p className="text-[10px] text-neutral-500">
+      <p className={mutedClass}>
         Choose a pattern to apply its constraints. The line stays as written.
       </p>
     );
   }
   return (
-    <div className="flex flex-col gap-1 text-[10px] leading-relaxed text-neutral-400">
+    <div className="flex flex-col gap-1 text-step-11 leading-relaxed text-panel-text-3">
       <p>{pattern.summary}</p>
       <p>{pattern.cameraConstraint}</p>
       <p>{pattern.soundConstraint}</p>
@@ -79,9 +80,9 @@ export function PatternChoice({
   onPick: (id: ScenePatternId) => void;
 }) {
   return (
-    <Block title="Pattern">
+    <Section title="Pattern" icon={null}>
       <PatternButtons selected={pattern?.id ?? null} onPick={onPick} />
       <PatternHelp pattern={pattern} />
-    </Block>
+    </Section>
   );
 }

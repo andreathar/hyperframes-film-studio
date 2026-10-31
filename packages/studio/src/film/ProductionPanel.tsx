@@ -7,7 +7,8 @@ import {
 } from "@hyperframes/film-production/browser";
 import { Button } from "../components/ui";
 import { withPattern } from "./briefEdit";
-import { Block, panelClass } from "./chrome";
+import { Section } from "../components/editor/propertyPanelPrimitives";
+import { mutedClass, panelClass } from "./chrome";
 import { DiagnosticsList } from "./DiagnosticsList";
 import { NativeParameters } from "./NativeParameters";
 import { PatternChoice } from "./PatternChoice";
@@ -92,11 +93,11 @@ export const ProductionPanel = memo(function ProductionPanel({
   const pattern = shownPattern(picked, brief);
   return (
     <div className={panelClass} aria-label="Production">
-      <h2 className="text-[12px] font-medium text-neutral-100">Production</h2>
+      <h2 className="text-step-12 font-medium text-panel-text-0">Production</h2>
       <ShotSummary shot={shot} />
-      <Block title="Reference roles">
+      <Section title="Reference roles" icon={null}>
         <ReferenceRoles shot={shot} brief={brief} onBriefChange={onBriefChange} />
-      </Block>
+      </Section>
       <PatternChoice
         pattern={pattern}
         onPick={(id) => pickPattern(id, brief, pick, onBriefChange)}
@@ -108,10 +109,10 @@ export const ProductionPanel = memo(function ProductionPanel({
         onBriefChange={onBriefChange}
       />
       <DiagnosticsList compilation={compilation} />
-      <Block title="Native parameters">
-        <p className="text-[10px] text-neutral-500">Account controls from the current snapshot.</p>
+      <Section title="Native parameters" icon={null}>
+        <p className={mutedClass}>Account controls from the current snapshot.</p>
         <NativeParameters snapshot={snapshot} brief={brief} onBriefChange={onBriefChange} />
-      </Block>
+      </Section>
       <ProductionActions brief={brief} onPrepare={onPrepare} onApplyProposal={onApplyProposal} />
     </div>
   );

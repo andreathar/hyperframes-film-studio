@@ -1,12 +1,13 @@
 import type { SceneBriefV1 } from "@hyperframes/film-production/browser";
-import { headingClass, textAreaClass } from "./chrome";
+import { TextArea } from "../components/ui";
+import { headingClass } from "./chrome";
 import type { SectionField } from "./sectionFields";
 
 function ExactLine({ label, text }: { label: string; text: string }) {
   return (
     <div className="flex flex-col gap-1">
       <span className={headingClass}>{label}</span>
-      <p className="whitespace-pre-wrap text-neutral-100">{text}</p>
+      <p className="whitespace-pre-wrap text-panel-text-0">{text}</p>
     </div>
   );
 }
@@ -15,7 +16,7 @@ function ReadOnlyLine({ label, text }: { label: string; text: string }) {
   return (
     <div className="flex flex-col gap-1">
       <span className={headingClass}>{label}</span>
-      <p className="whitespace-pre-wrap text-neutral-200">{text}</p>
+      <p className="whitespace-pre-wrap text-panel-text-1">{text}</p>
     </div>
   );
 }
@@ -30,16 +31,10 @@ function EditableLine({
   onCommit: (text: string) => void;
 }) {
   return (
-    <label className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1">
       <span className={headingClass}>{label}</span>
-      <textarea
-        aria-label={label}
-        className={textAreaClass}
-        rows={2}
-        value={text}
-        onChange={(event) => onCommit(event.target.value)}
-      />
-    </label>
+      <TextArea aria-label={label} rows={2} value={text} onCommit={onCommit} />
+    </div>
   );
 }
 

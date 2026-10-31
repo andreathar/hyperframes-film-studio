@@ -5,10 +5,17 @@ import {
   type SceneBriefV1,
 } from "@hyperframes/film-production/browser";
 import { isSoundStrategy, withSoundStrategy } from "./briefEdit";
-import { headingClass, selectClass } from "./chrome";
+import { Select } from "../components/ui";
+import { headingClass, mutedClass } from "./chrome";
+import { SOUND_STRATEGY_TERMS } from "./glossary";
 import { FieldControl } from "./FieldControl";
 import { sectionFields } from "./sectionFields";
 import type { ProductionShot } from "./types";
+
+const STRATEGY_OPTIONS = SOUND_STRATEGIES.map((strategy) => ({
+  value: strategy,
+  label: SOUND_STRATEGY_TERMS[strategy].label,
+}));
 
 function SoundStrategyField({
   brief,
@@ -19,25 +26,19 @@ function SoundStrategyField({
 }) {
   if (!brief) return null;
   return (
-    <label className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1">
       <span className={headingClass}>Sound strategy</span>
-      <select
-        aria-label="Sound strategy"
-        className={selectClass}
+      <Select
+        label="Sound strategy"
         value={brief.sound.strategy}
-        onChange={(event) => {
-          const value = event.target.value;
+        options={STRATEGY_OPTIONS}
+        onCommit={(value) => {
           if (!isSoundStrategy(value)) return;
           onBriefChange(withSoundStrategy(brief, value));
         }}
-      >
-        {SOUND_STRATEGIES.map((strategy) => (
-          <option key={strategy} value={strategy}>
-            {strategy}
-          </option>
-        ))}
-      </select>
-    </label>
+      />
+      <span className={mutedClass}>{SOUND_STRATEGY_TERMS[brief.sound.strategy].hint}</span>
+    </div>
   );
 }
 
@@ -70,7 +71,7 @@ function CompiledPrompt({ prompt }: { prompt: string | null }) {
   return (
     <div className="flex flex-col gap-1">
       <span className={headingClass}>Compiled prompt</span>
-      <pre className="font-mono text-[10px] whitespace-pre-wrap text-neutral-400">{prompt}</pre>
+      <pre className="font-mono text-step-11 whitespace-pre-wrap text-panel-text-3">{prompt}</pre>
     </div>
   );
 }
@@ -87,8 +88,8 @@ export function PromptSections({
   onBriefChange: (brief: SceneBriefV1) => void;
 }) {
   return (
-    <div className="flex flex-col gap-3 border-t border-neutral-800 pt-2">
-      <p className="text-[10px] text-neutral-500">Prose intent for the shot. Dialogue is exact.</p>
+    <div className="flex flex-col gap-3 border-t border-panel-border pt-2">
+      <p className={mutedClass}>Prose intent for the shot. Dialogue is exact.</p>
       {PROMPT_SECTIONS.map((section) => (
         <section key={section.id} aria-label={section.title} className="flex flex-col gap-1.5">
           <h3 className={headingClass}>{section.title}</h3>

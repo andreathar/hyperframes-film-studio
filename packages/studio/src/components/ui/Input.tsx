@@ -88,6 +88,7 @@ export function Input({
         disabled={disabled}
         aria-invalid={invalid || undefined}
         className={fieldText}
+        data-ui-input=""
         onValueChange={(next) => {
           dirtyRef.current = true;
           setDraft(next);
@@ -101,6 +102,83 @@ export function Input({
           }
           if (event.key === "Escape") {
             // Abandon the draft rather than leave it for the blur commit.
+            event.preventDefault();
+            event.stopPropagation();
+            dirtyRef.current = false;
+            setDraft(valueRef.current);
+            event.currentTarget.blur();
+          }
+        }}
+        {...props}
+      />
+    </div>
+  );
+}
+
+export interface TextAreaProps extends Omit<
+  ComponentPropsWithoutRef<"textarea">,
+  "value" | "onChange" | "className"
+> {
+  /** The committed value. A draft lives inside until blur. */
+  value: string;
+  /** Called with the draft on blur, only when it really changed. */
+  onCommit: (next: string) => void;
+  /** Called with every edit, for callers that keep the draft elsewhere. */
+  onDraft?: (next: string) => void;
+  /** Called once per committed change, for design-input telemetry. */
+  onTrack?: () => void;
+  invalid?: boolean;
+  className?: string;
+}
+
+/** Multiline Input: same box and text look, Escape abandons, blur commits (Enter adds a line). */
+export function TextArea({
+  value,
+  onCommit,
+  onDraft,
+  onTrack,
+  invalid,
+  disabled,
+  className,
+  rows = 2,
+  ...props
+}: TextAreaProps) {
+  const [draft, setDraft] = useState(value);
+  const valueRef = useRef(value);
+  valueRef.current = value;
+  const dirtyRef = useRef(false);
+
+  useEffect(() => {
+    if (!dirtyRef.current) setDraft(value);
+  }, [value]);
+
+  const commit = (next: string) => {
+    dirtyRef.current = false;
+    if (next === valueRef.current) return;
+    onCommit(next);
+    onTrack?.();
+  };
+
+  return (
+    <div
+      className={cn(fieldBase, "h-auto items-start py-1.5", className)}
+      aria-invalid={invalid || undefined}
+    >
+      <textarea
+        rows={rows}
+        value={draft}
+        disabled={disabled}
+        aria-invalid={invalid || undefined}
+        className={cn(fieldText, "resize-y")}
+        data-ui-input=""
+        onChange={(event) => {
+          dirtyRef.current = true;
+          setDraft(event.target.value);
+          onDraft?.(event.target.value);
+        }}
+        onBlur={() => commit(draft)}
+        onKeyDown={(event) => {
+          if (event.key === "Escape") {
             event.preventDefault();
             event.stopPropagation();
             dirtyRef.current = false;

@@ -1,8 +1,9 @@
 import type { CompilationV1, DiagnosticV1 } from "@hyperframes/film-production/browser";
-import { Block } from "./chrome";
+import { Section } from "../components/editor/propertyPanelPrimitives";
+import { mutedClass, warnClass } from "./chrome";
 
 function DiagnosticItem({ item }: { item: DiagnosticV1 }) {
-  const tone = item.severity === "error" ? "text-amber-400/90" : "text-neutral-400";
+  const tone = item.severity === "error" ? warnClass : "text-panel-text-3";
   return (
     <li className={tone}>
       <span className="font-mono">{item.code}</span>
@@ -12,9 +13,9 @@ function DiagnosticItem({ item }: { item: DiagnosticV1 }) {
 }
 
 function DiagnosticItems({ compilation }: { compilation: CompilationV1 | null }) {
-  if (!compilation) return <p className="text-neutral-500">No compilation yet.</p>;
+  if (!compilation) return <p className={mutedClass}>No compilation yet.</p>;
   if (compilation.diagnostics.length === 0) {
-    return <p className="text-neutral-500">No diagnostics.</p>;
+    return <p className={mutedClass}>No diagnostics.</p>;
   }
   return (
     <ul className="flex flex-col gap-1">
@@ -27,8 +28,8 @@ function DiagnosticItems({ compilation }: { compilation: CompilationV1 | null })
 
 export function DiagnosticsList({ compilation }: { compilation: CompilationV1 | null }) {
   return (
-    <Block title="Diagnostics">
+    <Section title="Diagnostics" icon={null}>
       <DiagnosticItems compilation={compilation} />
-    </Block>
+    </Section>
   );
 }

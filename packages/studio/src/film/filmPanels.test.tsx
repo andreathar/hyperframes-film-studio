@@ -3,114 +3,13 @@
 import { act, type ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type {
-  CapabilitySnapshotV1,
-  CompilationV1,
-  SceneBriefV1,
-} from "@hyperframes/film-production/browser";
+import type { CompilationV1, SceneBriefV1 } from "@hyperframes/film-production/browser";
 import { AssistantPanel, ProductionPanel } from "./index";
-import type { AssistantPanelProps, ProductionPanelProps, ProductionShot } from "./types";
+import type { AssistantPanelProps, ProductionPanelProps } from "./types";
+import { dialogue, sceneBrief, shot, snapshot } from "./testFixtures";
 import { resolveVisibleProposal, type ProposalMemory } from "./visibleProposal";
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
-
-const dialogue = "Já chega — fica.";
-
-function shot(line = dialogue): ProductionShot {
-  return {
-    shotKey: "plan:S1",
-    title: "The table",
-    direction: {
-      camera: "Locked medium close-up",
-      acting: "She finishes the sentence",
-      dialogue: line,
-      lighting: "Window from frame left",
-      continuity: "Still seated",
-    },
-    lineIds: ["L12"],
-    references: [{ id: "ref-face", role: "identity", sha256: "a".repeat(64), mediaKind: "image" }],
-  };
-}
-
-function sceneBrief(line = dialogue, producer: "human" | "assistant" = "human"): SceneBriefV1 {
-  return {
-    version: 1,
-    projectId: "table",
-    shotKey: "plan:S1",
-    sourceRevisionId: "source1",
-    reviewRevision: 2,
-    authoring: { producer, turnId: "turn-1", patternId: "restrained-dialogue" },
-    subjects: [{ id: "ada", facts: "The woman already cast for this shot." }],
-    references: [
-      {
-        referenceId: "ref-face",
-        sha256: "a".repeat(64),
-        mediaKind: "image",
-        subjectId: "ada",
-        role: "identity",
-        control: "native",
-        exclusions: [],
-      },
-    ],
-    camera: {
-      framing: "Medium close-up",
-      angle: "Eye level",
-      lensIntent: "A short lens",
-      focusIntent: "Eyes",
-      opening: "She is already looking off-screen left",
-      ending: "She is still looking off-screen left",
-      path: "Locked",
-      screenDirection: "Looks left",
-      axis: "Hold the line",
-    },
-    setting: {
-      place: "A quiet room",
-      lightSources: "Window",
-      lightDirection: "From frame left",
-      materials: "Wood",
-      palette: "Warm shadow",
-      atmosphere: "Still",
-    },
-    beats: [
-      {
-        id: "beat1",
-        startFrame: 0,
-        endFrame: 48,
-        subjectMotion: "She finishes the sentence.",
-        cameraMotion: "The frame stays put.",
-        environmentMotion: "Dust in the window light.",
-        observableEnd: "Her mouth is closed.",
-      },
-    ],
-    dialogue: [
-      {
-        speakerId: "ada",
-        language: "pt",
-        text: line,
-        delivery: "Quiet, no smile",
-        voiceId: "",
-        startFrame: 12,
-        endFrame: 40,
-      },
-    ],
-    sound: { strategy: "separate-edit", ambience: "Room tone", sfx: "", music: "" },
-    continuity: {
-      locks: ["Look left"],
-      allowedChanges: [],
-      exclusions: ["No second person"],
-      entryAnchor: "Already seated",
-      exitAnchor: "Still seated",
-    },
-    output: {
-      kind: "video",
-      width: 1920,
-      height: 1080,
-      fps: 24,
-      durationFrames: 96,
-      routePreference: "kling",
-    },
-  };
-}
 
 function compilation(message: string): CompilationV1 {
   return {
@@ -121,28 +20,6 @@ function compilation(message: string): CompilationV1 {
     compilationSha256: "cd",
     capabilitySnapshotSha256: null,
     executable: false,
-  };
-}
-
-function snapshot(): CapabilitySnapshotV1 {
-  return {
-    version: 1,
-    route: "kling",
-    runtimeIdentity: "runtime-fixture",
-    schemaDigest: "digest",
-    models: [
-      {
-        id: "account-model-a",
-        durationFrames: [72, 120],
-        ratios: ["16:9"],
-        resolutions: [{ width: 1280, height: 720 }],
-        counts: [1],
-        enums: { mode: ["fixture-mode"] },
-        slots: [{ name: "image_1", mediaKinds: ["image"], required: true }],
-        maxReferences: 1,
-        unsupportedCombinations: [],
-      },
-    ],
   };
 }
 
@@ -315,9 +192,8 @@ describe("ProductionPanel", () => {
     expect(host.textContent).toContain("fixture-mode");
     expect(host.textContent).not.toContain("The account snapshot is unresolved.");
     const duration = host.querySelector('[aria-label="account-model-a Duration frames"]');
-    expect(duration).toBeInstanceOf(HTMLSelectElement);
-    if (!(duration instanceof HTMLSelectElement)) return;
-    expect(duration.options).toHaveLength(2);
+    expect(duration?.getAttribute("role")).toBe("combobox");
+    expect(duration?.textContent).toContain("72");
   });
 
   it("shows compilation diagnostics the parent passed in", async () => {

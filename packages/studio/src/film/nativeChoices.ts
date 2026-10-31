@@ -4,7 +4,7 @@ import type { AccountModel } from "./contractTypes";
 export interface NativeChoice {
   key: string;
   label: string;
-  options: Array<{ value: string; label: string }>;
+  options: Array<{ value: string; label: string; disabled?: boolean; reason?: string }>;
   selected: string;
   apply?: (brief: SceneBriefV1, value: string) => SceneBriefV1;
 }

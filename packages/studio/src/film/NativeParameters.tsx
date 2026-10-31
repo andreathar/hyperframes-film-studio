@@ -1,21 +1,8 @@
-import { useState } from "react";
 import type { CapabilitySnapshotV1, SceneBriefV1 } from "@hyperframes/film-production/browser";
 import type { AccountModel } from "./contractTypes";
-import { headingClass, selectClass } from "./chrome";
+import { Select } from "../components/ui";
+import { headingClass, mutedClass } from "./chrome";
 import { choicesForModel, type NativeChoice } from "./nativeChoices";
-
-function commitChoice(
-  value: string,
-  choice: NativeChoice,
-  brief: SceneBriefV1 | null,
-  onBriefChange: (brief: SceneBriefV1) => void,
-  setPicked: (value: string) => void,
-) {
-  setPicked(value);
-  const apply = choice.apply;
-  if (!brief || !apply) return;
-  onBriefChange(apply(brief, value));
-}
 
 function ChoiceSelect({
   modelId,
@@ -28,34 +15,32 @@ function ChoiceSelect({
   brief: SceneBriefV1 | null;
   onBriefChange: (brief: SceneBriefV1) => void;
 }) {
-  const [picked, setPicked] = useState(choice.selected);
-  const known = choice.options.some((opt) => opt.value === picked);
-  const value = known ? picked : choice.selected;
+  const options = choice.options.map((opt) => ({
+    value: opt.value,
+    label: opt.disabled && opt.reason ? `${opt.label} (${opt.reason})` : opt.label,
+    disabled: opt.disabled,
+  }));
   return (
-    <label className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1">
       <span className={headingClass}>{choice.label}</span>
-      <select
-        aria-label={`${modelId} ${choice.label}`}
-        className={selectClass}
-        value={value}
-        onChange={(event) =>
-          commitChoice(event.target.value, choice, brief, onBriefChange, setPicked)
-        }
-      >
-        {choice.options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
-    </label>
+      <Select
+        label={`${modelId} ${choice.label}`}
+        value={choice.selected}
+        options={options}
+        onCommit={(value) => {
+          const apply = choice.apply;
+          if (!brief || !apply) return;
+          onBriefChange(apply(brief, value));
+        }}
+      />
+    </div>
   );
 }
 
 function SlotList({ model }: { model: AccountModel }) {
   if (model.slots.length === 0) return null;
   return (
-    <ul className="flex flex-col gap-1 text-[10px] text-neutral-400">
+    <ul className="flex flex-col gap-1 text-step-11 text-panel-text-3">
       {model.slots.map((slot) => (
         <li key={slot.name}>
           {slot.name} · {slot.mediaKinds.join(", ")}
@@ -69,7 +54,7 @@ function SlotList({ model }: { model: AccountModel }) {
 function UnsupportedList({ model }: { model: AccountModel }) {
   if (model.unsupportedCombinations.length === 0) return null;
   return (
-    <ul className="flex flex-col gap-1 text-amber-400/90">
+    <ul className="flex flex-col gap-1 text-warning-ink">
       {model.unsupportedCombinations.map((item) => (
         <li key={`${item.sound}:${item.motion}`}>{item.reason}</li>
       ))}
@@ -89,8 +74,8 @@ function ModelParameters({
   const choices = choicesForModel(model, brief);
   return (
     <div className="flex flex-col gap-2">
-      <h4 className="text-neutral-100">{model.id}</h4>
-      <p className="text-[10px] text-neutral-500">Up to {model.maxReferences} references.</p>
+      <h4 className="text-panel-text-0">{model.id}</h4>
+      <p className={mutedClass}>Up to {model.maxReferences} references.</p>
       {choices.map((choice) => (
         <ChoiceSelect
           key={`${model.id}:${choice.key}`}
