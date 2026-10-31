@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { SCENE_AUTHORING_INSTRUCTIONS } from "@hyperframes/film-production/browser";
 import { copyTextToClipboard } from "../utils/clipboard";
-import type { AssistantPanelProps, ProductionPanelProps, ProductionShot } from "./types";
+import type {
+  AssistantPanelProps,
+  AssistantReadinessView,
+  ProductionPanelProps,
+  ProductionShot,
+} from "./types";
 
 const DISCONNECTED_SHOT: ProductionShot = {
   shotKey: "unconnected",
@@ -17,7 +22,8 @@ const DISCONNECTED_SHOT: ProductionShot = {
   references: [],
 };
 
-const READINESS = {
+const READINESS: AssistantReadinessView = {
+  provider: "claude-external",
   state: "unavailable",
   evidence: "This Studio session has no film assistant host. Copy handoff keeps the instruction.",
 };

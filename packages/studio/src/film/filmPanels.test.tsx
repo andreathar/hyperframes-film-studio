@@ -171,7 +171,11 @@ function productionProps(overrides: Partial<ProductionPanelProps> = {}): Product
 function assistantProps(overrides: Partial<AssistantPanelProps> = {}): AssistantPanelProps {
   return {
     contextLabel: "Table · plan:S1 · rev 2",
-    readiness: { state: "external-handoff", evidence: "Signed-in CLI is not running." },
+    readiness: {
+      provider: "claude-external",
+      state: "external-handoff",
+      evidence: "Signed-in CLI is not running.",
+    },
     proposal: sceneBrief(dialogue, "assistant"),
     shotDialogue: "A line already in the cut.",
     draftInstruction: "Hold the look left.",

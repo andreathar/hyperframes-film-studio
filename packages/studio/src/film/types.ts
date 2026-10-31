@@ -1,27 +1,26 @@
 import type {
+  AssistantReadinessV1,
   CapabilitySnapshotV1,
   CompilationV1,
+  ProjectShotViewV1,
+  ReferenceRole,
   SceneBriefV1,
+  SceneReferenceBindingV1,
 } from "@hyperframes/film-production/browser";
 
+export interface ShotReference {
+  id: string;
+  role: ReferenceRole;
+  sha256: string;
+  mediaKind: SceneReferenceBindingV1["mediaKind"];
+}
+
 /** The selected shot, as the parent resolved it. Dialogue is the exact line. */
-export interface ProductionShot {
-  shotKey: string;
-  title: string;
-  direction: {
-    camera: string;
-    acting: string;
-    dialogue: string;
-    lighting: string;
-    continuity: string;
-  };
-  lineIds: string[];
-  references: Array<{
-    id: string;
-    role: string;
-    sha256: string;
-    mediaKind: string;
-  }>;
+export interface ProductionShot extends Omit<
+  ProjectShotViewV1,
+  "referenceIds" | "selectedCandidateId"
+> {
+  references: ShotReference[];
 }
 
 export interface ProductionPanelProps {
@@ -35,10 +34,7 @@ export interface ProductionPanelProps {
 }
 
 /** Provider status as the host reported it. The panel does not invent a ready state. */
-export interface AssistantReadinessView {
-  state: string;
-  evidence: string;
-}
+export type AssistantReadinessView = AssistantReadinessV1;
 
 export interface AssistantPanelProps {
   contextLabel: string;
