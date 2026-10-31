@@ -1,0 +1,39 @@
+---
+title: "Prepare a film edit locally (film-studio fork)"
+description: "Build an editable Hyperframes composition from owned footage, shot IDs and independently timed dialogue without generating new media."
+---
+
+This guide describes the **hyperframes-film-studio fork**. Its first production feature prepares an edit from a local manifest. It copies hash-verified media into a new composition directory and retains shot IDs, candidate take IDs and camera/acting/dialogue notes.
+
+## When to use it
+
+Use preparation when selected footage already exists and you want to assemble picture and sound with repeatable frame timing. It runs locally and makes no provider calls. Existing film approvals remain authoritative.
+
+The first version supports one continuous picture track, independent audio tracks, source trims and constant playback rates. Provider execution, automated ComfyUI jobs and a production inspector UI are subsequent work.
+
+## Prepare, check and render
+
+From this fork's checkout, with its dependencies installed and packages built:
+
+```sh
+bun run film:prepare --manifest .film-workspace/inputs/manifest.json --output .film-workspace/exchange-v1
+node packages/cli/bin/hyperframes.mjs lint .film-workspace/exchange-v1
+node packages/cli/bin/hyperframes.mjs check .film-workspace/exchange-v1 --json
+node packages/cli/bin/hyperframes.mjs render .film-workspace/exchange-v1 --output .film-workspace/exchange-v1.mp4
+```
+
+Preparation produces ordinary editable `index.html`, copied `assets/`, a portable `production.json` and a hash receipt. Run lint and browser check before previewing or rendering. Review the actual exported picture and sound before accepting a cut.
+
+## Preserve edits and originals
+
+Output must be a new directory. A second preparation into an existing directory fails, preserving timeline edits. Prepare another candidate in a different directory; automatic synchronization back to the manifest is not implemented.
+
+The manifest accepts relative local paths and actual SHA-256 hashes. Missing/changed bytes, path escapes, invalid timing and unsupported fields fail explicitly. Picture audio is muted; place dialogue separately to make J/L cuts without doubling sound.
+
+Private footage, manifests, renders and receipts belong under ignored `.film-workspace/`. Do not commit them. The complete manifest schema, examples and verification commands are maintained in the fork's `film-studio/README.md`.
+
+## Related topics
+
+- [Edit timing on the timeline](/studio/timeline)
+- [Make videos with Codex](/guides/with-codex)
+- [Make videos with Claude Code](/guides/with-claude-code)

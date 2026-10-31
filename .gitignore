@@ -201,3 +201,6 @@ chrome/
 # Python bytecode from running skill scripts
 __pycache__/
 *.pyc
+
+# Film production operator data, media and verification artifacts (local only).
+.film-workspace/

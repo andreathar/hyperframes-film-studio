@@ -1,3 +1,5 @@
+> **Film studio fork:** local production preparation and roadmap are in [film-studio/README.md](film-studio/README.md). Upstream Hyperframes documentation follows.
+
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/logo/dark.svg">
