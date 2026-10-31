@@ -377,6 +377,7 @@
         "@codemirror/state": "^6.6.0",
         "@codemirror/view": "6.40.0",
         "@hyperframes/core": "workspace:*",
+        "@hyperframes/film-production": "workspace:*",
         "@hyperframes/parsers": "workspace:*",
         "@hyperframes/player": "workspace:*",
         "@hyperframes/sdk": "workspace:*",
