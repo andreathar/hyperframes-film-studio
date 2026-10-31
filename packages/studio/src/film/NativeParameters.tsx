@@ -40,7 +40,7 @@ export function ChoiceSelect({
 function SlotList({ model }: { model: AccountModel }) {
   if (model.slots.length === 0) return null;
   return (
-    <ul className="flex flex-col gap-1 text-step-11 text-panel-text-3">
+    <ul className="flex flex-col gap-1 text-step-12 text-panel-text-3">
       {model.slots.map((slot) => (
         <li key={slot.name}>
           {slot.name} · {slot.mediaKinds.join(", ")}

@@ -71,7 +71,7 @@ function CompiledPrompt({ prompt }: { prompt: string | null }) {
   return (
     <div className="flex flex-col gap-1">
       <span className={headingClass}>Compiled prompt</span>
-      <pre className="font-mono text-step-11 whitespace-pre-wrap text-panel-text-3">{prompt}</pre>
+      <pre className="font-mono text-step-12 whitespace-pre-wrap text-panel-text-3">{prompt}</pre>
     </div>
   );
 }

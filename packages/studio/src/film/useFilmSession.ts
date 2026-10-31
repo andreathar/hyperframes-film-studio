@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { SCENE_AUTHORING_INSTRUCTIONS } from "@hyperframes/film-production/browser";
 import { copyTextToClipboard } from "../utils/clipboard";
 import {
@@ -29,6 +29,8 @@ const READINESS: AssistantReadinessView = {
   evidence: "This Studio session has no film assistant host. Copy handoff keeps the instruction.",
 };
 
+const noop = () => {};
+
 const NEXT_BLOCKED = "Needs a film project. Connecting one arrives with the film host.";
 
 export function useFilmSession(showToast: (message: string, tone?: "error" | "info") => void): {
@@ -36,16 +38,21 @@ export function useFilmSession(showToast: (message: string, tone?: "error" | "in
   assistant: AssistantPanelProps;
 } {
   const [instruction, setInstruction] = useState("");
+  const onNextStep = useCallback(() => showToast(NEXT_BLOCKED, "info"), [showToast]);
+  const onCancel = useCallback(() => setInstruction(""), []);
+  const onCopyHandoff = useCallback(() => {
+    void copyHandoff(instruction, showToast);
+  }, [instruction, showToast]);
   return {
     production: {
       shot: DISCONNECTED_SHOT,
       brief: null,
       compilation: null,
       snapshot: null,
-      onBriefChange: () => {},
-      onApplyProposal: () => {},
-      onPrepare: () => {},
-      onNextStep: () => showToast(NEXT_BLOCKED, "info"),
+      onBriefChange: noop,
+      onApplyProposal: noop,
+      onPrepare: noop,
+      onNextStep,
     },
     assistant: {
       contextLabel: "No film project · no shot · revision unavailable",
@@ -54,12 +61,10 @@ export function useFilmSession(showToast: (message: string, tone?: "error" | "in
       shotDialogue: "",
       draftInstruction: instruction,
       onInstructionChange: setInstruction,
-      onSend: () => {},
-      onApply: () => {},
-      onCancel: () => setInstruction(""),
-      onCopyHandoff: () => {
-        void copyHandoff(instruction, showToast);
-      },
+      onSend: noop,
+      onApply: noop,
+      onCancel,
+      onCopyHandoff,
     },
   };
 }

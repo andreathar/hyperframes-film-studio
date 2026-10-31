@@ -60,7 +60,7 @@ function ReferenceRow({
   return (
     <li className="flex flex-col gap-1">
       <span className="text-panel-text-0">{reference.role}</span>
-      <span className="font-mono text-step-11 text-panel-text-4">
+      <span className="font-mono text-step-12 text-panel-text-4">
         {reference.mediaKind} · {reference.id}
       </span>
       <RoleSelect

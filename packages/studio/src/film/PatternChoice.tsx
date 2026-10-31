@@ -101,7 +101,7 @@ function PatternHelp({ pattern }: { pattern: ScenePatternV1 | null }) {
   if (!pattern) return <p className={mutedClass}>{PATTERN_NONE_HINT}</p>;
   const roles = pattern.requiredReferenceRoles.map((role) => REFERENCE_ROLE_TERMS[role].label);
   return (
-    <div className="flex items-start gap-2 text-step-11 leading-relaxed text-panel-text-3">
+    <div className="flex items-start gap-2 text-step-12 leading-relaxed text-panel-text-3">
       <p className="min-w-0 flex-1">{pattern.summary}</p>
       <Popover
         aria-label={PATTERN_MORE_TERM.hint}

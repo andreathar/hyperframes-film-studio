@@ -89,6 +89,13 @@
       }
     },
     {
+      "files": ["packages/studio/src/film/**/*.ts", "packages/studio/src/film/**/*.tsx"],
+      "rules": {
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "error"
+      }
+    },
+    {
       "files": ["packages/cli/src/**/*.ts"],
       "excludeFiles": [
         "**/*.test.ts",
