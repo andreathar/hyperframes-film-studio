@@ -33,8 +33,9 @@ export function assistantReasons(input: {
   };
 }
 
-function sendReason(readiness: AssistantReadinessView): string | null {
-  if (readiness.state === "ready") return null;
+/** `limited` still lets the assistant help (READINESS_TERMS.limited), so only states with a recovery action block. */
+export function sendReason(readiness: AssistantReadinessView): string | null {
+  if (readiness.state === "ready" || readiness.state === "limited") return null;
   const term = READINESS_TERMS[readiness.state];
   return `${term.label}. ${term.action ?? term.hint}`;
 }

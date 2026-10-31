@@ -14,21 +14,28 @@ export interface BlockedButtonProps extends ButtonProps {
  */
 export function BlockedButton({ reason, ...props }: BlockedButtonProps) {
   const reasonId = useId();
-  if (reason === null) return <Button {...props} />;
+  const blocked = reason !== null;
+  // One tree shape in both states, so unblocking never remounts (and unfocuses) the button.
   return (
     <div className="flex flex-col items-start gap-0.5">
-      <Tooltip label={reason}>
-        <Button
-          {...props}
-          aria-disabled="true"
-          aria-describedby={reasonId}
-          className={cn("opacity-40 cursor-not-allowed", props.className)}
-          onClick={(event) => event.preventDefault()}
-        />
+      <Tooltip label={reason ?? ""} disabled={!blocked}>
+        {blocked ? (
+          <Button
+            {...props}
+            aria-disabled="true"
+            aria-describedby={reasonId}
+            className={cn("opacity-40 cursor-not-allowed", props.className)}
+            onClick={(event) => event.preventDefault()}
+          />
+        ) : (
+          <Button {...props} />
+        )}
       </Tooltip>
-      <p id={reasonId} className={mutedClass}>
-        {reason}
-      </p>
+      {blocked ? (
+        <p id={reasonId} className={mutedClass}>
+          {reason}
+        </p>
+      ) : null}
     </div>
   );
 }

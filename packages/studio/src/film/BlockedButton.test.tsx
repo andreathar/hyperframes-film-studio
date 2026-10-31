@@ -43,18 +43,47 @@ describe("BlockedButton", () => {
     expect(button.getAttribute("aria-describedby")).toBe(reason?.id);
   });
 
-  it("stays focusable and ignores Enter and Space", () => {
+  it("stays focusable and ignores the click a keyboard activation produces", () => {
     const onClick = vi.fn();
     const { button } = mount("Needs a thing", onClick);
     button.focus();
     expect(document.activeElement).toBe(button);
-    for (const key of ["Enter", " "]) {
-      act(() => {
-        button.dispatchEvent(new KeyboardEvent("keydown", { key, bubbles: true }));
-        button.dispatchEvent(new KeyboardEvent("keyup", { key, bubbles: true }));
-      });
-    }
+    act(() => {
+      button.dispatchEvent(new MouseEvent("click", { bubbles: true, detail: 0 }));
+    });
     expect(onClick).not.toHaveBeenCalled();
+  });
+
+  it("the same keyboard-style click does call onClick when not blocked", () => {
+    const onClick = vi.fn();
+    const { button } = mount(null, onClick);
+    button.focus();
+    act(() => {
+      button.dispatchEvent(new MouseEvent("click", { bubbles: true, detail: 0 }));
+    });
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
+  it("keeps the same focused node when unblocked, and when blocked again", () => {
+    const { host, button } = mount("Needs a thing", vi.fn());
+    button.focus();
+    const rerender = (reason: string | null) =>
+      act(() => {
+        root?.render(
+          <BlockedButton reason={reason} type="button">
+            Go
+          </BlockedButton>,
+        );
+      });
+    rerender(null);
+    expect(host.querySelector("button")).toBe(button);
+    expect(document.activeElement).toBe(button);
+    expect(button.hasAttribute("aria-disabled")).toBe(false);
+    expect(host.querySelector("p")).toBeNull();
+    rerender("Needs a thing again");
+    expect(host.querySelector("button")).toBe(button);
+    expect(document.activeElement).toBe(button);
+    expect(button.getAttribute("aria-disabled")).toBe("true");
   });
 
   it("wraps the button in a tooltip trigger when blocked", () => {

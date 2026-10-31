@@ -29,10 +29,7 @@ const READINESS: AssistantReadinessView = {
   evidence: "This Studio session has no film assistant host. Copy handoff keeps the instruction.",
 };
 
-const PREPARE_BLOCKED = "Prepare stays blocked until this project is connected to the film ledger.";
 const NEXT_BLOCKED = "Needs a film project. Connecting one arrives with the film host.";
-const SEND_BLOCKED =
-  "Send stays blocked until an assistant host is connected. Copy handoff is available.";
 
 export function useFilmSession(showToast: (message: string, tone?: "error" | "info") => void): {
   production: ProductionPanelProps;
@@ -47,7 +44,7 @@ export function useFilmSession(showToast: (message: string, tone?: "error" | "in
       snapshot: null,
       onBriefChange: () => {},
       onApplyProposal: () => {},
-      onPrepare: () => showToast(PREPARE_BLOCKED, "info"),
+      onPrepare: () => {},
       onNextStep: () => showToast(NEXT_BLOCKED, "info"),
     },
     assistant: {
@@ -57,7 +54,7 @@ export function useFilmSession(showToast: (message: string, tone?: "error" | "in
       shotDialogue: "",
       draftInstruction: instruction,
       onInstructionChange: setInstruction,
-      onSend: () => showToast(SEND_BLOCKED, "info"),
+      onSend: () => {},
       onApply: () => {},
       onCancel: () => setInstruction(""),
       onCopyHandoff: () => {
