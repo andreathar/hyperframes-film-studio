@@ -130,3 +130,7 @@ Hyperframes remains Apache-2.0; see the root LICENSE and retain upstream notices
 ## Existing film records
 
 Use `bun run film:import --workspace /path/to/Movies_Projects` for a read-only inventory/reconciliation report. Add `--output .film-workspace/import-v1` to save a new private candidate snapshot. See [the import contract](IMPORT.md) for source namespaces, hash checks and approval boundaries. This intake stage does not yet synchronize the production records with a timeline or activate providers.
+
+## Mapping and candidate review
+
+Use `bun run film:review --import <private-import.json>` to initialize a project-scoped review. Resume it with `--state`, propose explicit `--actions`, and save to a new `--output` file. See [the review contract](REVIEW.md). The service keeps mappings/reference roles/candidate takes bound to the import fingerprint and review revision; it grants no artistic or spending approval.

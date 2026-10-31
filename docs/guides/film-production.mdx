@@ -47,3 +47,7 @@ bun run film:import --workspace /path/to/Movies_Projects
 ```
 
 It reports shot/reference/take counts, missing media, changed hashes and unresolved ID links without changing the source. Add `--output .film-workspace/import-v1` to save a candidate snapshot in a new directory. Imported approval declarations remain evidence; execution permission is always false. The result is not automatically a renderable composition. The complete intake contract is maintained in the fork's `film-studio/IMPORT.md`.
+
+## Map shots and assign candidates
+
+`bun run film:review --import <private-import.json>` creates an empty local review state. Explicit commands can link plan/legacy shots, assign references with their declared roles and hashes, and select compatible candidate takes. Project identity, import fingerprint, revision and history are checked. Changing a mapping invalidates its dependent candidate selection. Use a new output file for each saved review. This stage does not approve footage, create jobs or alter the timeline; see the fork's `film-studio/REVIEW.md` for the command contract.
