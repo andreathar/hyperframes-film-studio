@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useState } from "react";
 import type { SceneBriefV1 } from "@hyperframes/film-production/browser";
 
 export interface ProposalMemory {
@@ -28,8 +28,9 @@ export function useVisibleProposal(
   contextLabel: string,
   proposal: SceneBriefV1 | null,
 ): SceneBriefV1 | null {
-  const memory = useRef<ProposalMemory>({ label: contextLabel, hidden: null });
-  const next = resolveVisibleProposal(contextLabel, proposal, memory.current);
-  memory.current = next.memory;
+  const [memory, setMemory] = useState<ProposalMemory>({ label: contextLabel, hidden: null });
+  const next = resolveVisibleProposal(contextLabel, proposal, memory);
+  if (next.memory.label !== memory.label || next.memory.hidden !== memory.hidden)
+    setMemory(next.memory);
   return next.visible;
 }

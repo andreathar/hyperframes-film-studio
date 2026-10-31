@@ -1,19 +1,16 @@
-import { useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import type { ScenePatternId } from "@hyperframes/film-production/browser";
 
 /** A pattern picked in this panel, cleared when the shot changes. */
 export function usePinnedPattern(
   shotKey: string,
 ): [ScenePatternId | null, (patternId: ScenePatternId) => void] {
-  const pin = useRef<{ shotKey: string; patternId: ScenePatternId | null }>({
+  const [pin, setPin] = useState<{ shotKey: string; patternId: ScenePatternId | null }>({
     shotKey,
     patternId: null,
   });
-  const [, redraw] = useState(0);
-  if (pin.current.shotKey !== shotKey) pin.current = { shotKey, patternId: null };
-  const pick = (patternId: ScenePatternId) => {
-    pin.current = { shotKey, patternId };
-    redraw((count) => count + 1);
-  };
-  return [pin.current.patternId, pick];
+  if (pin.shotKey !== shotKey) setPin({ shotKey, patternId: null });
+  const patternId = pin.shotKey === shotKey ? pin.patternId : null;
+  const pick = useCallback((id: ScenePatternId) => setPin({ shotKey, patternId: id }), [shotKey]);
+  return [patternId, pick];
 }
