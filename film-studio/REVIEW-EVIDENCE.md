@@ -13,3 +13,5 @@ Research: [source consolidation report](../docs/research/2026-10-31-film-studio-
 | [Durable job ledger](../.omo/evidence/film-provider-jobs-code-review.md)   | [Job delivery](JOBS-DELIVERY.md), commit `edb6a469c`; descriptor confinement, nonregular-file and publication regressions cover the reported findings. |
 
 The [Kling handoff review](../.omo/evidence/kling-handoff-code-review.md) records the initial relocation finding. Its resolution, current stationary-ancestor boundary and canonical parity evidence are in [handoff delivery](KLING-HANDOFF-DELIVERY.md), implementation commit `84ec48ba0`.
+
+The [candidate placement review](../.omo/evidence/film-placement-code-review.md) records its nonblocking masked-validation test finding. The corrected regression and parent verification are in [placement delivery](PLACEMENT-DELIVERY.md), implementation commit `163e613dd`.
