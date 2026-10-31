@@ -1,11 +1,26 @@
 # Stage A: information architecture and UI contract
 
-Status: Stage A deliverable for Gate A, **revision 2** (answers the Gate A round 1 review, verdict FAIL). Branch `film-studio-rebuild`. Date 2026-10-31.
+Status: Stage A deliverable for Gate A, **revision 3** (answers the Gate A round 2 review, verdict FAIL with nine small fixes; revision 2 answered round 1 and folded in the producer's three answers). Branch `film-studio-rebuild`. Date 2026-10-31.
 Author: Stage A (UI/UX). No React was written for this stage. This file is the only input contract for Stage B.
 
 Scored against `BEST-PRACTICES.md` Gate A items A1 to A20. Section 14 is the self-score. Section 15 lists decisions taken and what is still open.
 
-Revision 2 changes, mapped to the review's required fixes:
+Revision 3 changes, mapped to the round 2 fixes (R2-1 to R2-9):
+
+| Round 2 fix | What changed | Where |
+|---|---|---|
+| R2-1 (A1) | The asset-list format banner no longer names a column; the column list is only in "Copy details for support" | 4.11, 9.5, 10.2 |
+| R2-2 (A20) | Every prop and callback is typed with no ellipses; typed `SceneEdit` union, `HostResult` and `FilmHost` interface | 12.9, 12.10 |
+| R2-3 (A20) | Named owner and location for persisted scene records, never under an asset root, with a reload test | 12.10, 9.4 |
+| R2-4 (A15) | Registry row title is the import or review name, else `asset_id`; "first line of notes" removed | 9.5, 12.6 |
+| R2-5 (A2) | "Script from the asset folder" source removed | 8.1, 12.1 |
+| R2-6 (A1) | Cast is a closed host list; "Custom adds a name" removed | 6.11 |
+| R2-7 (A14) | D2 counts partition every existing scene, including scenes whose later lines changed | 4.12, 8.4 |
+| R2-8 | Self-score updated for the amended checklist; border-input range corrected; OQ-13 removed | 3.2, 14, 15 |
+| R2-9 (A20, A16) | Scene-to-importer-shot relationship, account-settings storage and output size, scene id cap of 80, and one-line copy for every workspace and script problem | 12.1, 12.11, 8.3, 10.2 |
+| Recommended | Test seam for the value tables, warning for every non-affirmative `approved`, film-sized tab | 12.12, 9.5, 16 |
+
+Revision 2 changes, mapped to the round 1 required fixes:
 
 | Review fix | What changed | Where |
 |---|---|---|
@@ -101,7 +116,7 @@ One row per region. Gate B must map its component tree one-to-one onto these row
 | R0 | Film host (non-visual, above all film panels, always mounted) | Own film state, the single film history, the live region and the toast host so they survive dock tab switches | None visible | none | contains R0.1 and G3 |
 | R0.1 | Live status | Announce progress, errors and counts for all three panels | Visually hidden text | none (not focusable) | `status` (`aria-live="polite"`, `aria-atomic="true"`) |
 | R1 | Schedule panel (dock id `schedule`, left group, `keepMounted`) | Master list of all scenes; see state, choose a scene, run its next action | Panel wrapper carrying `data-film-scope` | Enter by `Tab` from the dock strip, order R1.1 → R1.2 → R1.3 | `region`, `aria-label="Schedule"` |
-| R1.1 | Schedule toolbar | Filter, rebuild from script, undo and redo, scene count | "Show" select, "Update from script", "Undo", "Redo", count text | `Tab` through the four controls in that order. Select opens with `Enter`, `Space` or `Alt+Down`, `Esc` closes | `toolbar` (`aria-label="Schedule actions"`), `combobox`, `button` |
+| R1.1 | Schedule toolbar | Filter, rebuild from script, undo and redo, scene count, save status | "Show" select, "Update from script", "Undo", "Redo", count text, save-status text ("Saved", "Saving...", "Not saved: your schedule is kept only until Studio closes.", "Couldn't save. Retry") | `Tab` through the four controls in that order. Select opens with `Enter`, `Space` or `Alt+Down`, `Esc` closes | `toolbar` (`aria-label="Schedule actions"`), `combobox`, `button` |
 | R1.2 | Asset-folder banner | Say plainly when the asset folder or its asset list cannot be used | Message, "Check again", "Folder details" | `Tab` after the toolbar (only when shown). "Folder details" opens D5, `Esc` closes and returns focus | `region` (`aria-labelledby` the message) |
 | R1.3 | Scene list | One fixed-height row per scene with state, title, next action and reason. **Options contain text only; no interactive descendants** | Options. No buttons, links or menus inside an option | One tab stop (roving `tabindex`). `Up/Down` move and select, `Home/End`, `PageUp/PageDown` ±10, digits type-ahead to a scene number, `Enter` runs the primary action, `Shift+F10` or `ContextMenu` opens R1.4, `Alt+Up/Alt+Down` move the scene, `Delete` clears the scene, `Cmd/Ctrl+Z` undo (film scope, 11.3). Pointer: click selects, double-click runs the primary action, right-click opens R1.4 | `listbox` (`aria-label="Scenes"`, `aria-orientation="vertical"`, `aria-describedby` the key hint) / `option` (`aria-selected`, `aria-posinset`, `aria-setsize`) |
 | R1.4 | Scene actions menu | Scene actions without dragging, for the selected scene | Items: "Ask the assistant to draft this scene", "Move up", "Move down", "Move to position...", "Duplicate scene", "Clear scene", "Remove scene". Opened from the list (`Shift+F10`, `ContextMenu`, right-click) and from the "Scene actions" button in R2.1 | `Up/Down` move, `Enter` choose, `Esc` closes and returns focus to where it opened | `menu` / `menuitem` |
@@ -109,7 +124,7 @@ One row per region. Gate B must map its component tree one-to-one onto these row
 | R2 | Production panel (dock id `production`, right group, not `keepMounted`) | Inspect and edit the selected scene with presets | Panel wrapper carrying `data-film-scope` | Enter by `Tab` from the dock strip | `region`, `aria-label="Production"` |
 | R2.1 | Scene header | Which scene, its state, step between scenes, scene actions, undo | Heading "Scene 12 of 100", state label, "Previous scene", "Next scene", "Scene actions" (opens R1.4), "Undo", "Redo" | `Tab` in that order. The heading is `tabindex="-1"` so "Open in Production" can move focus to it | `heading` level 2, `button`, `menu` button (`aria-haspopup="menu"`) |
 | R2.2 | Inspector tabs | Four sections: Scene, Look, References, Check | Tabs | `Tab` into the tablist (one stop), `Left/Right` switch and activate, `Home/End` | `tablist` (`aria-label="Scene sections"`) / `tab` / `tabpanel` |
-| R2.3 | Scene tab | Script line, voice, who, where, action steps, length, coverage, notes | Exact line (read-only text), "Voice" select (host list) or read-only voice, title field, "Who is in this scene" multi-select, "Place" select, "Output" segmented, "Action steps" list with selects and steppers, "Scene length" select, "Coverage style" select, notes box | `Tab` in reading order | `tabpanel`, `group`s with visible labels |
+| R2.3 | Scene tab | Script line, voice, who, where, action steps, length, coverage, notes | Exact line (read-only text), "Voice" select (host list) or read-only voice, title field, "Who is in this scene" multi-select, "Place" select, "Production plan shot" select, "Output" segmented, "Action steps" list with selects and steppers, "Scene length" select, "Coverage style" select, notes box | `Tab` in reading order | `tabpanel`, `group`s with visible labels |
 | R2.4 | Look tab | Camera, lens, light, mood, sound, continuity | Selects `P-SIZE` to `P-MOOD`, "Sound plan" segmented, "Background sound" select, five continuity switches, entry and exit selects | `Tab` in reading order. Selects open as in R1.1 | `tabpanel`, `combobox`, `radiogroup`, `switch` |
 | R2.5 | References tab | Bind reference assets to this scene and record what is still needed | Bound references list, per-row "Role" select and "Remove link", "Add a reference" (opens D3), "Still needed" list, role and character selects with "Save the need" | `Tab` in reading order | `tabpanel`, `list`, `combobox`, `button` |
 | R2.6 | Check tab | What is missing, what is blocked, account settings, written prompt | Check list with "Go to field" buttons, "Account settings" selects, "See the written prompt" disclosure | `Tab` in reading order | `tabpanel`, `list`, `button` (`aria-expanded`) |
@@ -156,7 +171,7 @@ DESIGN.md defines brand tokens by hex. Studio does not use those names; it defin
 | (Studio role) | **Selected row** | `--color-on` wash plus a 3px start bar in `--color-selection`. `--color-selection` is reserved for selection and the playhead (`theme.css`) and is used for nothing else |
 | (Studio role) | **Focus ring** | see 3.2 |
 
-Fonts: **film panels inherit Studio's fonts** (`font-sans`, `font-mono` utilities). DESIGN.md names Inter and IBM Plex Mono, but Studio loads neither, and bundling them or importing them from a font CDN adds weight (B11) and a render-time network call. This is a declared deviation from the wording of A11 (OQ-3 answered, 15).
+Fonts: **film panels inherit Studio's fonts** (`font-sans`, `font-mono` utilities). DESIGN.md names Inter and IBM Plex Mono, but Studio loads neither, and bundling them or importing them from a font CDN adds weight (B11) and a render-time network call. This was a declared deviation from the first wording of A11 and is accepted by the amended A11 (OQ-3, 15).
 
 ### 3.2 Contrast rules (A11)
 
@@ -172,7 +187,7 @@ Computed from the DESIGN.md hex values and from Studio's oklch values (WCAG rela
 | Studio `--color-accent-ink` on `--color-surface` | 6.8 | 9.6 | Ready text and icon, focus ring |
 | Studio `--color-danger-ink` on `--color-surface` | 7.8 | 7.6 | Blocked text and icon |
 | Studio `--color-warning-ink` on `--color-surface` | 5.9 | 8.9 | Warning text and icon |
-| Studio `--color-border-input` on `--color-surface` | about 1.2 to 1.5 | about 1.5 to 2.8 | **Fails 3:1.** See field boundary below |
+| Studio `--color-border-input` on `--color-surface` | about 1.2 to 1.5 | about 1.5 | **Fails 3:1.** See field boundary below |
 
 Rules:
 
@@ -323,6 +338,9 @@ Parity for non-keyboard users, with no control inside the option:
 | Place                                                    |
 | [ Choose a place                                   v]    |
 | Choose from your project's places, or Custom.            |
+| Production plan shot (optional)                          |
+| [ Not linked                                       v]    |
+| Links this scene to a shot in your production plan.      |
 |                                                          |
 | Output   (o) Video   ( ) Still image                     |
 | Coverage style                                           |
@@ -555,7 +573,7 @@ no list:  (i) No asset list found in the asset folder.
               Scenes still work. References can't be picked yet.
               [Check again] [Folder details]
 
-bad list: (!) The asset list is missing a column: sha256.
+bad list: (!) The asset list isn't in the format Studio expects.
               Scenes still work. References can't be picked yet.
               [Check again] [Folder details]
 
@@ -568,8 +586,8 @@ unknown location:
               They are listed but can't be picked.
               [Folder details]
 
-workspace:(!) The film workspace couldn't be used: the active film
-              isn't listed in the workspace file.
+workspace:(!) The film workspace couldn't be used.
+              <reason sentence from 10.2>
               Scenes still work. References can't be picked yet.
               [Check again] [Folder details]
 
@@ -609,12 +627,14 @@ Paste source adds, above Split:
 | Update schedule from script                      |
 +--------------------------------------------------+
 | The script changed since the scenes were made.   |
-|  92 scenes stay the same                         |
+|  Now: 105 scenes                                 |
+|  92 stay the same                                |
+|  5 have changed lines (they keep your edits)     |
+|  8 no longer match a script line                 |
+|    2 you never edited (removed)                  |
+|    6 you edited                                  |
 |  4 new scenes will be added                      |
-|  8 scenes no longer match a script line          |
-|    2 of them you never edited (removed)          |
-|    6 of them you edited                          |
-| Edited scenes                                    |
+| Edited scenes (the 6 above)                      |
 |  (o) Keep my edits (recommended)                 |
 |  ( ) Replace 6 edited scenes                     |
 | [ Update schedule ]  [ Cancel ]                  |
@@ -850,7 +870,8 @@ Group label: "Keep the same as the previous scene". A switch that is on goes to 
 
 | Control | Options | Hint |
 |---|---|---|
-| Who is in this scene `P-CAST` (multi-select, `subjects[]`) | Characters from the project (provided by props); "Custom" adds a name | "Pick everyone who appears, even if they don't speak." |
+| Who is in this scene `P-CAST` (multi-select, `subjects[]`) | A closed list of characters from the project (host-supplied `cast`). No Custom option | "Pick everyone who appears, even if they don't speak. Someone missing? Mention them in Notes." |
+| Production plan shot `P-PLANSHOT` (`planShotKey`, closed host list `planShots`, first option "Not linked", no Custom) | Plan shots from the film import | "Links this scene to a shot in your production plan. Studio never links them for you." |
 | Place `P-PLACE` (`setting.place`) | Places from the project (provided by props); "Custom" | "Choose from your project's places, or Custom." |
 | Scene length `P-LENGTH` (`output.durationFrames`) | 2 s, 3 s, 4 s, 5 s, 6 s, 8 s, 10 s | "About how long the scene runs. Account limits are checked in Check." |
 | Action step `P-ACTION` (`beats[].subjectMotion`; per step also `P-ENDING`, and "Starts at" and "Ends at" steppers, 12.3 and 12.4) | Stays still and speaks; Turns to look; Walks into frame; Sits down or stands up; Picks up an object; Sets an object down; Leans in; Reacts to what was said; Custom | "One clear action per step with a visible end." |
@@ -977,8 +998,7 @@ Goal: one action, offline, no model. All scenes start empty. Ids derive from the
 1. The producer opens Schedule. With no scenes, R1.5 shows "No scenes yet" and one button, "Create scenes from script" (4.2).
 2. The button opens D1. Focus lands on "Script source".
 3. "Script source" lists what exists, each with a hint:
-   - "Script already imported for this project": "Uses the lines from your film import." The film workspace file exists (9.5), so the importer path applies. The option is offered when the `ScriptSourceAdapter` returns lines (12.12). When it cannot, it is disabled with the plain reason beside it ("The film workspace couldn't be used: ..." for an importer error from 9.5, or "Studio can't read lines from the project script file yet." because the script file's layout is not yet specified, OQ-6) and "Paste a script" is chosen. The producer is never left with a dead dialog.
-   - "Script from the asset folder": offered only when the adapter reports lines there; otherwise disabled with the plain reason ("Asset folder not configured." or "No script found in the asset folder.").
+   - "Script already imported for this project": "Uses the lines from your film import." The film workspace file exists (9.5), so the importer path applies. The option is offered when the `ScriptSourceAdapter` returns lines (12.12). When it cannot, it is disabled with the plain reason beside it ("The film workspace couldn't be used: ..." for an importer error from 9.5, or "Studio can't read lines from the project script file yet." because the script file's layout is not yet specified, OQ-6; every reason is in 10.2) and "Paste a script" is chosen. The producer is never left with a dead dialog.
    - "Paste a script": shows the paste box (4.12). Dialogue is free text by A1.
 4. "Split into scenes by": "One scene per script line" (default), "One scene per speaker turn", "One scene per paragraph". Hints: "Each line becomes its own scene.", "Consecutive lines by the same speaker share a scene.", "A blank row starts a new scene."
 5. The preview updates live and is read by R0.1: "Found 98 script lines. 98 scenes will be made. 3 lines have no speaker." Nothing is created yet. A line without a speaker still makes a scene, flagged "No speaker" on its row.
@@ -998,18 +1018,20 @@ Tolerant, never an error for ordinary writing:
 
 ### 8.3 Line ids (hash-based, not positional)
 
-- An imported line keeps the id it has in the source. If a source id is not a producer-safe id (`^[A-Za-z0-9][A-Za-z0-9_-]{0,119}$`), the adapter reports "script lines have invalid ids" and offers Paste.
+- An imported line keeps the id it has in the source. An imported id must match the legacy manifest id pattern, `^[A-Za-z][A-Za-z0-9_-]{0,79}$` (`legacy/manifest.mjs`), and be at most 74 characters so that `scene-` plus the id stays within the same 80-character limit (12.1). If any id fails, the adapter reports `invalid-ids` (copy in 10.2) and offers Paste.
 - A pasted line gets `line-` plus the first 8 hex characters of the SHA-256 of its normalised speaker and text. Normalisation is for hashing only (trim, collapse runs of white space to one space, Unicode NFC); the stored text is the exact text. An exact duplicate of an earlier line gets `-2`, `-3` and so on in order of appearance.
 - The id does not change when other lines are inserted, removed or reordered. It does change when the line's own words change, and Studio says so: a reworded line is one removed line and one new line (8.4). A separate display number (the position, 1 to N) is shown to the producer and is never used as a key (B3).
 
 ### 8.4 Updating from the script (D2, A14)
 
-- **Match** by `lineId`. A scene is matched when its first line's id is in the new script.
-- **Unchanged**: the scene's lines and their order are the same.
-- **New**: a new script line not in any scene. A new scene is added after the scene of its script predecessor.
-- **No longer match**: a scene whose first line is gone (removed, or reworded, which changes the id).
-- **Edited** (the number D2 reports): a scene that is not Empty, or whose title, notes, needs, presets, links, steps or suggestions the producer changed since it was created or last replaced. A scene that is Empty and untouched is not edited.
-- Scenes that no longer match and were never edited are removed (undoable, counted in the dialog). Scenes that no longer match and were edited stay, tagged "Script line removed", under the default "Keep my edits (recommended)". The alternative "Replace 6 edited scenes" removes those 6 and needs a second confirm line: "This removes your edits in 6 scenes. You can undo." Nothing is overwritten silently, and the default never discards an edit.
+- **Match** by `lineId`. A scene's identity is its first line's id (12.1).
+- Every existing scene falls into exactly one of three groups, so the counts always sum to the scene total:
+  1. **Unchanged**: its first line is in the new script and its member lines are exactly the same, in the same order.
+  2. **Changed lines**: its first line is in the new script but its member lines differ (a later line was reworded, removed or added, which happens with "per speaker turn" and "per paragraph"). The scene keeps its identity and every producer edit, takes the new `lineIds`, and is tagged "Script changed" so the producer can review it. It is never removed or replaced.
+  3. **No longer match**: its first line is not in the new script (removed, or reworded, which changes the id).
+- **New** scenes are additional: each new script line not in any scene starts a new scene, added after the scene of its script predecessor. Total after the update is the total before, minus the removed scenes, plus the new ones. D2 shows "Now: N scenes" so the producer can check the sum.
+- **Edited** (the number D2 reports for the third group): a scene that is not Empty, or whose title, notes, needs, presets, links, steps or suggestions the producer changed since it was created or last replaced. A scene that is Empty and untouched is not edited.
+- Scenes in the third group that were never edited are removed (undoable, counted in the dialog). Edited ones stay, tagged "Script line removed", under the default "Keep my edits (recommended)". The alternative "Replace 6 edited scenes" removes those 6 and needs a second confirm line: "This removes your edits in 6 scenes. You can undo." Nothing is overwritten silently, and the default never discards an edit. "Replace" never touches the first two groups.
 - If nothing changed, D2 says "Nothing to update. 98 scenes already match." and offers only "Close".
 - Scenes the producer has moved keep their positions; new scenes follow their script predecessor.
 
@@ -1059,6 +1081,7 @@ This is for `docs/` and the Stage B PR, not for any producer screen.
 | Validation at startup | Each entry must be absolute, exist (else reason `missing`), and be a readable directory (else reason `denied`). Unset gives `unset`. The result is a typed `root-unavailable` with that reason (B33), never a fallback to samples. Paths are canonicalised with `realpath`; escaping symlinks are refused (B30). |
 | Where the producer meets it | Only the banner and D5 (4.11, 9.3), in plain words. |
 | Read-only | The indexer never writes, creates or deletes inside a root (B26). |
+| Scene data folder | A second operator setting, `filmDataDir` (environment variable `HYPERFRAMES_FILM_DATA_DIR`), default unset, names the private folder where scene records are saved. It must not be inside any asset root and must not contain one (12.10). Never shown in the UI; when unset the Schedule says "Not saved: your schedule is kept only until Studio closes." |
 
 It fits the two producer roots in `local-asset-roots.md`: the Movies_Projects folder (the one holding `workspace.json`) and the film workspace (`.film-workspace/`: imports and the review file), as two list entries. Studio resolves the active film's project folder from `workspace.json` and reads `asset-registry.csv` there (9.5); an entry that is itself a project folder (it holds `asset-registry.csv`) is also accepted. This is a proposal for Stage B to ratify.
 
@@ -1072,7 +1095,7 @@ Verified live by the producer on pop-os; the cloud VM cannot see these files and
 
 Strict validation (B34):
 
-- The header must contain all eight names, matched case-sensitively after removing a byte order mark; order does not matter and extra columns are ignored. A missing column is a list-level error: "The asset list is missing a column: sha256." No row is read.
+- The header must contain all eight names, matched case-sensitively after removing a byte order mark; order does not matter and extra columns are ignored. A missing column is a list-level error shown as "The asset list isn't in the format Studio expects." No row is read. The names of the missing columns are never shown in the UI; they are included only in "Copy details for support" (A1).
 - The file is parsed as quoted CSV (commas and line breaks inside quotes are valid, as `notes` may need them). Bad quoting, a wrong field count, an empty `asset_id`, an `asset_id` that is not a producer-safe id, a duplicate `asset_id` (both rows are flagged) and a non-empty `sha256` that is not 64 hex characters are row problems. **Rows with problems are never dropped:** each is reported with its line number in the banner ("3 rows in the asset list have problems, first on line 12") and listed in the picker under "Rows with problems", not selectable, with the line number and the reason.
 
 Column to index record (B27):
@@ -1085,7 +1108,7 @@ Column to index record (B27):
 | `source` | `provenance.origin` | Kept verbatim and shown read-only as the row's source text. The record's provenance kind is `registry-csv`, with the CSV file reference and its hash. Import and review records keep `import-json` and `review-json` |
 | `sha256` | `sha256` | Empty: the state is `observed-unverified`. Present: compared with the observed hash (async, bounded, cached by path, size and mtime; B31) to give `verified` or `hash-mismatch` |
 | `approved` | `approved` | Read-only display, see "Approved" below |
-| `notes` | `notes` | Read-only text, shown as a secondary line. Because the registry has no title column, the row title is the import or review record's name when there is one, otherwise the first line of `notes`, otherwise `asset_id` |
+| `notes` | `notes` | Read-only text, shown as a secondary line. Because the registry has no title column, the row title is the import or review record's name when there is one, otherwise `asset_id`. `notes` is never used as a title |
 
 **Path base and provider ids.** The header is known; the values in `path_base` are not (no sample row was provided), and none is invented. Stage B ships `PATH_BASES`, a typed table from a `path_base` value to one of two kinds: `file` with a root-relative base folder, or `provider` (the `path_or_provider_id` is an identifier at a generation provider, not a file). The table is filled from the producer's real vocabulary (OQ-15) and never from a guess.
 
@@ -1093,7 +1116,7 @@ Column to index record (B27):
 - `provider`: the item is not a file on this computer. It is listed under "Provider items (not files on this computer)", has no thumbnail, is never hashed, is not selectable, and says "Can't be used as a reference until it is a file on this computer." It keeps its `asset_id` and provider id as read-only text. It is never given a file state it has not earned.
 - A `path_base` not in the table is `unresolved`: listed, not selectable, "Studio doesn't know this location yet." The banner counts them: "12 assets use a location Studio doesn't know yet." "Copy details for support" includes each distinct `path_base`, `kind` and `approved` value with its count (never paths or hashes), so the real vocabulary can be reviewed and added to the tables without opening the file.
 
-**Approved.** The `approved` column is shown, never changed. Studio has no approve control, never writes the column, and never infers an approval from a hash, a link or a suggestion (approval stays external, `PRODUCTION-DESIGN.md`). Display: an empty value is "Approval: not recorded"; a value the typed `APPROVED` table recognises as affirmative or negative is "Approved" or "Not approved"; any other value is shown verbatim as "Approval: <value>". The value never gates selection (verification by checksum does, A15). A scene that links an asset not recorded as approved gets a host-supplied warning check, never a blocker (OQ-16).
+**Approved.** The `approved` column is shown, never changed. Studio has no approve control, never writes the column, and never infers an approval from a hash, a link or a suggestion (approval stays external, `PRODUCTION-DESIGN.md`). Display: an empty value is "Approval: not recorded"; a value the typed `APPROVED` table recognises as affirmative or negative is "Approved" or "Not approved"; any other value is shown verbatim as "Approval: <value>". The value never gates selection (verification by checksum does, A15). A scene that links an asset whose `approved` is anything other than an affirmative value (empty, negative or unrecognised) gets a host-supplied warning check, never a blocker (OQ-16).
 
 **Other facts.** Only `verified` assets can be bound (a binding needs `referenceId` and `sha256`, `parse/scene.ts`). The CSV has no archived column, so `archived` comes only from import and review records. Registry rows and import records for the same `assetId` are shown once, with the registry row as the id source.
 
@@ -1129,6 +1152,29 @@ Never show the raw states. Text is final copy; icon shapes follow 3.4 (ready che
 | host not connected (today's stub) | "No assistant is connected to this Studio" | "Copy the request keeps your note." |
 
 "Ask the assistant" is enabled only on "Ready". Executable found or process started is never shown as "Ready".
+
+### 10.2 Plain copy for every workspace, script and asset-list problem
+
+One line per problem, final copy. None shows a file name, column name, code or setting name (A1). The problem names are the data values in 12.12.
+
+| Data value | Where shown | Copy |
+|---|---|---|
+| `WorkspaceProblem` `unreadable` | Banner line 2 | "The film workspace file can't be read." |
+| `no-active-film` | Banner line 2 | "The film workspace file doesn't name an active film." |
+| `active-film-not-unique` | Banner line 2 | "The active film isn't listed exactly once in the film workspace file." |
+| `document-outside-project` | Banner line 2 | "A project document is stored outside the project folder." |
+| `documents-missing` | Banner line 2 | "The production documents for the active film are missing." |
+| `ScriptSourceResult` `workspace-error` | D1, beside the disabled source | "The film workspace couldn't be used. See the message at the top of Schedule." |
+| `script-layout-unknown` | D1, beside the disabled source | "Studio can't read lines from the project script file yet." |
+| `invalid-ids` | D1, beside the disabled source | "Some script lines can't be tracked because their labels are too long or use unusual characters." |
+| `root-unavailable` | D1, beside the disabled source | "The asset folder isn't available." |
+| `AssetIndexResult` `list-missing` | Banner | "No asset list found in the asset folder." |
+| `list-invalid` | Banner | "The asset list isn't in the format Studio expects." |
+| row problems | Banner and picker group "Rows with problems" | "3 rows in the asset list have problems, first on line 12." Each row: "Line 12: <plain reason>" |
+| `unknownLocations` | Banner | "12 assets use a location Studio doesn't know yet." |
+| `FolderStatus` `partial` | Banner | "1 of 2 asset folders is unavailable: <path>." |
+
+For every problem the banner adds "Scenes still work. References can't be picked yet." except row problems and unknown locations, where it adds "The other references still work." "Copy details for support" carries the technical detail (column names, values and counts, never paths or hashes) for whoever supports the setup.
 
 ## 11. Accessibility and keyboard details
 
@@ -1178,13 +1224,14 @@ interface ScriptLine {
   paragraph: number; // 0-based paragraph in the source
 }
 interface ScriptSource {
-  kind: "imported" | "asset-folder" | "pasted";
+  kind: "imported" | "pasted";
   lines: readonly ScriptLine[];
 }
 ```
 
-- `sceneId = "scene-" + lineIds[0]`. `lineIds` lists every member line in order (one for "per script line", several for "per speaker turn" or "per paragraph"). The id is stable while the first line exists. `scene-` plus a source id longer than 113 characters is rejected by the adapter.
-- `shotKey = sceneId` (the film-production shot-key pattern allows it). The React key and every callback use `sceneId`, never the array index (B3). The display number (1 to N) is separate.
+- `sceneId = "scene-" + lineIds[0]`. `lineIds` lists every member line in order (one for "per script line", several for "per speaker turn" or "per paragraph"). The id is stable while the first line exists. The cap is **80 characters**, the legacy manifest id limit (`^[A-Za-z][A-Za-z0-9_-]{0,79}$`, `legacy/manifest.mjs`), because a scene id can reach that code: `scene-` is 6 characters, so a line id may be at most 74. The adapter rejects a longer imported id (`invalid-ids`). Pasted ids are `line-` plus 8 hex characters plus an optional `-2` style suffix, far under the cap.
+- **Relationship to the importer's shots.** The importer already builds shots keyed `plan:<id>` (production-plan shots, which carry the references) and `manifest:<id>` (legacy shots, which carry the takes), and the review and job records are keyed by those keys. A Schedule scene is a new creative layer above them. It does **not** replace, rename or modify an importer shot, a review or a job, and Studio never matches them automatically. A scene may carry one optional link, `planShotKey`, chosen by the producer in the Scene tab from a closed host list ("Production plan shot", with "Not linked"). Hint: "Links this scene to a shot in your production plan. Studio never links them for you." When linked, the plan shot's own references appear in the picker under "From the linked plan shot" as ordinary rows, and linking one still needs "Use in this scene". The brief's `shotKey` is `planShotKey` when linked and `sceneId` otherwise, so existing review and job flows keyed by the plan shot keep working (the shot-key pattern allows both). The selected-clip to shot lookup stays an explicit metadata lookup (`PRODUCTION-DESIGN.md`).
+- The React key and every callback use `sceneId`, never the array index (B3). The display number (1 to N) is separate.
 - "Edited": the `edited` flag on the scene record, set by the host on any producer change after creation (8.4).
 
 ### 12.2 Preset storage rule
@@ -1192,7 +1239,7 @@ interface ScriptSource {
 - **Ids are persisted, labels are not, prose is not written by the UI.** A scene stores `PresetChoice = { id: string; note: string }`. `note` is empty unless `id` is `custom`.
 - `Custom` with an empty note counts as an open choice. Entering a note sets it.
 - A stored id the catalogue no longer knows displays "Choose ..." with a warning "This choice is no longer offered." and counts as open. It is never dropped silently.
-- The scene record is `ScheduleScene` (12.9), a new additive film-store record owned by Stage B in `@hyperframes/film-production`. `SceneBriefV1` is not edited by the UI. **Stage C builds the brief from the record:** it maps each preset id to its phrase and fills `authoring.patternId` (coverage, null for `custom`), `camera.*`, `setting.*`, `sound.*` and `continuity.*`. Stage B writes no prose into a brief.
+- The scene record is `ScheduleScene` (12.10), a new additive film-store record owned by Stage B in `@hyperframes/film-production`. `SceneBriefV1` is not edited by the UI. **Stage C builds the brief from the record:** it maps each preset id to its phrase and fills `authoring.patternId` (coverage, null for `custom`), `camera.*`, `setting.*`, `sound.*` and `continuity.*`. Stage B writes no prose into a brief.
 - The catalogue is typed data (`film-panels/presets.ts`, written from section 6): `{ key, label, required, allowCustom, options: { id, label, hint }[] }`. A test asserts every option has a hint of at most about 70 characters and that `custom` is last where allowed.
 
 ```ts
@@ -1207,7 +1254,7 @@ interface PresetChoice { id: string; note: string }
 
 - **fps comes from the project**, as a `fps: number | null` prop (integer 1 to 120, as the manifest requires). It is never defaulted. With `null`, "Scene length" and the step steppers are disabled with "Frame rate not known yet", the scene cannot be Ready, and the row reason reads that.
 - Storage is integer frames. "Scene length" options are 2, 3, 4, 5, 6, 8 and 10 s; choosing one stores `Math.round(seconds * fps)`. Display is "4 s (96 frames)". A stored length not in the list shows as its own option, "4.04 s (97 frames) from the account", so a host value is never hidden.
-- Action steps use 0.5 s steppers stored as integer frames. Rules: `0 <= start < end <= lengthFrames`, steps do not overlap. A stepper that would break a rule stops at the nearest valid value and says so in text ("Steps can't overlap. Set to 2.5 s.") through R0.1; nothing is clamped silently.
+- Action steps use 0.5 s steppers stored as integer frames, converted with the same `Math.round(seconds * fps)` as length. Rules: `0 <= start < end <= lengthFrames`, steps do not overlap. A stepper that would break a rule stops at the nearest valid value and says so in text ("Steps can't overlap. Set to 2.5 s.") through R0.1; nothing is clamped silently.
 - Account limits on length (the snapshot's `durationFrames` values) are a Check-tab warning supplied by the host, not a filter on the list.
 - **Still image** (`kind: "image"`): fps and duration are 0 in the contract (`parse/scene.ts` rejects video timing on an image). Length, Action steps, Movement, Sound plan, Background sound, Entry, Exit and Voice are hidden behind "Not used for a still image." and are not required. Their stored values are kept (not deleted) and return if the producer switches back to Video; the switch is undoable. Required choices for an image: coverage, shot size, lens, light type, mood.
 
@@ -1251,7 +1298,7 @@ type Locator =
   | { type: "unresolved"; pathBase: string }; // path_base not in PATH_BASES
 interface ReferenceAsset {
   assetId: string; // asset_id verbatim, never generated
-  title: string | null; // import or review name, else first line of notes, else null (the id is shown)
+  title: string | null; // import or review name, else null (the asset_id is shown). Never derived from notes
   kind: "image" | "video" | "audio" | "doc" | null; // null: "Kind unknown", not selectable
   sha256: string | null; // null: state is observed-unverified
   state: AssetState;
@@ -1277,7 +1324,7 @@ interface RowProblem { line: number; reason: string } // asset-list rows that fa
 ### 12.7 Checks, hints and who computes what
 
 ```ts
-type FieldId = PresetKey | "length" | "cast" | "place" | "steps" | "links"
+type FieldId = PresetKey | "length" | "cast" | "place" | "planShot" | "steps" | "links"
   | "voice" | "notes" | "title";
 interface Check { id: string; severity: "blocking" | "warning" | "info"; text: string;
   fieldId: FieldId | null; fixLabel: string | null }
@@ -1296,51 +1343,255 @@ type ChecksStatus = "unavailable" | "ok";
 - Row height is exactly 72px (three 20px lines plus 12px padding), identical in the narrow and wide layouts. The virtualizer uses `estimateSize: () => 72`, no `measureElement`, overscan 6, and `aria-setsize` equals the real total. A fixed height makes `scrollToIndex` exact for Home, End and digit jumps (B1, B2). With 100 scenes about 10 to 14 rows are in the DOM.
 - Text is single-line with an ellipsis, so a longer title or a larger text size cannot change the height. The full text is always in the inspector. The picker list uses fixed 64px rows under the same rule.
 
-### 12.9 Props per region
+### 12.9 Props per region (fully typed)
 
-All collections are `readonly`. Every callback takes `sceneId` and, for mutations, the `expectedRevision` (12.10). Components hold no domain state; R0 owns it.
+All collections are `readonly`. Components hold no domain state; R0 owns it and passes data and callbacks only. Every mutation goes through one callback, `onEdit(sceneId, edit)`, whose payload is the `SceneEdit` union below; R0 adds the `expectedRevision` (12.10). Final spellings belong to Stage B, the fields, payloads and meanings are the contract. The shared vocabulary comes first.
+
+```ts
+type SceneState = "empty" | "drafted" | "ready" | "blocked";
+type SceneFilter = "all" | "empty" | "drafted" | "ready" | "blocked" | "needs-reference";
+type InspectorTab = "scene" | "look" | "references" | "check";
+type MenuSource = "keyboard" | "pointer" | "button";
+type ScheduleAction = "draft" | "move-up" | "move-down" | "move-to" | "duplicate" | "clear" | "remove";
+type SplitRule = "line" | "speaker-turn" | "paragraph";
+type TaskId = "draft" | "other-camera" | "tighten-action" | "check-continuity" | "suggest-references" | "explain-checks";
+type ScopeId = "this" | "empty" | "filtered";
+type ProviderId = "codex" | "claude";
+type SuggestionGroup = "look" | "action" | "sound" | "continuity";
+type SaveStatus = "saved" | "saving" | "session-only" | "error";
+type AssistantState = "ready" | "missing-cli" | "unauthenticated" | "unsupported-protocol"
+  | "unavailable-mode" | "limited-usage" | "not-connected";
+
+interface HostOption { id: string; label: string } // closed host list: cast, plan shots, voices, providers
+interface PresetOption { id: string; label: string; hint: string }
+interface PresetCatalogEntry { label: string; required: boolean; allowCustom: boolean; options: readonly PresetOption[] }
+type PresetCatalogue = Readonly<Record<PresetKey, PresetCatalogEntry>>;
+interface HistoryView { undoLabel: string | null; redoLabel: string | null }
+interface PrimaryAction { label: string; reason: string }
+interface SceneRow {
+  sceneId: string; number: number; title: string; state: SceneState; pending: boolean;
+  nextLabel: string; reason: string; summary: string | null; refNote: string | null; creativeOnly: boolean;
+}
+interface AccountField { key: string; label: string; options: readonly { value: string; label: string }[]; selected: string | null }
+interface AccountSettingsView { fields: readonly AccountField[] }
+interface BannerView { kind: BannerKind; text: string; detail: string | null }
+type BannerKind = "folder-unset" | "folder-missing" | "folder-denied" | "folder-partial"
+  | "workspace-error" | "list-missing" | "list-invalid" | "rows-with-problems"
+  | "unknown-locations" | "none-usable";
+interface SuggestionView {
+  suggestionId: string; sceneId: string; sceneLabel: string; revision: number; dialogueUnchanged: boolean;
+  groups: Readonly<Record<SuggestionGroup, readonly { fieldId: FieldId; from: string; to: string }[]>>;
+}
+interface AssistantStatusView { state: AssistantState; help: string | null } // shown text comes from 10.1, never the host's raw words
+interface ScenePreview { sceneCount: number; lineCount: number; linesWithoutSpeaker: number; firstLine: string | null }
+interface UpdatePlan {
+  unchanged: number; changedLines: number; noLongerMatch: number;
+  noLongerMatchUnedited: number; noLongerMatchEdited: number; added: number;
+}
+interface FolderDetail { path: string; status: "ok" | "unset" | "missing" | "denied" | "no-list" }
+```
+
+```ts
+interface ScheduleToolbarProps {
+  filter: SceneFilter; counts: Readonly<Record<SceneFilter, number>>; shownCount: number;
+  saveStatus: SaveStatus; history: HistoryView;
+  onFilterChange: (filter: SceneFilter) => void;
+  onOpenUpdate: () => void; onUndo: () => void; onRedo: () => void;
+}
+interface FolderBannerProps {
+  banner: BannerView | null; checking: boolean;
+  onCheckAgain: () => void; onOpenFolderDetails: () => void;
+}
+interface SceneListProps {
+  rows: readonly SceneRow[]; selectedId: string | null; totalCount: number;
+  onSelect: (sceneId: string) => void;
+  onRunNext: (sceneId: string) => void;
+  onOpenMenu: (sceneId: string, source: MenuSource) => void;
+  onMoveBy: (sceneId: string, delta: -1 | 1) => void;
+  onClear: (sceneId: string) => void;
+}
+interface SceneActionsMenuProps {
+  sceneId: string; canMoveUp: boolean; canMoveDown: boolean;
+  onAction: (sceneId: string, action: ScheduleAction) => void; onClose: () => void;
+}
+interface ScheduleEmptyProps { onOpenCreate: () => void }
+interface SceneHeaderProps {
+  number: number; total: number; state: SceneState; history: HistoryView;
+  onPrevious: () => void; onNext: () => void; onOpenMenu: (source: MenuSource) => void;
+  onUndo: () => void; onRedo: () => void;
+}
+interface ProductionPanelProps {
+  scene: ScheduleScene | null; tab: InspectorTab; catalogue: PresetCatalogue;
+  dialogue: readonly DialogueView[]; voices: readonly VoiceOption[] | null;
+  cast: readonly HostOption[]; places: readonly HostOption[]; planShots: readonly HostOption[];
+  fps: number | null; outputSize: { width: number; height: number } | null;
+  assets: ReadonlyMap<string, ReferenceAsset>;
+  checks: readonly Check[]; hints: readonly SmartHint[]; checksStatus: ChecksStatus;
+  account: AccountSettingsView | null; writtenPrompt: string | null;
+  pending: ReadonlySet<FieldId>; conflict: ScheduleScene | null; primary: PrimaryAction;
+  onTabChange: (tab: InspectorTab) => void;
+  onEdit: (sceneId: string, edit: SceneEdit) => void;
+  onOpenPicker: (sceneId: string) => void;
+  onGoToField: (fieldId: FieldId) => void;
+  onHintAction: (actionId: string) => void;
+  onPrimary: (sceneId: string) => void;
+  onAskAssistant: (sceneId: string) => void;
+  onKeepMine: (sceneId: string) => void;
+  onUseTheirs: (sceneId: string) => void;
+}
+interface ReferencePickerProps {
+  sceneLabel: string; status: "loading" | "ready" | "error";
+  assets: readonly ReferenceAsset[]; unregistered: readonly UnregisteredFile[]; problems: readonly RowProblem[];
+  filters: { kind: "all" | "image" | "video" | "audio"; source: "all" | "registry-csv" | "import-json" | "review-json"; show: "usable" | "all" | "plan-shot" };
+  search: string; role: ReferenceRole; message: string | null;
+  onFilters: (filters: ReferencePickerProps["filters"]) => void;
+  onSearch: (text: string) => void; onRole: (role: ReferenceRole) => void;
+  onChoose: (assetId: string) => void; onRetry: () => void; onClose: () => void;
+}
+interface AssistantPanelProps {
+  status: AssistantStatusView; providers: readonly HostOption[]; provider: ProviderId;
+  task: TaskId; scope: ScopeId; scopeCounts: Readonly<Record<ScopeId, number>>; note: string;
+  target: { sceneLabel: string; revision: number } | null; pending: boolean;
+  suggestion: SuggestionView | null; history: HistoryView; message: string | null;
+  onProvider: (provider: ProviderId) => void; onTask: (task: TaskId) => void; onScope: (scope: ScopeId) => void;
+  onNote: (text: string) => void; onSend: () => void; onStop: () => void; onCopyRequest: () => void;
+  onPasteSuggestion: () => void; onSuggestionFile: (file: File) => void;
+  onUse: (suggestionId: string, groups: readonly SuggestionGroup[]) => void; onDismiss: (suggestionId: string) => void;
+  onCheckAgain: () => void; onUndo: () => void; onRedo: () => void; onGoToScene: (sceneId: string) => void;
+}
+interface CreateScenesDialogProps {
+  sources: readonly { kind: ScriptSource["kind"]; label: string; hint: string; disabledReason: string | null }[];
+  source: ScriptSource["kind"]; pasted: string; split: SplitRule;
+  preview: ScenePreview | null; status: "idle" | "previewing" | "creating" | "error"; message: string | null;
+  onSource: (kind: ScriptSource["kind"]) => void; onPaste: (text: string) => void; onSplit: (rule: SplitRule) => void;
+  onConfirm: () => void; onCancel: () => void;
+}
+interface UpdateScheduleDialogProps {
+  plan: UpdatePlan | null; editedChoice: "keep" | "replace"; status: "idle" | "updating" | "error"; message: string | null;
+  onEditedChoice: (choice: "keep" | "replace") => void; onConfirm: () => void; onCancel: () => void;
+}
+interface MoveSceneDialogProps {
+  sceneLabel: string; position: number; total: number;
+  onPosition: (position: number) => void; onConfirm: () => void; onCancel: () => void;
+}
+interface FolderDetailsProps {
+  folders: readonly FolderDetail[]; checking: boolean;
+  onCheckAgain: () => void; onCopyDetails: () => void; onClose: () => void;
+}
+interface PresetSelectProps {
+  label: string; entry: PresetCatalogEntry; value: PresetChoice | null; disabledReason: string | null; hint: string | null;
+  onChange: (choice: PresetChoice | null) => void;
+}
+interface HintProps { id: string; severity: "warning" | "info"; text: string; action: { label: string; onAction: () => void } | null }
+interface InfoTipProps { label: string; children: ReactElement }
+interface StateBadgeProps { state: SceneState | "working" }
+```
+
+`SceneEdit` is the only mutation vocabulary. Each variant is one undo step and each is rejected by the host on a revision mismatch (12.10):
+
+```ts
+type SceneEdit =
+  | { type: "set-title"; title: string }
+  | { type: "set-notes"; notes: string }
+  | { type: "set-preset"; key: PresetKey; choice: PresetChoice | null }
+  | { type: "set-place"; choice: PresetChoice | null }
+  | { type: "set-lock"; key: LockKey; on: boolean }
+  | { type: "set-cast"; castIds: readonly string[] }
+  | { type: "set-kind"; kind: "video" | "image" }
+  | { type: "set-length"; lengthFrames: number | null }
+  | { type: "add-step"; step: ActionStep }
+  | { type: "remove-step"; stepId: string }
+  | { type: "set-step-action"; stepId: string; actionId: string; actionNote: string }
+  | { type: "set-step-ending"; stepId: string; endingId: string; endingNote: string }
+  | { type: "set-step-start"; stepId: string; startFrame: number }
+  | { type: "set-step-end"; stepId: string; endFrame: number }
+  | { type: "link-reference"; link: ReferenceLink }
+  | { type: "unlink-reference"; assetId: string; role: ReferenceRole }
+  | { type: "set-link-role"; assetId: string; from: ReferenceRole; to: ReferenceRole }
+  | { type: "add-need"; need: ReferenceNeed }
+  | { type: "remove-need"; needId: string }
+  | { type: "set-voice"; speaker: string; voiceId: string | null }
+  | { type: "set-account"; key: string; value: string | null }
+  | { type: "link-plan-shot"; shotKey: string | null }
+  | { type: "apply-suggestion"; suggestionId: string; groups: readonly SuggestionGroup[] };
+```
+
+`SceneRow` is produced by one pure selector, `toRow(scene, checks, checksStatus, assets)`. `ScheduleScene` is defined in 12.10.
+
+### 12.10 The scene record, persistence and the host interface
+
+**Scene record.**
 
 ```ts
 interface ScheduleScene {
   sceneId: string; lineIds: readonly string[]; revision: number;
   title: string; notes: string; edited: boolean;
+  planShotKey: string | null; // 12.1: optional link to an importer plan shot
   castIds: readonly string[]; place: PresetChoice | null;
   kind: "video" | "image"; lengthFrames: number | null;
   presets: Partial<Record<PresetKey, PresetChoice>>;
   locks: Partial<Record<LockKey, boolean>>;
-  steps: readonly ActionStep[]; links: readonly ReferenceLink[];
-  needs: readonly ReferenceNeed[];
+  steps: readonly ActionStep[]; links: readonly ReferenceLink[]; needs: readonly ReferenceNeed[];
   voiceBySpeaker: Readonly<Record<string, string>>;
+  account: Readonly<Record<string, string>>; // 12.11
+}
+interface ScheduleSnapshot { filmId: string; scheduleRevision: number; scenes: readonly ScheduleScene[] }
+```
+
+**Who persists, and where (so "survives reload" is testable).**
+
+- The owner is the film host, a `FilmHost` (below) implemented by Stage B in `packages/film-production`. It has two implementations: `MemoryFilmHost`, which keeps the snapshot in memory, and `FileFilmHost`, which writes `<dataDir>/<filmId>/schedule.json` with an atomic write (temporary file then rename). The project's film id is the `activeFilm` from `workspace.json`.
+- `dataDir` is the film host's private data directory, set by the operator (`filmDataDir`, environment variable `HYPERFRAMES_FILM_DATA_DIR`, documented in `docs/` only; default unset, never shown in the UI). It is validated at startup: absolute, a readable and writable directory, and **not inside any asset root and containing none** (compared after `realpath`), because asset roots are read-only by rule (B26). This is the "configured private data directory" `PRODUCTION-DESIGN.md` already calls for.
+- With `dataDir` unset or invalid the host is `MemoryFilmHost` and `saveStatus` is `session-only`. The Schedule shows the plain line "Not saved: your schedule is kept only until Studio closes." (R1.1) and never claims persistence it does not have. `studio-server` has no `/film/*` routes today; wiring them is outside Stage A and Stage B ships the interface, the two implementations and their tests.
+- **Test for "survives reload":** create a `FileFilmHost` on a temporary directory, apply edits, build a second `FileFilmHost` on the same directory and assert the snapshot is identical. A second test asserts `FileFilmHost` refuses a `dataDir` inside a fixture asset root. A third asserts `MemoryFilmHost` reports `session-only`.
+- Persisted: everything in `ScheduleScene`, schedule order (the array order), `scheduleRevision`. Session only (R0): selection, filter, inspector tab, history, open dialogs, note drafts until committed on blur.
+
+**Revisions and outcomes.** Each scene has a host-owned integer `revision`; the schedule has `scheduleRevision`. Every mutation sends the expected revision. The host's answer is the discriminated `HostResult`; the UI shows: row "Saving..." while pending; "Couldn't save changes to Scene 12. Retry." for `rejected`; the conflict card "Scene 12 was changed elsewhere. [Keep mine] [Use theirs]" for `conflict`, keeping both versions until chosen; "Not sure this saved. Check again." for `uncertain`. At compile time Stage C maps `revision` to `SceneBriefV1.reviewRevision` where the host uses it.
+
+```ts
+type HostResult<T> =
+  | { kind: "applied"; value: T }
+  | { kind: "rejected"; reason: string } // plain words, shown as is
+  | { kind: "conflict"; theirs: ScheduleScene }
+  | { kind: "uncertain" };
+
+interface AssistantRequest {
+  sceneIds: readonly string[]; expectedRevisions: Readonly<Record<string, number>>;
+  task: TaskId; scope: ScopeId; note: string; provider: ProviderId;
+}
+interface FilmHost {
+  loadSchedule(): Promise<ScheduleSnapshot | null>; // null: no scenes yet
+  editScene(sceneId: string, expectedRevision: number, edit: SceneEdit): Promise<HostResult<ScheduleScene>>;
+  previewScenes(source: ScriptSource, split: SplitRule): ScenePreview;
+  createScenes(source: ScriptSource, split: SplitRule): Promise<HostResult<ScheduleSnapshot>>;
+  planUpdate(source: ScriptSource, split: SplitRule): UpdatePlan;
+  applyUpdate(source: ScriptSource, split: SplitRule, editedChoice: "keep" | "replace",
+    expectedScheduleRevision: number): Promise<HostResult<ScheduleSnapshot>>;
+  moveScene(sceneId: string, toIndex: number, expectedScheduleRevision: number): Promise<HostResult<ScheduleSnapshot>>;
+  duplicateScene(sceneId: string, expectedScheduleRevision: number): Promise<HostResult<ScheduleSnapshot>>;
+  clearScene(sceneId: string, expectedRevision: number): Promise<HostResult<ScheduleScene>>;
+  removeScene(sceneId: string, expectedScheduleRevision: number): Promise<HostResult<ScheduleSnapshot>>;
+  restore(snapshot: ScheduleSnapshot, expectedScheduleRevision: number): Promise<HostResult<ScheduleSnapshot>>; // undo and redo
+  readScriptSource(): Promise<ScriptSourceResult>;
+  indexAssets(): Promise<AssetIndexResult>;
+  readFolderStatus(): Promise<FolderStatus>;
+  readAssistantStatus(): Promise<AssistantStatusView>;
+  requestSuggestion(request: AssistantRequest, signal: AbortSignal): Promise<HostResult<SuggestionView>>;
+  readClipboardSuggestion(): Promise<HostResult<SuggestionView>>;
+  readSuggestionFile(file: File): Promise<HostResult<SuggestionView>>;
+  copyRequest(request: AssistantRequest): Promise<{ copied: boolean }>;
+  prepareScene(sceneId: string, expectedRevision: number): Promise<HostResult<ScheduleScene>>;
 }
 ```
 
-| Component | Data props | Callback props |
-|---|---|---|
-| `ScheduleToolbar` (R1.1) | `filter`, `counts: Record<SceneFilter, number>`, `shownCount`, `history: { undoLabel: string \| null; redoLabel: string \| null }` | `onFilterChange`, `onOpenUpdate`, `onUndo`, `onRedo` |
-| `FolderBanner` (R1.2) | `folder: FolderStatus` (12.12), `checking: boolean` | `onCheckAgain`, `onOpenFolderDetails` |
-| `SceneList` (R1.3) | `rows: readonly SceneRow[]`, `selectedId: string \| null`, `totalCount` | `onSelect(sceneId)`, `onRunNext(sceneId)`, `onOpenMenu(sceneId, source)`, `onMove(sceneId, toIndex)`, `onClear(sceneId)` |
-| `SceneActionsMenu` (R1.4) | `sceneId`, `canMoveUp`, `canMoveDown` | `onAction(sceneId, ScheduleAction)` |
-| `ScheduleEmpty` (R1.5) | none | `onOpenCreate` |
-| `SceneHeader` (R2.1) | `number`, `total`, `state`, `history` | `onPrevious`, `onNext`, `onOpenMenu`, `onUndo`, `onRedo` |
-| `ProductionPanel` (R2, R2.2 to R2.7) | `scene`, `tab: InspectorTab`, `catalogue`, `dialogue: readonly DialogueView[]`, `voices: readonly VoiceOption[] \| null`, `cast`, `places` (host option lists), `fps`, `assets: ReadonlyMap<string, ReferenceAsset>`, `checks`, `hints`, `checksStatus`, `account: AccountSettingsView \| null`, `writtenPrompt: string \| null`, `pending: ReadonlySet<FieldId>`, `conflict: ScheduleScene \| null`, `primary: { label: string; reason: string }` | `onTabChange`, `onPreset(key, choice)`, `onLock(key, on)`, `onCast`, `onPlace`, `onKind`, `onLength`, `onStep…`, `onTitle`, `onNotes`, `onOpenPicker`, `onUnlink`, `onRole`, `onNeedAdd`, `onNeedRemove`, `onGoToField(fieldId)`, `onHintAction(actionId)`, `onPrimary`, `onAskAssistant`, `onKeepMine`, `onUseTheirs`, `onAccountChange` |
-| `ReferencePicker` (D3) | `assets`, `unregistered`, `filters`, `search`, `role`, `sceneLabel`, `status: "loading" \| "ready" \| "error"` | `onFilter`, `onSearch`, `onRole`, `onChoose(assetId)`, `onClose` |
-| `AssistantPanel` (R3) | `status: AssistantStatusView`, `providers`, `provider`, `task`, `scope`, `scopeCounts`, `note`, `target: { sceneLabel: string; revision: number } \| null`, `pending: boolean`, `suggestion: SuggestionView \| null`, `history` | `onProvider`, `onTask`, `onScope`, `onNote`, `onSend`, `onStop`, `onCopyRequest`, `onPasteSuggestion`, `onSuggestionFile(file)`, `onUse(groups)`, `onDismiss`, `onCheckAgain`, `onUndo`, `onRedo` |
-| `CreateScenesDialog` (D1), `UpdateScheduleDialog` (D2), `MoveSceneDialog` (D4), `FolderDetails` (D5) | the preview or counts the host computed, the source options with their disabled reasons, `pending` | `onChooseSource`, `onChooseSplit`, `onPaste(text)`, `onConfirm`, `onCancel`, `onChooseEdited` |
-| `PresetSelect`, `Hint`, `InfoTip`, `StateBadge` | `catalogue entry`, `value`, `hint`, `disabledReason` | `onChange` |
+Undo and redo are R0 history entries of `{ label, before: ScheduleSnapshot, after: ScheduleSnapshot }` applied through `restore`; scenes are immutable values so snapshots share structure. `checks`, `hints`, `writtenPrompt` and `account` are read-only host outputs (12.7, 12.11) and are not part of the scene record.
 
-Supporting types: `SceneFilter = "all" | "empty" | "drafted" | "ready" | "blocked" | "needs-reference"`; `InspectorTab = "scene" | "look" | "references" | "check"`; `ScheduleAction = "draft" | "move-up" | "move-down" | "move-to" | "duplicate" | "clear" | "remove"`; `AssistantStatusView = { state: "ready" | "missing-cli" | "unauthenticated" | "unsupported-protocol" | "unavailable-mode" | "limited-usage" | "not-connected"; help: string | null }` (the text shown comes from the table in 10.1, never the host's raw words); `SuggestionView = { sceneId: string; sceneLabel: string; revision: number; dialogueUnchanged: boolean; groups: Record<"look" | "action" | "sound" | "continuity", readonly { fieldId: FieldId; from: string; to: string }[]> }`; `FolderStatus` and `AssetIndexResult` are in 12.12.
+### 12.11 Account settings: storage and output size
 
-`SceneRow` is the derived row view, produced by one pure selector `toRow(scene, checks, checksStatus, assets)`: `{ sceneId, number, title, state, pending, nextLabel, reason, summary, refNote, creativeOnly }`.
-
-### 12.10 Persistence, revisions and conflicts
-
-- The host persists scene records; R0 holds only session state. Persisted: everything in `ScheduleScene`, schedule order, the script source reference. Session-only: selection, filter, inspector tab, history, open dialogs.
-- Every scene has a host-owned integer `revision`. Each mutation callback sends `expectedRevision`. The host answers one of four outcomes, matching `PRODUCTION-DESIGN.md`: `applied`, `rejected` (with a plain reason), `conflict` (with `theirs: ScheduleScene`), or `uncertain` (the reply was lost). The UI shows: row "Saving..." while pending; "Couldn't save changes to Scene 12. Retry." for rejected; the conflict card "Scene 12 was changed elsewhere. [Keep mine] [Use theirs]" for conflict, keeping both versions until chosen; "Not sure this saved. Check again." for uncertain.
-- At compile time Stage C maps `revision` to `SceneBriefV1.reviewRevision` where the host uses it; Stage A does not decide that mapping.
-
-### 12.11 Account settings view
-
-`AccountSettingsView` mirrors the existing `NativeChoice` list in `film/nativeChoices.ts`: `{ key, label, options: { value, label }[], selected }[]`, or `null` for "Not read yet". Labels are humanised by 6.12. Options are copied from the account snapshot; nothing is invented.
+- **Storage.** `ScheduleScene.account` maps a setting key from the account snapshot (`ratio`, `resolution`, `count`, and any `enum-<name>`) to the exact option value the snapshot offered (`NativeChoice.options[].value`; a resolution value is `1920×1080` style text). `set-account` writes it; `null` clears it. Length is the exception: the snapshot's duration setting is the same field as the Scene tab's length, `lengthFrames`, so there is one source.
+- **View.** `AccountSettingsView` is built by the host from the snapshot and the scene's `account` map (`selected` is the stored value, else `null`, never a default). It mirrors the existing `NativeChoice` list in `film/nativeChoices.ts`. With no snapshot the Check tab says "Account settings not read yet." and offers "Check again".
+- **Output size.** Width and height come from the scene's stored `resolution` when set; otherwise from the project's `outputSize` prop (the composition's own size), never from a default. When both are missing the host supplies the check "Picture size needed". Stage C parses the stored `resolution` text into `output.width` and `output.height` when building the brief.
+- Labels are humanised by 6.12.
 
 ### 12.12 Closed facts, remaining unknown values, and typed adapters
 
@@ -1376,7 +1627,7 @@ type ScriptSourceResult =
 | Script file layout (OQ-6) | `ScriptSourceResult.unavailable("script-layout-unknown")` | D1 disables "Script already imported": "Studio can't read lines from the project script file yet." Paste is chosen and always works |
 | Importer errors | `AssetIndexResult.workspace-error` | The workspace banner in 4.11 with the importer's reason in plain words |
 
-The picker also lists registry rows with problems (`problems`, with line numbers), provider items and unresolved locations in their own non-selectable groups (9.5). `list-invalid` covers the strict header check; `problems` covers row-level failures, so nothing is dropped.
+Tests inject their own `PATH_BASES`, `KINDS` and `APPROVED` tables, so fixtures declare their own values while the production default stays empty and Stage B never invents a vocabulary to make a fixture work. The picker also lists registry rows with problems (`problems`, with line numbers), provider items and unresolved locations in their own non-selectable groups (9.5). `list-invalid` covers the strict header check; `problems` covers row-level failures, so nothing is dropped.
 
 ### 12.13 What Stage B decides nothing about, and what it may decide
 
@@ -1402,32 +1653,32 @@ Stage A does not propose signature interactions. Up to three are reserved, each 
 
 ## 14. Self-score against Gate A (A1 to A20)
 
-Written to be adversarial: for each item, what passes, what could still be attacked, and what is unverified. Scoring is on paper (design level). "Verify in B" means Gate B must prove it in the running build. The checklist in `BEST-PRACTICES.md` has not been amended since the review proposed changes, so items are scored against its current wording and the deviations are named.
+Written to be adversarial: for each item, what passes, what could still be attacked, and what is unverified. Scoring is on paper (design level). "Verify in B" means Gate B must prove it in the running build. The checklist was amended after round 1: A1 now allows a "Note for Custom" field and a "Search" filter, A11 accepts DESIGN.md roles realised through Studio tokens with inherited fonts, and A20 was added. Items are scored against that current wording. Round 2 found A1 and A20 failing; both were re-examined against their literal text below.
 
 | ID | W | Result | Evidence and remaining attack surface |
 |---|---|---|---|
-| A1 | must | **Pass, with one exception for the gate owner** | Free text is listed in 0: dialogue (paste), titles, notes, "Note for Custom" (a note), and "Search". "Search" is the only item not literally dialogue, notes or titles; it creates no data and is never required (OQ-1 decided yes, but the checklist text needs the amendment). No env var, flag, config key or diagnostic code is shown anywhere: D5 shows read-only paths and plain statuses (9.3); the key lives only in 9.4 for `docs/`. The assistant return path has no JSON UI (4.8). Paste grammar is a plain hint (8.2). Residual: the producer copies the other tool's answer out of a window where it may be JSON (4.8); Studio never shows or asks for it. "Copy details for support" copies text that may include codes, which Studio does not display. |
-| A2 | must | **Pass** | One action creates N empty scenes (8.1, 4.2, 4.12). Four states as text plus distinct icon shape (3.4, 4.3). Empty is computed, not judged (3.4). Residual: the project script file's layout is not specified (OQ-6), so the imported-script source reports "Studio can't read lines from the project script file yet" and Paste always works (8.1, 12.12). |
-| A3 | must | **Pass** | Every state has one action and one reason (5). The empty-row label "Choose the look" no longer collides with the assistant's "Draft this scene" (5). |
-| A4 | must | **Pass at design; unverified** | Default layout with Schedule left (active, `keepMounted`) and Production and Assistant in separate right groups (4.1). State, live region and history live in R0 so tab switches lose nothing. Selecting never moves focus or scroll (11.2). Residual: needs the dock changes in DEP1; a stored layout is never rearranged, so a producer with an old layout gets panels added, not repositioned. Verify in B in a real browser. |
-| A5 | must | **Pass** | Every preset in 6 is a select with a one-line hint and Custom last where the list is open-ended; closed lists (length, role, task, scope, voice) correctly have none. Custom with an empty note stays open (12.2). Residual: Studio's `Select` has no hint line (DEP4). |
-| A6 | must | **Pass at design; dependency** | 7.2 follows APG and WCAG 1.4.13. Hints are persistent text, so nothing essential is tooltip-only (7.1). Residual: Studio's `Tooltip` is `pointer-events-none` and sets `aria-describedby` only while open (DEP3). |
-| A7 | must | **Pass at design; dependency** | Keyboard path for every row of the IA table. One tab stop in the list (11.2). Single focus rule (3.2). Residual: DEP2 (the list must own plain keys) is required or Space, `f`, `s` and others are stolen. |
-| A8 | must | **Pass** | `listbox/option` with no interactive descendants (2 R1.3, 4.3, 11.2). Row actions are keyboard (Enter, Shift+F10), pointer (double-click, right-click) and a real button in the Production header and action bar. Tabs are `tablist/tab/tabpanel` with arrow switching (R2.2). The picker list follows the same rule. |
-| A9 | must | **Pass at design; unverified** | Film controls at least 28px, the 24px size excluded (3.3); sticky action bar with `scroll-padding-bottom` (4.4). Residual: needs a focus-not-obscured test at 400% zoom. |
-| A10 | must | **Pass** | 11.4 plus D4. Nothing requires a drag. |
-| A11 | must | **Conditional** | Colours go only through Studio tokens mirroring DESIGN.md roles, with no hex (3.1). Drafted no longer reuses the selection token; only Ready and Blocked carry a hue; warnings use `--color-warning-ink`; one focus-ring rule; a 3:1 field boundary in `--color-text-muted` (3.2). **As literally worded, A11 fails on two points:** it says colours come "only from DESIGN.md tokens" (the mapping uses Studio tokens, because the hex ratchet forbids literals and DESIGN.md has no danger or warning role), and it names Inter and IBM Plex Mono (film panels inherit Studio fonts, 3.1). It passes if the gate owner accepts the amendment the review proposed. Contrast figures for Studio tokens come from oklch conversion, not a browser measurement; Verify in B in light and dark. |
-| A12 | should | **Pass** | One polite region in the film host, plus the assistant's (11.5). Errors are polite and also persistent visible text. Pending is row or field scoped. |
-| A13 | should | **Pass** | One film history across R1, R2 and R3 with Undo in all three, key scoping with `[data-film-scope]`, extension of `shouldIgnoreHistoryShortcut` (11.3). Residual: history is session memory, cleared on reload (stated). Studio's editor history stays separate by design (OQ-11). |
-| A14 | should | **Pass** | D2 counts unchanged, new, no longer matching and edited; edited scenes are kept by default; replacing needs a second confirm (8.4). "Edited" is defined (8.4, 12.1). Residual: a reworded line is one removed plus one new scene because ids are content hashes; this is stated to the producer. |
-| A15 | must | **Pass** | Thumbnail, kind, source and the six importer states verbatim as data values with plain labels (9.1, 12.6). The registry header is now exact and mapped column by column to the index record, with strict validation (9.5). Only `verified` is selectable; provider items, unresolved locations, unknown kinds and problem rows are listed but not selectable, none given a state it has not earned. Residual: the labels are glosses, not the raw importer words (one to one); the `path_base`, `kind` and `approved` value tables are not yet filled (OQ-15), so real registry rows may all show "Studio doesn't know this location yet" until they are. |
-| A16 | must | **Pass** | Banner copy for unset, missing, denied, partial, no list, missing column, bad rows, unknown locations, none usable and a film-workspace error (4.11). Scenes stay usable. "No preview" is text only (12.6). The cloud VM claims no real asset; tests use synthetic fixtures (12.12). |
-| A17 | must | **Pass** | A link keeps its id; "Unavailable" with a reason (also for provider and unresolved locations); an unknown id shows the id and "Not in the asset list." (12.6). Removal only by "Remove link". |
-| A18 | should | **Pass at design; unverified** | 4.13, 3.3, 11.6. The Studio shell overflows at 320px, so "Maximize panel" is the real escape hatch (stated). Verify in B at 400% zoom. |
-| A19 | must | **Pass** | Section 2 has region, purpose, controls, keyboard path and ARIA role for every region, dialog and global element, with stable ids. |
-| A20 | must | **Pass, with notes** | Section 12: prop and data types (12.1, 12.5 to 12.7, 12.9, 12.11), preset storage rule (12.2), row height (12.8), seconds-to-frames and still-image rules (12.3), action-beat and voice fields (12.4, 12.5), where needs live (12.6), who computes blocked (12.7), thumbnails (12.6), the registry mapping (9.5) and typed adapters with degraded states for the value tables still unknown (12.12), conflicts (12.10), and a "Stage B decides nothing about" list (12.13). Residual: `approved` is read-only and never gates selection, an unconfirmed policy (OQ-16). `ScheduleScene` is a new additive record in `@hyperframes/film-production`, a contract change someone must own (DEP9); the voice-per-speaker mapping and the revision mapping to the brief are Stage C and host decisions named but not designed here. |
+| A1 | must | **Pass** | Free text is exactly the amended list (0): dialogue (paste), titles, notes, "Note for Custom", "Search". The cast "Custom adds a name" is gone; cast and plan shots are closed host lists (6.11). The "missing a column: sha256" banner is gone; column names appear only in "Copy details for support" (4.11, 9.5, 10.2). A search of the producer-visible copy in 4.x, 5, 7, 8, 10 finds no env var, flag, key, column name, code or JSON; the operator route is docs-only (9.4). Residual attack surface: (a) read-only ids and 8-character hash prefixes are shown in the picker and header for traceability (A15 needs a source and state, not necessarily ids); the producer never types or must understand them; (b) the producer copies the other tool's answer out of a window where it may be JSON (4.8); (c) "checksum" appears in state glosses (9.1), a plain word, not a schema. |
+| A2 | must | **Pass** | One action creates N empty scenes (8.1, 4.2, 4.12) with four states as text plus a distinct icon (3.4). The unevidenced "script from the asset folder" source is removed. Residual: the imported-script source is unavailable until OQ-6 (script file layout) is answered; Paste always works, so the single action is real. |
+| A3 | must | **Pass** | One action and one reason per state (5); no label collision with the assistant task. |
+| A4 | must | **Pass at design; unverified** | Default layout, separate right groups, `keepMounted` Schedule, state and live region in R0 (4.1). Residual: needs the dock changes in DEP1; a stored layout is never rearranged, so a returning producer gets panels added rather than repositioned. Verify in a real browser. |
+| A5 | must | **Pass** | Section 6: every open-ended preset is a select with one-line hints and Custom last; closed lists correctly have none (length, role, task, scope, voice, cast, plan shot). Residual: Studio `Select` has no hint line (DEP4). |
+| A6 | must | **Pass at design; dependency** | 7.2 follows APG and WCAG 1.4.13; hints are persistent text. Residual: Studio `Tooltip` is `pointer-events-none` and sets `aria-describedby` only while open (DEP3). |
+| A7 | must | **Pass at design; dependency** | Keyboard path per IA row; one tab stop in the list; one focus rule (3.2). Residual: DEP2 is required or Space and single letters are stolen. |
+| A8 | must | **Pass** | `listbox/option` with no interactive descendants (R1.3, 4.3, 11.2); tabs are `tablist/tab/tabpanel`; D3 follows the same rule. |
+| A9 | must | **Pass at design; unverified** | 28px controls, 72px rows, 40px options, `scroll-padding-bottom`; the 24px `Tab` size is excluded and a film-sized tab is listed (DEP4). Verify focus-not-obscured at 400% zoom. |
+| A10 | must | **Pass** | 11.4 and D4; nothing needs a drag. |
+| A11 | must | **Pass at design; unverified in a browser** | Roles documented per Studio token, no hex, fonts inherited, only Ready and Blocked carry hue, Drafted and Empty neutral, warnings use `--color-warning-ink`, selection token only for the selected-row bar, one focus ring, 3:1 field boundary via DEP4 (3.1, 3.2). The `--color-border-input` dark range is corrected to about 1.5 (a fail either way). Contrast comes from oklch conversion, not a browser measurement. |
+| A12 | should | **Pass** | One polite region in the always-mounted host (11.5); errors polite and persistent. |
+| A13 | should | **Pass** | One film history across R1, R2 and R3 with Undo in all three, `[data-film-scope]` key scoping, `restore` in `FilmHost` (11.3, 12.10). Residual: history is session memory (stated). |
+| A14 | should | **Pass** | D2 counts now partition every existing scene (unchanged, changed lines, no longer match) plus new scenes, with "Now: N scenes" so the sum is checkable (4.12, 8.4). Keep-edits default; replace needs a second confirm and never touches the first two groups. Residual: a reworded line is one removed plus one new scene because ids are content hashes (stated). |
+| A15 | must | **Pass** | Thumbnail, kind, source and the six importer states verbatim as data values with plain labels (9.1, 12.6); registry columns mapped (9.5); the row title is the import or review name else `asset_id`, never `notes`. Residual: until OQ-15 is answered the value tables are empty, so real registry rows show "Studio doesn't know this location yet" and none is selectable. That is honest but means the picker cannot yet bind a real asset. |
+| A16 | must | **Pass** | Banner variants for every folder, workspace and asset-list problem with one-line copy for each (4.11, 10.2); scenes stay usable; "No preview" is text only; synthetic fixtures only (12.12). |
+| A17 | must | **Pass** | A link keeps its id; "Unavailable" with a reason, including provider and unresolved locations and unknown ids (12.6); removal only by "Remove link". |
+| A18 | should | **Pass at design; unverified** | 4.13, 3.3, 11.6; the shell overflows at 320px so "Maximize panel" is the escape hatch. Verify at 400% zoom. |
+| A19 | must | **Pass** | Section 2: every region, dialog and global element with region, purpose, controls, keyboard path and ARIA role. The new "Production plan shot" select and the save-status text are in R2.3 and R1.1. |
+| A20 | must | **Pass, with named residuals** | Section 12: no ellipses in the prop tables (every prop and callback is typed in 12.9, a grep of section 12 for `...` and the ellipsis character finds none inside a type), typed `SceneEdit`, `HostResult` and `FilmHost` (12.9, 12.10); the owner and location of persistence with a reload test (12.10); scene-to-importer-shot relationship (12.1); scene id cap of 80 (12.1, 8.3); account-settings storage and output size (12.11); preset storage (12.2); row height (12.8); frames and still images (12.3); beats and voice (12.4, 12.5); needs (12.6); who computes blocked (12.7); thumbnails (12.6); registry mapping and value-table adapters (9.5, 12.12); error copy (10.2); "Stage B decides nothing about" (12.13). Residuals: `ScheduleScene` is a new additive record in `@hyperframes/film-production` and someone must own it (OQ-14, DEP9); the default for `filmDataDir` is deliberately unset, so a producer who has not configured it works in session-only mode and the Schedule says so (RISK5, OQ-17); `studio-server` film routes do not exist and are out of Stage A scope; the internal shape of R0's store is left to Stage B. |
 
-Totals as written: 15 of 16 musts pass at design level (A11 is conditional on the amendment), 4 of 4 shoulds pass at design level. Five musts (A4, A6, A7, A9, A11) and one should (A18) carry "unverified" or dependency notes that only Gate B can close. The producer's three authorised answers are folded in (9.5, 1.4, 15.1b); the remaining unknowns are values (OQ-15, OQ-16) and the script file layout (OQ-6), each with an honest degraded state.
+Totals under the current checklist: 16 of 16 musts pass at design level and 4 of 4 shoulds pass at design level. Six musts (A4, A6, A7, A9, A11, and A20's named residuals) and one should (A18) carry unverified or dependency notes that only Gate B can close. The unknowns that remain are honest ones: OQ-6 (script file layout), OQ-15 (real `path_base`, `kind` and `approved` values), OQ-16 (policy for unapproved assets).
 
 ## 15. Decisions taken and what is still open
 
@@ -1435,9 +1686,9 @@ Totals as written: 15 of 16 musts pass at design level (A11 is conditional on th
 
 | ID | Question | Decision |
 |---|---|---|
-| OQ-1 | Are "Custom" note boxes, the picker search and operator text acceptable under A1? | "Note for Custom" and "Search" are named exceptions (0). Operator text is removed from the UI entirely (9.3, 9.4). The checklist needs the A1 amendment for "Search" |
+| OQ-1 | Are "Custom" note boxes, the picker search and operator text acceptable under A1? | "Note for Custom" and "Search" are named exceptions (0) and are now in the amended A1. Operator text is removed from the UI entirely (9.3, 9.4) |
 | OQ-2 | Colour for Blocked and warnings | Blocked is `--color-danger-ink`, warnings are `--color-warning-ink` (3.1) |
-| OQ-3 | Inter and IBM Plex Mono | Inherit Studio fonts; do not bundle (3.1). Needs the A11 amendment |
+| OQ-3 | Inter and IBM Plex Mono | Inherit Studio fonts; do not bundle (3.1). Accepted in the amended A11 |
 | OQ-4 | Where Schedule lives | Left dock, first and active tab, `keepMounted`, with the default layout in 4.1 |
 | OQ-5 | Folder browser | None in Stage B. The UI says "Ask whoever set up this computer to choose the folder." The operator route is in 9.4 |
 | OQ-7 | Required choices | The six in 3.4. Place and "Who is in this scene" are advisory |
@@ -1460,8 +1711,8 @@ Totals as written: 15 of 16 musts pass at design level (A11 is conditional on th
 | OQ-15 | The real values of `path_base`, `kind` and `approved` in `asset-registry.csv` (the header is known, no sample row was released) | Producer | Typed tables `PATH_BASES`, `KINDS`, `APPROVED` ship without invented values; unknown values degrade honestly and "Copy details for support" lists the distinct values with counts so they can be added (9.5) |
 | OQ-16 | Should an asset not recorded as approved be bindable (this doc: yes, with a host warning) or blocked? | Producer | Read-only display, never gates selection (9.5) |
 | OQ-12 | Does the copied request ask the other tool for only its final answer? | Stage C | Stated as a requirement (4.8); Stage C writes the instruction |
-| OQ-13 | Will the gate owner amend A1 (Search), A11 (Studio tokens, inherited fonts), A12 (role of errors, if `alert` is ever wanted) as proposed in the review? | Gate owner | A1 and A11 are scored with the deviation named (14); A12 is satisfied as written |
 | OQ-14 | Who owns the additive `ScheduleScene` record in `@hyperframes/film-production`? | Coordinator | Stage B owns the type; `SceneBriefV1` is not edited (12.2) |
+| OQ-17 | Where should scene records be saved by default? `filmDataDir` is unset by default so nothing is written near an asset root without the operator's say-so | Coordinator or producer | Session-only mode with the visible line "Not saved: your schedule is kept only until Studio closes." (12.10) |
 
 ## 16. Stage B dependencies and risks
 
@@ -1470,14 +1721,16 @@ Totals as written: 15 of 16 musts pass at design level (A11 is conditional on th
 | DEP1 | Register `schedule` in `PANEL_IDS` and `PANEL_DEFINITIONS` (zone `left`, `keepMounted: true`). Add `schedule` as the first tab of the default left group and `production` as the active tab of the right group, with `assistant` in its own group below, when a film host is connected and a stored layout lacks them (4.1). Mount the film host (R0) from `FilmDockPanels`. Today `DEFAULT_LEFT` and `DEFAULT_RIGHT` in `dockLayout.ts` contain neither film panel, and only `preview` and `timeline` are `keepMounted` | `components/dock/panelRegistry.ts`, `dockLayout.ts`, `Dock.tsx`, `film/FilmDockPanels.tsx` |
 | DEP2 | The scene list owns plain keys (add its role to the owning list). `shouldIgnoreHistoryShortcut` returns true inside `[data-film-scope]` and the film history handles the undo keys there | `utils/typingTarget.ts`, `utils/studioHelpers.ts`, `hooks/appHotkeysDispatch.ts` |
 | DEP3 | Tooltip stays open under the pointer (remove `pointer-events-none` or add a hoverable variant) and keeps `aria-describedby` mounted | `components/ui/Tooltip.tsx` |
-| DEP4 | Film-scoped `Select` with a one-line hint per option, 40px rows, wrapping text and a visible reason for disabled options. A film-scoped field-boundary override of `fieldBase` (`--color-text-muted`) for Select, Input, NumberField, SearchInput, textarea and segmented controls | `components/ui/Select.tsx`, `Input.tsx` |
+| DEP4 | Film-scoped `Select` with a one-line hint per option, 40px rows, wrapping text and a visible reason for disabled options, and a film-sized (at least 28px) `Tab` for R2.2. A film-scoped field-boundary override of `fieldBase` (`--color-text-muted`) for Select, Input, NumberField, SearchInput, textarea and segmented controls | `components/ui/Select.tsx`, `Input.tsx` |
 | DEP5 | No new colour literals outside `theme.css` (hex ratchet). Film panels use only the tokens in 3.1. `text-[11px]` and `neutral-*` are retired in film panels | `styles/hexRatchet.test.ts` |
 | DEP6 | The virtualized list keeps `aria-posinset` and `aria-setsize` and reaches unmounted rows with Home and End at a fixed 72px row (12.8). Reuse the `useTimelineVirtualRows` pattern | `player/components/useTimelineVirtualRows.ts` |
 | DEP7 | Operator documentation for the host path (9.4) and `root-unavailable` results, in `docs/` in the same PR. The registry reader implements the strict header and row validation in 9.5 and runs the importer's validation of `workspace.json` rather than reimplementing it | Stage B index work, `legacy/import-movies.mjs` |
 | DEP8 | Each film file under 600 lines; extract per region (one component per IA row) | `packages/studio/AGENTS.md` |
+| DEP11 | `FilmHost` (12.10) with `MemoryFilmHost` and `FileFilmHost`, the `filmDataDir` validation (absolute, read-write, disjoint from every asset root after `realpath`) and the three persistence tests. `studio-server` film routes are a later task | `packages/film-production`, Stage B |
 | DEP9 | `ScheduleScene` and the related additive types (12.1 to 12.9) live in `@hyperframes/film-production` | OQ-14 |
 | DEP10 | Stage C interfaces consumed as props: preset phrase maps, `checks`, `hints`, `writtenPrompt`, suggestion parsing (12.7, 12.13) | Stage C |
 | RISK1 | Undo meaning differs by focus (film scope against Studio's editor history). Mitigated by the Undo and Redo buttons in all three panels, labelled with the action | 11.3 |
 | RISK2 | Hint and label wrapping at 320px, and the 72px fixed row with larger text sizes (single-line truncation protects the height). Verify in a real browser; happy-dom has no layout | 4.13, 12.8 |
 | RISK3 | The producer's asset folder is unreachable from the cloud VM and no real asset is claimed. Every state is tested with synthetic fixtures (a miniature CSV with the exact header, a mini `workspace.json`, an absent root; B35). The value tables (OQ-15) must be filled from the producer's real vocabulary before real rows resolve | 9.5, 12.12 |
+| RISK5 | With `filmDataDir` unset (the default) the producer's schedule lives only in memory and is lost when Studio closes. The Schedule says so in plain words, but the loss is real until someone sets the folder (OQ-17) | 12.10 |
 | RISK4 | The copy-and-paste return path depends on clipboard read permission. A file picker is the fallback and the message says so (4.8) | 4.8 |
