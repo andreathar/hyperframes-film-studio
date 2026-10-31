@@ -9,6 +9,11 @@ import { useVisibleProposal } from "./visibleProposal";
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
 
+// These tests lock the observable behaviour under StrictMode. They do not tell
+// render-phase ref writes apart from state. Abandoned concurrent renders
+// (transition plus Suspense) can still lose the pin or the hidden memory under
+// React 19. That is accepted until film code uses transitions.
+
 const roots: Root[] = [];
 afterEach(() => {
   for (const root of roots.splice(0)) act(() => root.unmount());
@@ -106,8 +111,10 @@ function mount(): { render: (node: ReactNode) => void } {
 describe("usePinnedPattern under StrictMode", () => {
   let pick: ((id: ScenePatternId) => void) | null = null;
   let seen: ScenePatternId | null = null;
+  let renders = 0;
   function Probe({ shotKey }: { shotKey: string }) {
     const [pattern, pickPattern] = usePinnedPattern(shotKey);
+    renders += 1;
     seen = pattern;
     pick = pickPattern;
     return null;
@@ -115,13 +122,22 @@ describe("usePinnedPattern under StrictMode", () => {
 
   it("keeps a pick on the same shot and clears it on another shot", () => {
     const view = mount();
+    renders = 0;
     view.render(<Probe shotKey="A" />);
     const id: ScenePatternId = "restrained-dialogue";
     act(() => pick?.(id));
     expect(seen).toBe(id);
+    const pickA = pick;
     view.render(<Probe shotKey="A" />);
     expect(seen).toBe(id);
+    expect(pick).toBe(pickA);
+    renders = 0;
     view.render(<Probe shotKey="B" />);
+    // StrictMode doubles each pass; the reset adds one re-render pass. A loop
+    // would blow far past this bound.
+    expect(renders).toBeGreaterThan(0);
+    expect(renders).toBeLessThanOrEqual(6);
+    expect(pick).not.toBe(pickA);
     expect(seen).toBeNull();
     view.render(<Probe shotKey="A" />);
     expect(seen).toBeNull();
