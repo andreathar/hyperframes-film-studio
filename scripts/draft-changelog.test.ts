@@ -5,14 +5,13 @@ import {
   findSkippedReleaseTags,
   parseArgs,
   parseCommit,
+  REPO_URL,
   renderCommitBullet,
   renderMdxCommitBullet,
   renderTags,
   shouldSkipCommit,
   type RawCommit,
 } from "./draft-changelog.ts";
-
-const REPO_URL = "https://github.com/heygen-com/hyperframes";
 
 function commit(subject: string): RawCommit {
   return {

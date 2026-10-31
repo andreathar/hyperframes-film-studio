@@ -21,7 +21,7 @@ import { CHANGELOG_REVIEW_TODO, CHANGELOG_STYLE_NOTE, compareSemver } from "./se
 const REVIEW_SUMMARY_BLOCK = [CHANGELOG_REVIEW_TODO, CHANGELOG_STYLE_NOTE].join("\n");
 
 const ROOT = join(import.meta.dirname, "..");
-const REPO_URL = "https://github.com/heygen-com/hyperframes";
+export const REPO_URL = readRepositoryUrl();
 const DOCS_MARKER =
   "{/* New release entries are prepended by `bun run changelog:draft <version> --write`. */}";
 
@@ -201,6 +201,24 @@ function git(args: string[]) {
     cwd: ROOT,
     encoding: "utf-8",
   }).trim();
+}
+
+/**
+ * Links in the generated notes follow the root manifest's `repository.url`, so
+ * a fork that attributes its packages gets commit and compare links that resolve.
+ */
+function readRepositoryUrl() {
+  const manifest: unknown = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8"));
+  if (manifest && typeof manifest === "object" && "repository" in manifest) {
+    const repository = manifest.repository;
+    if (repository && typeof repository === "object" && "url" in repository) {
+      const url = repository.url;
+      if (typeof url === "string" && url.startsWith("https://github.com/")) {
+        return url.replace(/\.git$/, "").replace(/\/$/, "");
+      }
+    }
+  }
+  return "https://github.com/heygen-com/hyperframes";
 }
 
 function tagExists(tag: string) {
