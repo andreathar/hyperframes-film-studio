@@ -37,3 +37,13 @@ Private footage, manifests, renders and receipts belong under ignored `.film-wor
 - [Edit timing on the timeline](/studio/timeline)
 - [Make videos with Codex](/guides/with-codex)
 - [Make videos with Claude Code](/guides/with-claude-code)
+
+## Inspect existing film records
+
+The fork also provides a read-only intake command:
+
+```sh
+bun run film:import --workspace /path/to/Movies_Projects
+```
+
+It reports shot/reference/take counts, missing media, changed hashes and unresolved ID links without changing the source. Add `--output .film-workspace/import-v1` to save a candidate snapshot in a new directory. Imported approval declarations remain evidence; execution permission is always false. The result is not automatically a renderable composition. The complete intake contract is maintained in the fork's `film-studio/IMPORT.md`.

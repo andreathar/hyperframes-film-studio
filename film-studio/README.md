@@ -126,3 +126,7 @@ node_modules/.bin/oxfmt --check scripts/film-production package.json
 The film tests exercise real filesystem preparation, source probing, hash drift, escaping paths, timing, independent audio and preservation of an edited output. Media cases require FFmpeg/ffprobe and explicitly skip when FFmpeg is absent. Root script tests include the film test so CI can reach it.
 
 Hyperframes remains Apache-2.0; see the root LICENSE and retain upstream notices. This initial implementation copies no code from the other studios. The comparative research identifies candidates for subsequent deliberate adoption, including their separate dependency notices and acceptance gates.
+
+## Existing film records
+
+Use `bun run film:import --workspace /path/to/Movies_Projects` for a read-only inventory/reconciliation report. Add `--output .film-workspace/import-v1` to save a new private candidate snapshot. See [the import contract](IMPORT.md) for source namespaces, hash checks and approval boundaries. This intake stage does not yet synchronize the production records with a timeline or activate providers.
