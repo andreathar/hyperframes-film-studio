@@ -5,6 +5,7 @@ import {
   compareSemver,
   findBlockingTags,
   findUnexpectedChanges,
+  isForkRelease,
   isPrerelease,
   parseReleaseOptions,
   releaseAllowedPaths,
@@ -67,6 +68,34 @@ describe("set-version release options", () => {
         skipChangelogCheck: true,
       }),
       false,
+    );
+  });
+
+  it("treats fork -film.N releases as the stable line and requires changelog artifacts", () => {
+    assert.equal(isForkRelease("0.8.223-film.1"), true);
+    assert.equal(isForkRelease("0.8.223-alpha.1"), false);
+    assert.equal(isForkRelease("0.8.223"), false);
+    assert.equal(
+      releaseRequiresChangelog({
+        version: "0.8.223-film.1",
+        skipTag: false,
+        skipChangelogCheck: false,
+      }),
+      true,
+    );
+    assert.equal(
+      releaseRequiresChangelog({
+        version: "0.8.223-film.1",
+        skipTag: true,
+        skipChangelogCheck: false,
+      }),
+      false,
+    );
+  });
+
+  it("includes the fork-only film-production package in the release set", () => {
+    assert.ok(
+      releaseAllowedPaths("0.8.223-film.1").includes("packages/film-production/package.json"),
     );
   });
 

@@ -35,7 +35,15 @@ const PACKAGES = [
   "packages/aws-lambda",
   "packages/gcp-cloud-run",
   "packages/sdk",
+  "packages/film-production",
 ];
+
+/**
+ * Fork release line: `<upstream>-film.<n>`. Semver sorts it below the upstream
+ * version it builds on, so it never collides with an upstream tag, but it is the
+ * fork's stable line and gets the full changelog gate (see releases/README.md).
+ */
+export const FORK_RELEASE_PATTERN = /-film\.\d+$/;
 
 const PLUGINS = [
   ".claude-plugin/plugin.json",
@@ -236,11 +244,19 @@ function assertTagMonotonicity(version: string) {
 export function releaseRequiresChangelog(
   options: Pick<ReleaseOptions, "version" | "skipTag" | "skipChangelogCheck">,
 ) {
-  return !options.skipTag && !options.skipChangelogCheck && !isPrerelease(options.version);
+  return (
+    !options.skipTag &&
+    !options.skipChangelogCheck &&
+    (!isPrerelease(options.version) || isForkRelease(options.version))
+  );
 }
 
 export function isPrerelease(version: string) {
   return version.includes("-");
+}
+
+export function isForkRelease(version: string) {
+  return FORK_RELEASE_PATTERN.test(version);
 }
 
 function assertReviewedChangelog(version: string) {

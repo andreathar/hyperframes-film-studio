@@ -3,7 +3,7 @@
   "version": "0.8.223",
   "repository": {
     "type": "git",
-    "url": "https://github.com/heygen-com/hyperframes",
+    "url": "https://github.com/andreathar/hyperframes-film-studio",
     "directory": "packages/studio-server"
   },
   "files": [
