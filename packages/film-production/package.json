@@ -1,0 +1,73 @@
+{
+  "name": "@hyperframes/film-production",
+  "version": "0.8.223",
+  "description": "Shared film production contracts, scene briefs and audited local services",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andreathar/hyperframes-film-studio",
+    "directory": "packages/film-production"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "src/legacy"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "bun": "./src/index.ts",
+      "node": "./dist/index.js",
+      "import": "./src/index.ts",
+      "types": "./src/index.ts"
+    },
+    "./browser": {
+      "browser": "./src/browser.ts",
+      "bun": "./src/browser.ts",
+      "import": "./src/browser.ts",
+      "types": "./src/browser.ts"
+    },
+    "./contracts": {
+      "bun": "./src/contracts.ts",
+      "node": "./dist/contracts.js",
+      "import": "./src/contracts.ts",
+      "types": "./src/contracts.ts"
+    },
+    "./legacy": "./src/legacy/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts"
+      },
+      "./browser": {
+        "import": "./dist/browser.js",
+        "types": "./dist/browser.d.ts"
+      },
+      "./contracts": {
+        "import": "./dist/contracts.js",
+        "types": "./dist/contracts.d.ts"
+      },
+      "./legacy": "./src/legacy/index.mjs",
+      "./package.json": "./package.json"
+    },
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts"
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "tsup && vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.10",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.11"
+  }
+}

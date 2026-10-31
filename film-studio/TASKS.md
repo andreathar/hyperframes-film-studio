@@ -11,7 +11,7 @@ The Plannotator Board is the active task surface. This checklist records impleme
 - [x] Export blocked Kling producer handoffs with verified references; current increment, software tested and awaiting workflow review.
 - [ ] Repair inspector asset/runtime version consistency; delegated repair has targeted RED→GREEN evidence.
 - [ ] Isolate recorded broad-workspace test failures on the base and establish a trustworthy CI baseline.
-- [ ] Extract shared film contracts/services into a workspace package without duplicating reducers.
+- [x] Extract shared film contracts/services into a workspace package without duplicating reducers.
 - [ ] Add durable review/project recovery, explicit source-revision continuity and candidate catalog.
 - [ ] Add deliberate job-attempt recovery while retaining unknown-outcome duplicate protection.
 - [ ] Add a proposal-only local assistant host and preserve external Claude/clipboard authoring.

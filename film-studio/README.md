@@ -14,7 +14,9 @@ The [Kling producer handoff](KLING-HANDOFF.md) exports a verified, blocked candi
 
 Use [explicit candidate placement](PLACEMENT.md) to turn selected takes and an authored frame-based cut plan into a new editable composition. It checks current media and retains original IDs/direction provenance while preserving existing edits.
 
-The [production execution proposal](EXECUTION-PLAN.md) and [design](PRODUCTION-DESIGN.md) define the next integrated Studio/assistant work. They are a concrete review proposal; the existing runtime repair is delegated separately.
+The [production execution proposal](EXECUTION-PLAN.md) and [design](PRODUCTION-DESIGN.md) define the next integrated Studio/assistant work.
+
+Shared scene, assistant and provider records live in `@hyperframes/film-production`. Browser code imports `/browser` or `/contracts`. The audited filesystem services stay on the server-only `/legacy` export, which these CLIs re-export. A compiled scene is never itself a Kling release.
 
 ## Prepare an edit
 

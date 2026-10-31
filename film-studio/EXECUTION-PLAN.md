@@ -91,10 +91,10 @@ Broader workspace run exposed failures outside the changed scope; do not relabel
 **Files:** create `packages/film-production/{package.json,tsconfig.json,tsup.config.ts,src/contracts.ts,src/index.ts}` and explicit subpath entries; move current domain modules from `scripts/film-production/` into `src/legacy/` unchanged initially; retain compatible root CLI/re-export wrappers. Parent updates root build ordering, dependency manifests and package-subpath data.
 **Consumes:** current audited service behavior. **Produces:** typed ports above, package exports usable from both Bun source and Node dist.
 
-- [ ] Write failing package-consumer tests: existing CLI imports work, Node resolves built exports, browser-safe contracts import no fs/process implementation; no package cycle.
-- [ ] Move single implementations and add boundary declarations/types without duplicating reducers. Preserve legacy file formats/commands. Parent commits the contract before consumer workers branch.
+- [x] Write failing package-consumer tests: existing CLI imports work, Node resolves built exports, browser-safe contracts import no fs/process implementation; no package cycle.
+- [x] Move single implementations and add boundary declarations/types without duplicating reducers. Preserve legacy file formats/commands. Parent commits the contract before consumer workers branch.
 - [ ] Run `bun run --cwd packages/film-production build`, `bun run film:test`, `bun run check:workspace-contracts`, `bun run check:package-subpaths`, `bun run check:package-cycles`; expect baseline behavior and zero missing exports/cycles. Run a fresh workspace build once to establish the new package order. First isolate the recorded broad-workspace failures on the base under controlled load; do not hide failures or label an interrupted run green. Parent owns this baseline lane.
-- [ ] Document public versus server-only exports; commit independently.
+- [x] Document public versus server-only exports; commit independently.
 
 ## Task 2 — Durable project lifecycle, revision continuity and candidate intake
 

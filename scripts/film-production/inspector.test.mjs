@@ -47,14 +47,14 @@ async function app(fn, options = {}, makeServer = createInspectorServer) {
 async function isolatedAssets(fn) {
   const root = await mkdtemp(join(tmpdir(), "inspector-assets-"));
   try {
-    // Preserve the production layout so import.meta.url resolves only this fixture's assets.
-    await cp(new URL(".", import.meta.url), join(root, "scripts/film-production"), {
-      recursive: true,
-    });
+    // The server lives in the package and resolves assets from its own file URL.
+    const sourceLegacy = new URL("../../packages/film-production/src/legacy/", import.meta.url);
+    const legacyDir = join(root, "packages/film-production/src/legacy");
+    await cp(sourceLegacy, legacyDir, { recursive: true });
     const assets = join(root, "film-studio/inspector");
     await mkdir(assets, { recursive: true });
     const { createInspectorServer: makeServer } = await import(
-      pathToFileURL(join(root, "scripts/film-production/inspector-server.mjs")).href
+      pathToFileURL(join(legacyDir, "inspector-server.mjs")).href
     );
     await fn(assets, makeServer);
   } finally {

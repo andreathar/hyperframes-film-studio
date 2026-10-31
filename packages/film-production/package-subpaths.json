@@ -1,0 +1,36 @@
+{
+  "package": "@hyperframes/film-production",
+  "localNodeRuntime": true,
+  "subpaths": {
+    ".": {
+      "source": "./src/index.ts",
+      "runtime": "./dist/index.js",
+      "types": "./dist/index.d.ts",
+      "environments": ["browser", "bun", "node"]
+    },
+    "./browser": {
+      "source": "./src/browser.ts",
+      "runtime": "./dist/browser.js",
+      "types": "./dist/browser.d.ts",
+      "environments": ["browser", "bun"]
+    },
+    "./contracts": {
+      "source": "./src/contracts.ts",
+      "runtime": "./dist/contracts.js",
+      "types": "./dist/contracts.d.ts",
+      "environments": ["browser", "bun", "node"]
+    },
+    "./legacy": {
+      "source": "./src/legacy/index.mjs",
+      "runtime": "./src/legacy/index.mjs",
+      "types": null,
+      "environments": ["browser", "bun", "node"]
+    },
+    "./package.json": {
+      "source": "./package.json",
+      "runtime": "./package.json",
+      "types": null,
+      "environments": ["browser", "bun", "node"]
+    }
+  }
+}

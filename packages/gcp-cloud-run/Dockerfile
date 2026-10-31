@@ -119,6 +119,7 @@ COPY packages/parsers/package.json packages/parsers/package.json
 COPY packages/sdk/package.json packages/sdk/package.json
 COPY packages/sdk-playground/package.json packages/sdk-playground/package.json
 COPY packages/inspector/package.json packages/inspector/package.json
+COPY packages/film-production/package.json packages/film-production/package.json
 COPY packages/studio-server/package.json packages/studio-server/package.json
 COPY scripts/package-subpaths.mjs scripts/package-subpaths.mjs
 # A corrupt tarball extraction can print an error and then hang instead of
