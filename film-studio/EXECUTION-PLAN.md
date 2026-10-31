@@ -1,16 +1,31 @@
-# Film Studio Execution Implementation Plan
+# Integrated Film Studio Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development to implement this plan task-by-task. The producer explicitly chose delegation. Parent integrates shared seams; workers own isolated modules. Steps use checkbox tracking.
+## Consolidation update — 2026-10-31
 
-**Goal:** Deliver the actual Hyperframes production frontend and assistant-assisted, parameter-validated scene workflow for The Table Between Centuries, with recoverable provider/candidate/edit integration.
+The producer requires one GitHub branch, `main`. The coordinator is consolidating existing heads and quality correction `48693f33f`; publication, remote branch cleanup and final integrated checks remain pending verification. Earlier branch/PR inventories are historical captures. [Project controls](PROJECT-CONTROL.md) and [the state register](PROJECT-STATE.json) record the verified backup and current policy. Recovery/input/descriptor findings, native offline acceptance, assistant/provider qualification and inspector activation remain open; consolidation does not close them.
 
-**Architecture:** One public Studio, one shared production domain package and narrow typed host capabilities. AI proposes SceneBrief; deterministic services compile/validate; the canonical producer runner releases Kling requests. Existing renderer, editor and source authority remain.
+> **For agentic workers:** Use superpowers:subagent-driven-development to execute reviewed tasks. The producer requested specialized subagents. The coordinator integrates shared seams; workers own isolated modules. Checkboxes describe this revision, not historical delivery.
 
-**Tech Stack:** Existing Bun workspace, ESM/TypeScript, React/dockview, Hono, current workspace tsup/Vitest, Node filesystem/process primitives, existing FFmpeg/Hyperframes renderer. No new paid AI backend. Preserve audited ESM service algorithms during package extraction; do not simultaneously rewrite them into another state framework.
+**Goal:** Make the existing film tools one intuitive, recoverable workflow inside Hyperframes Studio, then add explainable scene assistance and qualified provider execution.
 
-**Spec:** `film-studio/PRODUCTION-DESIGN.md` (review candidate; new product implementation starts after its single producer review). Independent builder review found no important unanswered design questions; its private receipt is retained in the operator workspace.
+**Architecture:** One editor/renderer, one film domain package, one project store, optional film/assistant/provider capabilities. First close the owned-media candidate → selection → edit → render → reopen cycle. Compiler and assistant work can progress behind reviewed contracts without blocking the offline cycle.
 
-## Global Constraints
+**Tech Stack:** Existing Bun workspace, ESM/TypeScript, React/dockview, Hono, workspace build/test tools, Node filesystem primitives, existing Hyperframes/FFmpeg pipeline. Preserve audited algorithms during extraction.
+
+**Spec:** [PRODUCTION-DESIGN.md](PRODUCTION-DESIGN.md), with delivery and interaction requirements revised below. [CHECKPOINT-REVIEW.md](CHECKPOINT-REVIEW.md) records fresh evidence. This is a new review proposal; no product implementation is claimed.
+
+## Verified starting point — 2026-10-31
+
+- Integration checkout: `docs/film-production-execution`, `658f01cd0`. Latest functional increment: inspector job controls, on top of import/review/jobs/blocked handoff/new-composition placement.
+- Runtime repair: committed separately at `3532efca9`, `feat/film-runtime-consistency`, peer worktree `/mnt/data/Projects_SSD/hyperframes-film-kling-handoff`. It is absent here. Integration and activation are distinct actions.
+- Fresh `bun run film:test`: **153/153** here; **155/155** in the peer repair checkout, no failures/skips. Whole-workspace baseline remains unresolved; the earlier broad run was interrupted.
+- Whole-project reconciliation: [PR #7](https://github.com/andreathar/hyperframes-film-studio/pull/7), head `963d9b424`, already implements shared package/contracts and includes runtime repair ancestry. It is not in this checkout; review requires changes and CI Comments is failing. Reuse this work before assigning P1. Unified project/review/catalog, film API, native panels, compiler and assistant host remain unimplemented in the audited snapshots.
+- New finding: synthetic directory-open failure after ledger rename rejected the mutation while reread showed revision 0 → 1. A failed response does not prove nothing was saved.
+- Preserve concurrent `film-studio/WORKFLOW.mmd`. No merge, restart, provider action or model execution occurred in this review.
+
+The [quality audit](QUALITY-REPORT.md), [observed state register](PROJECT-STATE.json) and [operating contract](PROJECT-CONTROL.md) now govern state reconciliation. First reconcile PR #7, contract changes and CI; use one implementation/integration lane plus independent review until that gate is closed. Later dependency waves retain the maximum three-worker cap.
+
+## Global constraints
 
 - Use existing workspace build/export conventions; Bun only for workspace operations. No new dependency without a task-specific reason.
 - Imported documents and historical request snapshots remain immutable evidence.
@@ -18,196 +33,266 @@
 - Exact dialogue bytes must survive compilation. Unsupported parameters/assets/combinations produce diagnostics; no silent clamping, fallback or dropping.
 - Keep the canonical Movies release runner as sole Kling submitter. Canonical Movies and Argon checkouts are read-only to implementation workers.
 - No paid request, upload, real model inference or creative selection is authorized by plan acceptance alone.
-- New local assistant host is explicit functionality; do not claim desktop chat code exists in this checkout. Codex is first in-app; Claude external handoff remains available, with in-app subscription mode gated by supported qualification.
-- At most three implementation workers plus parent. Separate peer worktrees, never nested checkouts; no overlapping file ownership. Preserve concurrent `film-studio/WORKFLOW.mmd`.
-- Docs ship with user-visible behavior; new CLI commands update `docs/packages/cli.mdx`. Tests must be reachable. Build changed packages before consumers.
+- Keep private production state outside editor-readable composition roots. No credentials in browser context, arguments or logs.
+- At most three implementation workers plus coordinator. Separate local worktrees, `main` as the only published GitHub branch, explicit ownership, no reverting others' changes. No additional agent tiers by default.
+- Reuse public Studio preview, timeline, asset browser, save/version checks and undo. Preserve external agent/file/clipboard authoring.
+- Docs ship with behavior; new CLI commands enter `docs/packages/cli.mdx`. Tests must be reachable. Build changed packages before consumers.
+- Read current applicable skills at execution time. Use the required Context7 flow for library/API/CLI integration documentation. This local review did not qualify external APIs/accounts.
 
-## Contracts and ownership
+## Approaches and recommendation
 
-Parent owns public contracts/export maps, workspace `package.json`/`bun.lock`, build ordering, package-subpath manifests, shared route registration, existing dock/App wiring, integration docs and final acceptance. Workers request seam edits rather than independently modifying these files.
+The design considered expanding the companion, integrating native Studio panels, and relying on unavailable desktop chat source. Native Studio remains the recommendation: reuse one editing context and one set of domain rules. Maintain the companion while native work is incomplete. Desktop chat is not an implementation baseline in this checkout.
 
-`packages/film-production/src/contracts.ts` defines the V1 records in the spec plus the following ports:
+Revise delivery order: the previous combined API dependency indirectly made compiler/assistant completion a prerequisite for the offline gate. Split optional capabilities so owned-media production works while assistant/provider readiness is unavailable. This is the coordinator's proposed sequencing change, not a recorded producer choice.
 
-- `FilmPort.readProject(projectId): Promise<ProjectViewV1>`
-- `FilmPort.dispatch(projectId, command: FilmCommandV1): Promise<FilmCommandResultV1>`
-- `FilmPort.events(projectId, afterSequence): AsyncIterable<FilmEventV1>`
-- `AssistantPort.inspect(provider): Promise<AssistantReadinessV1>`
-- `AssistantPort.start(context: AssistantContextV1, instruction): Promise<AssistantTurnV1>`
-- `AssistantPort.events(turnId, afterSequence): AsyncIterable<AssistantEventV1>`; `cancel(turnId): Promise<void>`
-- `ProviderPort.inspectReadiness(profileId): Promise<ProviderReadinessV1>`; `prepare(compilation): Promise<ProviderCandidateV1>`; optional `submit(release)`, `reconcile(attemptId)`, `importResult(receipt)` only when declared supported.
+## Six concrete smart features
 
-Every mutation carries requestId, projectId, expectedProjectRevision and explicit reason. Assistant-context includes immutable project/shot/composition/selection/playhead/revision identity. Event envelopes contain projectId, sequence, operation/turn ID and version; late events cannot retarget another project. All external JSON starts as unknown and is parsed before use; no `any`/unchecked assertions.
+| Feature                        | Observable behavior                                                                                               | Recovery and acceptance                                                                                                |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Resume and next action         | Reopen the same shot/draft; show the highest-priority unresolved step with reason and field link                  | Derive from diagnostics, never guessed mappings; retain both conflict versions; announce status without stealing focus |
+| Reference/continuity guidance  | Assigned references first, role/subject filters, explain suggestions and changed continuity inputs                | Use recorded evidence/hashes; no automatic assignment; invalidate affected proposals when bytes change                 |
+| Guided scene brief             | Editable acting beats, camera intent, exact dialogue and readable frame timing; inspect prompt/native diagnostics | Offline drafting works; unknown capability stays unresolved; no silent translation/model/time substitution             |
+| Contextual assistant proposals | Explain diagnostics or draft changes; preview before/after diff and explicitly apply                              | Freeze project/shot/revision; stale response stays a draft; cancel/reconnect cannot retarget another shot              |
+| Candidate comparison/placement | Compare media/notes; preview track/start/trim/rate/audio before assembly or edit                                  | Separate validity from selection; preserve previous edit; keyboard operation and undo/reload proof                     |
+| Job readiness/recovery         | Clear manual/qualified/unavailable modes and release/submitted/unknown/returned/failed states                     | Reconcile the same unknown task; new attempt has lineage/release; readable labels with inspectable IDs                 |
 
-## Dependency waves
+Use existing tokens/components. Show one primary next action; disclose provenance/settings when needed. Pending state affects its operation, not unrelated browsing. Keyboard access, textual status, live announcements and focus recovery are acceptance requirements. Uncertain saves show “Checking saved state”; never claim saved before publication is confirmed.
+
+## Specialized team and ownership
+
+Planning used three independent read-only specialists: architecture/domain, workflow/UX, reliability/code quality. Execution schedules these roles in waves, not all simultaneously.
+
+| Role                           | Owns                                                                                                                        | Boundary                                                       |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| Coordinator/integrator         | Contracts, exports, manifests/lockfile, build order, existing API/host/dock/Ask Agent/editor wiring, docs/final integration | No canonical source mutations or unrelated edits               |
+| Domain specialist              | New package `src/project/`, later `src/attempts/`, tests                                                                    | No UI/transports or unilateral contract changes                |
+| API specialist                 | New studio-server `src/film/` routes/session/events/tests                                                                   | Registration files remain coordinator-owned                    |
+| UX/frontend specialist         | New Studio `src/film/` components/hooks/API and assistant UI                                                                | One UI state owner; no domain reducers/host execution          |
+| Compiler/assistant specialists | Compiler: package `src/scene/`, `src/native/`; host: CLI `src/film/assistant/`                                              | Separate ownership; frontend integration stays with UI owner   |
+| Provider specialist            | One assigned provider module and narrow host adapter                                                                        | No second submit authority or provider-specific frontend store |
+| Independent reviewer/QA        | Milestone review/evidence; runner/scenarios when assigned                                                                   | Fixes return to implementation owner                           |
+
+Freeze a contract commit before consumer integration. Contract changes are coordinator patches followed by affected-consumer validation. Workers report base SHA, owned diff, commands/results, unresolved issues and interfaces. Review meaningful milestones. Same failing scenario is rechecked after its owner fixes it.
+
+## Contracts to freeze before parallel consumers
+
+Review PR #7's existing `packages/film-production/src/{contracts.ts,model.ts,parse/,browser.ts,index.ts}` and server-only legacy subpath. Preserve that implementation and browser-safe entrypoints; do not create parallel parser/server modules just to match earlier proposed filenames. Browser imports cannot transitively load fs/process.
+
+PR #7 has the main ports and parsed command actions, but its command lacks the proposed envelope version and its result has `accepted: boolean`, not the recovery discriminants below. These are requirements to reconcile before freeze, not evidence that the PR violated an already-approved revised contract. Review/draft/migration/placement actions and request replay must be settled against the existing types.
+
+- Retain the design's V1 project/source/candidate/review/brief/compilation/capability/attempt/receipt/assistant records. Document legacy JSON migration without upgrading observations into authenticated provider proof.
+- `FilmPort.readProject(projectId): Promise<ProjectViewV1>`; `dispatch(projectId, command: FilmCommandV1): Promise<FilmCommandResultV1>`; `events(projectId, afterSequence): AsyncIterable<FilmEventV1>`.
+- Command envelope: `version: 1`, `requestId`, `projectId`, `expectedProjectRevision`, `reason`, discriminated `action`. Freeze exact review/draft/source-refresh/candidate-registration/selection/assembly payloads and parsers before API/UI consumer integration.
+- Request identity is project-scoped and durable. Same ID/payload returns the recorded result; same ID/different payload conflicts. Check recorded requests before stale-revision rejection so lost responses can recover committed commands.
+- Result discriminant: `applied`, `conflict`, `rejected`, `uncertain`, with request ID, current/observed revision and structured diagnostics. Uncertain never means blind retry. Reread by request ID; visible state after sync failure is not crash-durability proof. Block dependent writes until recovery verifies/republishes durable state or reports operator repair required.
+- Diagnostics carry stable `code`, `severity`, `message`, optional `shotKey`, `fieldPath`, proposed recordId, typed recovery action. Distinguish invalid input, stale revision, unavailable capability, missing evidence, uncertain publication.
+- Source evidence, additive catalog and project mutation revisions are separate. History retains original snapshots; refresh returns an impact set for affected active proposals/selections/releases.
+- New intent identity includes project/shot and effective inputs. Legacy fingerprints remain history. Separate readable labels from route-safe IDs.
+- Placement carries `requestId`, proposed operationId, expected project revision and expected composition file version across the editor/store boundary. Freeze `FilmPlacementCommandV1` in this contract commit; repeated application must reconcile the original operation, never insert twice.
+- Events carry version/project/sequence/request-or-turn/revision. Replay committed project events from cursor; unavailable/expired cursor requires explicit resync plus snapshot, never silent gaps. Assistant events are independently optional.
+- AssistantPort and ProviderPort retain design readiness/start/events/cancel and prepare/reconcile boundaries. FilmPort works without either.
+
+## Dependencies and first delivery
 
 ```mermaid
 flowchart LR
-  T0[0 Runtime repair] --> A[1 Shared package and contracts]
-  A --> B[2 Durable lifecycle and intake]
-  A --> C[3 Scene compiler and native validation]
-  A --> D[4 Assistant host]
-  B --> E[5 Project API]
-  C --> E
-  D --> E
-  E --> F[6 Native Studio panels]
-  F --> P[12 Offline production-cycle gate]
-  B --> G[7 Kling release/result bridge]
-  C --> G
-  B --> H[8 Higgsfield handoff/import]
-  B --> I[9 ComfyUI adapter]
-  B --> J[10 Local profiles]
-  F --> K[11 Timeline integration]
-  K --> P
-  G --> Q[12 Qualified live Kling gate]
-  P --> Q
+  P0[0 Baseline and repair] --> P1[1 Package/contracts]
+  P1 --> P2[2 Durable project/catalog]
+  P2 --> P3[3 Film API]
+  P3 --> P4[4 Native Production]
+  P4 --> P5[5 Edit/render/reopen]
+  P1 --> P6[6 Scene compiler]
+  P2 --> P7[7 Attempt recovery]
+  P6 --> P8[8 Assistant host/UI]
+  P3 --> P8
+  P5 --> P9[9 Qualified Kling route]
+  P6 --> P9
+  P7 --> P9
+  P9 --> P10[10 Further adapters]
+  P5 --> P11[11 Integration review]
+  P8 --> P11
+  P9 --> P11
+  P10 --> P11
 ```
 
-Wave 0: finish runtime repair and freeze contracts. Wave 1: domain lifecycle, compiler and assistant-host workers can run independently. Wave 2: API/frontend plus provider work consume reviewed contracts; backend and frontend integration are sequential where required. Wave 3: Higgsfield, ComfyUI and local profiles run in parallel against the same intake interface. Parent schedules one independent review per meaningful milestone, not per trivial edit. No worker waits for another's uncommitted implementation.
+Wave 0: review/integrate repair and classify baseline; contract design can proceed without changing a live inspector. Wave 1: domain P2 and compiler P6 independently follow P1. Wave 2: P3 → P4 → P5 is the offline critical path; P7/P8 use remaining slots and never block it. UI may develop against frozen fixtures while API settles, but acceptance uses the real API. Wave 3: one Kling route, then further adapters. Independent review runs when implementation workers free a slot.
 
-## Review Focus
+## Review focus
 
-- Source refresh/additive candidate must preserve old job/review provenance and identify only affected decisions; tests in Task 2.
-- Tool-enabled or inherited-config assistant must not bypass provider release or mutate source; negative fake-process tests and qualification in Task 4.
-- Shot/project switch during streamed response must not apply to the new target; tests in Tasks 5–6.
-- Native schema/quote/reference drift after preview must invalidate exact release; tests in Task 7.
-- Candidate replacement/edit/restart must preserve manual edits, dialogue bytes, frame timing and source metadata; tests in Tasks 2, 11–12.
+1. Response loss/failure after state replacement: reconcile same request, retain evidence, verify durability before dependent work (P2/P3).
+2. Additive candidate/changed reference: preserve history, invalidate affected current decisions only (P2/P4).
+3. Project/shot switch during save/stream: retain drafts and reject target/revision mismatch (P4/P8).
+4. Unknown outcome versus failure: reconcile original task versus explicit new attempt; no accidental cross-shot collision (P7/P9).
+5. Edit changed after placement preview: reject stale apply, preserve manual changes/undo, verify decoded rate/trim/audio (P5).
 
-## Task 0 — Coherent inspector runtime (existing-contract repair)
+## P0 — Actual baseline and existing runtime repair
 
-**Owner:** delegated runtime worker, branch `feat/film-runtime-consistency`, peer checkout; parent reviews and publishes.
-**Files:** existing `scripts/film-production/inspector-server.mjs`, `inspector.test.mjs`, `film-studio/INSPECTOR.md` only.
-**Interface:** unchanged `createInspectorServer`; a server owns a fixed complete asset snapshot.
+**Owner:** coordinator; scoped runtime worker only if review finds a defect. **Files:** repair's `scripts/film-production/inspector-server.mjs`, `inspector.test.mjs`, `film-studio/INSPECTOR.md`; private evidence `.film-workspace/integration-baseline/`.
 
-- [x] Reproduce RED: replace assets before first request and remove required module; old code mixes live disk assets / starts partial UI.
-- [x] Capture the fixed allowlisted assets at initialization; missing required asset fails before listening. Preserve security/API semantics.
-- [x] Verify focused film suite (155 tests), lint/format and regression evidence. Parent reviews full diff.
-- [ ] Commit/push scoped repair; preserve runtime review backup. A controlled real restart is a distinct operator action, not an automatic worker side effect.
+- [ ] Recheck worktrees and repair `3532efca9`. Its commit exists: do not redo it. Integrate the reviewed three-file change through the development branch; no automatic PR merge or live restart.
+- [ ] Run `bun run film:test`; both asset regressions present, zero failures/skips, expected count at this point 155.
+- [ ] In isolated execution worktrees, install frozen dependencies only if needed; `bun run build` before package tests/typecheck. Recover exact failures from the interrupted broad run; compare base `5ff23acdd` and candidate with identical setup/load. Interrupted/missing-dependency runs are not pass.
+- [ ] Record command/base/candidate/result/owner. Fix candidate regressions in owning tasks; reproduced unrelated base failures get explicit follow-up, never silent suppression.
 
-Broader workspace run exposed failures outside the changed scope; do not relabel it green or fix unrelated packages inside this task.
+**Acceptance:** repair integrated and targeted regressions pass; named baseline failures reproducibly classified. Live restart remains a separate authorized operator action after preserving current review.
 
-## Task 1 — Shared package and contract freeze
+## P1 — Review/reuse the existing shared implementation and reconcile contracts
 
-**Owner:** parent integration plus one package worker; no other worker edits manifests/contracts.
-**Files:** create `packages/film-production/{package.json,tsconfig.json,tsup.config.ts,src/contracts.ts,src/index.ts}` and explicit subpath entries; move current domain modules from `scripts/film-production/` into `src/legacy/` unchanged initially; retain compatible root CLI/re-export wrappers. Parent updates root build ordering, dependency manifests and package-subpath data.
-**Consumes:** current audited service behavior. **Produces:** typed ports above, package exports usable from both Bun source and Node dist.
+**Owner:** existing PR #7 implementation owner, session assignment to confirm; coordinator owns contract reconciliation/manifests and independent reviewer owns closure. **Files:** existing PR #7 package, `src/{contracts.ts,model.ts,parse/,browser.ts,index.ts,legacy/}`, package/consumer tests and current script wrappers. Preserve one implementation and build/export/subpath compatibility.
 
-- [x] Write failing package-consumer tests: existing CLI imports work, Node resolves built exports, browser-safe contracts import no fs/process implementation; no package cycle.
-- [x] Move single implementations and add boundary declarations/types without duplicating reducers. Preserve legacy file formats/commands. Parent commits the contract before consumer workers branch.
-- [ ] Run `bun run --cwd packages/film-production build`, `bun run film:test`, `bun run check:workspace-contracts`, `bun run check:package-subpaths`, `bun run check:package-cycles`; expect baseline behavior and zero missing exports/cycles. Run a fresh workspace build once to establish the new package order. First isolate the recorded broad-workspace failures on the base under controlled load; do not hide failures or label an interrupted run green. Parent owns this baseline lane.
-- [x] Document public versus server-only exports; commit independently.
+**Interfaces:** produces contracts above and server-only legacy exports; current CLI behavior stays compatible.
 
-## Task 2 — Durable project lifecycle, revision continuity and candidate intake
+- [x] Existing extraction identified/reviewed at `963d9b424`; nine modules byte-identical, inspector asset path adjusted, old wrappers re-export one implementation. Isolated package build/four tests/typecheck and 155 legacy film tests pass; no fresh whole-workspace install qualification claimed.
+- [ ] Close PR #7 path-contract, metadata/test-quality and failed Comments findings; reconcile Fallow exclusion scope. Recheck targeted consumer fixtures and added boundary regressions without duplicating the package.
+- [ ] Reconcile versioned commands, uncertain outcomes, durable request replay and placement operation identity against existing ports/types; freeze one agreed contract commit and examples before consumer integration. Preserve file formats/storage algorithms until their owning lifecycle task changes them.
+- [ ] Build new package and workspace in updated order. Run `bun run film:test`, `bun run check:workspace-contracts`, `bun run check:package-subpaths`, `bun run check:package-cycles`; zero new failures. Make package tests reachable through declared runners.
+- [ ] Independent behavior/isolation review, then scoped commit as the consumer base.
 
-**Owner:** domain worker. **Files:** new `src/project/{store,revisions,catalog,migration,attempts}.ts`, typed project parsers and `src/project/*.test.ts`; root wrappers retain compatibility.
-**Consumes:** frozen contracts. **Produces:** `openProject`, legacy-project migration, project command dispatch, `registerCandidate`, `createAttempt`, implementing FilmPort.
+## P2 — Durable project/review and additive catalog
 
-- [ ] RED fixtures: restart after review save, add a take without losing old history, unrelated board-text update, changed reference bytes, stale concurrent mutation, interrupted publication, terminal failure/new attempt, unknown outcome/no duplicate, same native task bound once.
-- [ ] Use locked atomic project state plus immutable content-addressed source/evidence blobs. Write blobs first, then publish references/revision; orphan blobs are harmless. Preserve legacy inputs; migration writes a new destination and never invents approval/compilation provenance.
-- [ ] Keep source-evidence revision separate from effective creative/reference bindings. Preserve historical jobs on their captured snapshot; require revalidation of affected active proposals/releases. Candidate catalog additions are explicit events, not edits to old imported bundles.
-- [ ] Intake verifies current bytes/streams, kind, original IDs, metadata and receipt/attempt provenance. Image metadata and first-frame review remain explicit. Model-generated files never become selected/accepted by registration.
-- [ ] Run `bun run --cwd packages/film-production test src/project`; expect all listed recovery/data-continuity cases green plus legacy suite compatibility. Document operator migration/recovery; commit.
+**Owner:** domain specialist. **Files:** new package `src/project/{store,publication,revisions,catalog,migration,commands,nextActions}.ts`, tests/fixtures.
 
-## Task 3 — Scene schema, patterns and deterministic Kling candidate compiler
+**Interfaces:** FilmPort through `openProject`, planned dispatchFilmCommand and readProjectEvents functions; `registerCandidate`/`selectCandidate` consume frozen actions and preserve legacy snapshot identity.
 
-**Owner:** compiler worker. **Files:** new `src/scene/{schema,compile,patterns,diagnostics}.ts`, `src/native/{snapshot,validate,serialize,releaseProfile}.ts` and their tests/fixtures; no domain store or transport edits.
-**Consumes:** SceneBriefV1, verified reference bindings, source/review identity, optional CapabilitySnapshotV1, film release profile. **Produces:** `parseSceneBrief`, `compileScene`, native-candidate validation, canonical argument serialization as specified.
+- [ ] RED: review/draft save → reopen; response-loss replay; same ID/different payload; competing revisions; unchanged/additive/changed source; intake → selection; duplicate bytes with explicit shot associations.
+- [ ] RED publication faults before rename, directory-open/sync after rename, cleanup; crash/reopen with abandoned lock; orphan/missing blob. Assert no guessed rollback, blind retry or lock stealing.
+- [ ] Implement private locked atomic project state and immutable blobs. Verify/write blobs before references; persist command outcomes. After uncertain publication, verify or durably republish visible state under writer ownership, otherwise block with diagnostic. Reread alone never proves power-loss durability.
+- [ ] Intake verifies bytes, kind/stream coverage, original IDs, image metadata and optional job/attempt evidence. Catalog addition does not mutate imports, select or approve footage. Migration writes a new destination, preserves originals.
+- [ ] Pure `deriveNextActions(view: ProjectViewV1): FilmNextActionV1[]`: uncertainty first, then stale/missing evidence, mapping/reference gaps, selection/placement. Stable priority, reason/target, no inferred mapping.
+- [ ] Run `bun run --cwd packages/film-production test src/project`, legacy suite, build/typecheck; review fault results and migration/recovery guide.
 
-- [ ] RED fixtures: exact Unicode dialogue, reordered object keys/determinism, invalid/overlapping action timing, contradictory camera, unknown required voice, missing references, unsupported sound/motion combination, wrong output arithmetic and malformed/unknown fields.
-- [ ] Implement editable pattern data and prompt ordering from the spec. Adapt Argon pure compiler concepts with provenance/licensing retained; remove hardcoded model lists, time bounds and dialogue mutation. Distinguish prose lens/camera intent from native controls.
-- [ ] RED native fixtures: model/enum/slot/schema drift, combined reference cap, alias collisions, incomplete snapshot, wrong runtime/source binding, duration/ratio/resolution/count mismatch. No snapshot means creative draft only, executable false.
-- [ ] Verify `bun run --cwd packages/film-production test src/scene src/native`; expect deterministic output, useful field-level diagnostics and zero discovery/upload/submit calls. Compare canonical serialization/hash with the existing Python fixture. Document each pattern and diagnostic; commit.
+## P3 — Optional film API and recoverable client contract
 
-## Task 4 — Proposal-only assistant host and external handoff
+**Owner:** API specialist; coordinator owns registration. **Files:** new studio-server `src/film/{routes,session,events,validation}.ts` and tests; coordinator edits existing `types.ts`, `createStudioApi.ts`, CLI `src/server/studioServer.ts`, Studio `vite.adapter.ts`.
 
-**Owner:** assistant-host worker. **Files:** new `packages/cli/src/film/assistant/{host,codex,externalClaude,events,context,qualification}.ts` and tests; parent wires host capability later. No UI/store/provider edits.
-**Consumes:** AssistantPort/context and scene JSON schema. **Produces:** normalized readiness/start/events/cancel; candidate proposals only.
+**Interfaces:** optional `StudioApiAdapter.film: FilmPort`; snapshot/command/events/bootstrap under `/projects/:id/film/*`. Assistant routes independently unavailable until P8.
 
-- [ ] RED fake-process cases: missing binary/login, unsupported protocol, bad JSON, output-schema violation, late chunks, cancellation, interruption, quota/rate limit, environment API-key override, unapproved tool request and token/log redaction.
-- [ ] Resolve existing executables without installation/PATH mutation; use argument arrays and private project-scoped temporary context. Codex CLI structured output is the first adapter. Runtime compatibility and tool isolation must be tested before showing ready; no model call occurs during readiness browsing.
-- [ ] Prove authoring mode cannot execute providers/shell/file writes or inherit unapproved MCP/hooks. If the verified version cannot enforce that profile, return unsupported with the external handoff path, not reduced protection. Never extract credentials.
-- [ ] Implement Claude external file/clipboard handoff with the same scene schema/authoring instructions; do not advertise third-party Claude.ai login or silently use API billing. Any future embedded adapter must pass its documented qualification gate separately.
-- [ ] Run CLI package tests for `src/film/assistant`; fake transports must show zero remote model/generation calls. Document supported modes versus unverified live auth; commit. Controlled real agent-turn acceptance is explicit, not hidden in unit tests.
+- [ ] RED HTTP: missing capability, wrong project/Host/Origin/token/type, bounded payloads/events, path escape, stale revision, replay/lost response, cursor resync; private state inaccessible through existing generic file/media routes.
+- [ ] Implement bootstrap/typed results/shared parsers, no arbitrary path/executable route; default Vite disabled/fake. Snapshot or narrow request lookup resolves uncertain outcomes by request identity.
+- [ ] Build film then studio-server before consumers. Run `bun run --cwd packages/studio-server test src/film`, existing selection/host tests, affected typechecks; zero new failures versus P0.
+- [ ] Document unavailable/recovery semantics and independently review routes before real host wiring.
 
-## Task 5 — Shared project API and event bridge
+## P4 — Native Production: open, decide, save, reopen
 
-**Owner:** API worker; parent owns `createStudioApi.ts`, `StudioApiAdapter` and CLI/Vite host wiring.
-**Files:** new `packages/studio-server/src/film/{routes,assistantRoutes,validation,events}.ts` and tests; parent edits existing `types.ts`, `createStudioApi.ts`, `packages/cli/src/server/studioServer.ts`, `packages/studio/vite.adapter.ts`.
-**Consumes:** FilmPort and AssistantPort. **Produces:** typed project GET/command/event and assistant readiness/turn/event/cancel endpoints under `/projects/:id/film/*` and `/projects/:id/assistant/*`.
+**Owner:** frontend specialist. **Files:** new Studio `src/film/{api,components,hooks,context}/` and tests; coordinator minimally wires `components/dock/panelRegistry.ts`, `hooks/useStudioSidePanels.tsx`, `App.tsx`.
 
-- [ ] RED HTTP cases: wrong project/origin/token/type, oversized JSON/event, absent capability, stale revisions, event replay/cursor, disconnect/cancel and path escape.
-- [ ] Register narrow routes through optional adapter capabilities. Vite defaults disabled/fake. Reuse existing Hono/SSE patterns; no arbitrary executable/path endpoint and no private state through generic editor routes.
-- [ ] Build film-production then studio-server before CLI/Studio consumers. Run studio-server film-route tests and existing selection/media/host compatibility tests; expect unavailable mode explicit and existing API unchanged. Document route schemas and error recovery; commit.
+**Interfaces:** consumes ProjectViewV1, diagnostics/actions and film HTTP; one project-scoped client store. No localStorage as canonical production persistence.
 
-## Task 6 — Native Studio Production and Assistant panels
+- [ ] RED: clip → explicit shot lookup, unmapped selection, saved/dirty/uncertain/conflict states, draft reload, switch project/shot during save, late response isolation, absent capability.
+- [ ] Build shot/direction, assigned-first references/filters, explicit mapping/reference changes, owned candidate registration/selection, next-action links. Draft keyed project/shot/field; conflict preserves local and saved values. One truthful save contract for review/jobs.
+- [ ] Scope pending state; use native tokens/components, keyboard controls, labels/live status and focus continuity. Narrow dock remains operable; readable labels reveal IDs/provenance on demand.
+- [ ] Run `bun run --cwd packages/studio test src/film`, dock tests/typecheck. Actual browser + API: open synthetic project → reference change → owned intake/selection → reload/reopen; competing edit and keyboard recovery. Capture before/after, supported themes and narrow panel.
 
-**Owner:** frontend worker under `packages/studio/src/film/{components,hooks,api,context}` and tests. Parent wires `components/dock/panelRegistry.ts`, `hooks/useStudioSidePanels.tsx`, `hooks/useAskAgentModal.ts`, `App.tsx` minimally.
-**Consumes:** reviewed API schemas, ProjectView, scene/compilation/assistant/provider states. **Produces:** actual functional dock panels, not an iframe of the companion inspector.
+**Acceptance:** durable native review/candidate work without connected assistant, provider execution or companion download.
 
-- [ ] Before UI work, read Studio AGENTS, Impeccable and current web guidance; retain existing tokens/components. RED UI cases: exact selected shot resolution, malformed assistant proposal, durable draft/reload, capability unavailable, keyboard, project switch/late response, stale apply/draft retention.
-- [ ] Build shot/reference/direction context, structured scene editor/pattern choice, compiled prompt/native parameter inspector and diagnostics, attempts/candidates and explicit actions. Native parameter fields derive from the selected snapshot; no static model catalog or false ready status.
-- [ ] Route existing Ask Agent into the one panel; preserve clipboard fallback. Show target/revision and editable proposal diff before apply. Generation/release actions are separate from chat send and cannot be triggered by model text.
-- [ ] Run Studio film/AskAgent/dock tests and a real browser walkthrough through iframe/selection hooks, desktop+narrow layout and project reopening. Verify actual API, not only happy-dom mocks. Document public Studio support separately from desktop docs; commit.
+## P5 — Candidate-to-edit and first offline production cycle
 
-## Task 7 — Kling qualification, exact release and result binding
+**Owner:** editor specialist; coordinator owns existing mutation/undo seams. **Files:** new Studio `src/film/timeline/{placement,actions,preview}.ts`, tests; shared `src/project/{assembly,placementOperations}.ts`; a planned offline-cycle browser runner, isolated fixtures. Editor specialist owns these two shared files as an explicit exception to the domain directory ownership; domain specialist owns project-command reconciliation. Coordinator registers runner/CI.
 
-**Owner:** Kling integration worker. **Files:** new package `src/providers/kling/{capabilities,prepare,releaseBridge,reconcile}.ts`, CLI host adapter and fixtures; parent updates old handoff wrapper. Canonical Movies files remain unchanged.
-**Consumes:** compiled scene, snapshot, job/attempt, reference proofs and canonical release profile. **Produces:** blocked prepared payload, exact release input, single-submit bridge and normalized result receipts/candidates.
+**Interfaces:** pure `previewFilmPlacement(input: FilmPlacementInputV1): FilmPlacementPreviewV1`; `applyFilmPlacement(command: FilmPlacementCommandV1)` uses existing editor version/transaction machinery. Command includes preview, request/operation IDs and expected project/file versions, frozen during P1. New-assembly preparation remains supported separately.
 
-- [ ] RED fixtures: plugin versus canonical CLI identity mismatch, invalid producer-safe ID, missing/current schema, wrong input role, changed prompt/contract/bytes after release, expired quote/upload scope, interrupted submit and uncertain result.
-- [ ] Qualify installed canonical transport and sanitized account-specific schemas using read-only operations; never substitute another CLI/MCP envelope. Bind both compilation fingerprint and canonical Python payload hash. Current film shot-contract restrictions remain explicit diagnostics.
-- [ ] Only the canonical released request submits. Preserve native task/trace/output identity, reconcile unknown instead of retrying, verify downloaded bytes before intake. A deliberate new attempt requires explicit reason and a new exact release.
-- [ ] Run offline provider/hash/runner-sentinel tests plus legacy handoff tests; expect no provider invocation from preparation. Live account readiness and one paid generation are separate producer-controlled gates. Document qualified versus fixture-only evidence; commit.
+- [ ] RED: catalog candidate resolves verified bytes; preview track/start/trim/rate/audio/conflicts; stale file/source rejects; existing hand-edited output never overwritten.
+- [ ] New assembly first, then explicit insertion/replacement through existing save tokens/undo. Keep picture muted with separate dialogue. No second timeline state engine or arbitrary panel HTML rewrite.
+- [ ] Persist placement intent before changing composition files. A durable operation receipt links preview/input identity, before/after file versions and hashes, resulting composition/clip IDs and editor transaction identity. After file mutation, reconcile that receipt into the project store; do not pretend the two stores share an atomic transaction. Restart/replay inspects recorded evidence and recovers the original result, or exposes uncertainty and blocks duplicate application. Never overwrite intervening human edits to resolve uncertainty.
+- [ ] Fault tests interrupt before/after editor mutation and before/after project-result publication. Assert one insertion at most, recovery of the original receipt where provable, explicit uncertainty otherwise, and preservation of manual edits/undo history.
+- [ ] Actual UI/API cycle: open → map/reference → intake → select → preview/place → edit → undo/redo → save → render → close/reopen. Include changed source, failed save and interrupted/repeated command; retain manual edits and decisions.
+- [ ] Deterministic 24fps/96-frame fixture: full decode requires 96 frames/4 seconds within one-frame timestamp tolerance; visual/audio markers verify source trims/placement within one frame. Cover 0.5×/1×/2×, nonzero trims and independent J/L audio. Metadata assertions alone insufficient; repair/report unsupported behavior before capability claims.
+- [ ] Build affected packages; focused domain/API/Studio suites, executable cycle runner, composition lint/browser check before rendering. Record build SHA, screenshots, decoded measurements and reopening evidence.
 
-## Task 8 — Higgsfield handoff and owned-result module
+**First integrated release gate:** P0–P5 pass as one offline product. Compiler, assistant and live generation have independent readiness status.
 
-**Owner:** provider worker A. **Files:** `src/providers/higgsfield/{handoff,receipt,qualification}.ts` and fixtures; no direct Studio wiring.
-**Consumes:** provider/scene/candidate contracts. **Produces:** functional handoff package, explicit returned-media import, readiness capability declaration.
+## P6 — Scene compiler and explainable native diagnostics
 
-- [ ] RED missing/changed output, image metadata, wrong shot/job/attempt and false-executable-capability cases.
-- [ ] Implement manual handoff/import as a usable production path. Automatic execution requires a documented authenticated product interface; an agent plugin alone is not that interface. Mark unsupported operations precisely, retain full request/output provenance.
-- [ ] Run provider/intake tests; parent verifies generic UI exposes handoff/import correctly. No credits spent or uploads triggered. Document the execution qualification prerequisite; commit.
+**Owner:** compiler specialist parallel with P2 after P1. **Files:** new package `src/scene/{schema,compile,patterns,diagnostics}.ts`, `src/native/{snapshot,validate,serialize,releaseProfile}.ts`, tests/fixtures; frontend owner later adds scene editor.
 
-## Task 9 — ComfyUI workflow adapter
+**Interfaces:** `parseSceneBrief(value: unknown): SceneBriefV1`; `compileScene(brief, context): CompilationV1`; native validation/serialization per design, no discovery/upload/submit side effects.
 
-**Owner:** provider worker B. **Files:** `src/providers/comfyui/{profile,workflow,adapter,receipt}.ts` and fake-server tests.
-**Consumes:** versioned selected server/workflow/input bindings, resource lease and provider contracts. **Produces:** readiness, deterministic workflow candidate, explicit queue submission/reconciliation and verified candidate result.
+- [ ] RED exact Unicode dialogue, reordered-input determinism, impossible/overlapping beats, camera conflicts, missing subject/reference/voice, frame arithmetic, unsupported combinations. No snapshot → creative draft, executable false.
+- [ ] Data-driven patterns and field diagnostics; preserve provenance/licensing of adopted pure Argon concepts, remove hardcoded capability assumptions. Camera prose stays distinct from native controls.
+- [ ] RED schema/enum/slot/combined-cap drift, aliases, duration/ratio/count, Python canonical-hash parity. Live CLI/account qualification remains separate.
+- [ ] Run `bun run --cwd packages/film-production test src/scene src/native`, build/typecheck, no-external-call sentinel. UI owner adds recoverable brief/compiled view and field-linked diagnostic browser proof.
 
-- [ ] Fetch current official/local server API documentation before implementation. RED fake-server cases: offline server, workflow drift, missing model/node, bad slot binding, queue disconnect/unknown, duplicate callback, escaping output and GPU lease conflict.
-- [ ] Never start the server or download/load models from browsing/readiness. Bind workflow hash/model/input references to attempt; preserve server job ID and import outputs through shared intake.
-- [ ] Run fake-server/provider tests with zero inference. A real queued workflow is a separate explicit local-generation acceptance. Document profile setup/recovery; commit.
+## P7 — Attempts and outcome reconciliation
 
-## Task 10 — Local assistant/model profiles
+**Owner:** domain specialist after P2. **Files:** new `src/attempts/{identity,commands,reconcile}.ts`, tests; coordinator reviews contract additions.
 
-**Owner:** provider worker C. **Files:** `src/providers/local/{profile,readiness,assistant,resources}.ts` and tests; local media uses Task 9 workflows where applicable.
-**Consumes:** explicit configured runtime/model capabilities and shared resource lease. **Produces:** local SceneBrief proposals and honest media capability mapping.
+**Interfaces:** `createAttempt` and planned reconcileAttempt consume project commands; intent has immutable attempts with native identity, observed state, reason and release where applicable.
 
-- [ ] RED unavailable model, unsupported structured output, unexpected remote endpoint, server loss, schema-invalid proposal and competing Comfy/local resource cases.
-- [ ] Keep endpoint/model/profile selection explicit; no weights install or auto-load. Validate every returned proposal with the same scene parser. No second independent local media engine.
-- [ ] Run fake-runtime tests; then an operator-selected installed model can qualify actual behavior. Document limits and resource ownership; commit.
+- [ ] RED unknown cannot resubmit; confirmed failure permits explicit new attempt; another requested take has lineage/reason; identical requests on different shots follow scoped identity; duplicate task/receipt idempotent; conflicting binding rejected.
+- [ ] Keep legacy hashes historical, new scoped identity for new attempts; transport error never invents success/failure.
+- [ ] Package attempt/project + legacy job/handoff tests. UI owner adds reconcile/new-attempt actions with diff/uncertainty; exact release still controls submission.
 
-## Task 11 — Candidate-to-timeline actions through existing editor machinery
+## P8 — Proposal-only assistant host and native panel
 
-**Owner:** editor integration worker, using reviewed candidate contracts. **Files:** new `packages/studio/src/film/timeline/{mapping,placement,actions}.ts` and tests, shared package placement adapter; parent owns existing editor wiring.
-**Consumes:** selected candidate/shot, explicit cut/timing, expected source/edit version. **Produces:** new-assembly action and explicit version-checked placement/replacement through existing SDK/mutation/undo paths.
+**Owner:** host specialist; UI specialist alone edits Assistant UI; coordinator wires Ask Agent/routes/capability. **Files:** new CLI `src/film/assistant/{host,events,context,qualification,externalHandoff}.ts` plus transport after qualification; the existing Studio film Assistant panel and hooks; planned studio-server film assistant routes and tests.
 
-- [ ] RED ID alias mismatch, stale source/clip, other human-edited clips, dialogue preservation, independent J/L audio, undo/reopen and rejected overwrite cases.
-- [ ] Preserve original shot/take/attempt metadata on clips. Reuse existing preparation/placement and persistent edit-history paths; no new timeline authority. Editing never silently regenerates footage or re-prepares over hand edits.
-- [ ] Run film placement and Studio editor integration tests, lint/check generated HTML, and real browser edit→undo/reopen acceptance. Document supported edit semantics; commit.
+**Dependencies/interfaces:** P6 schema/P3 identity; AssistantPort readiness/start/events/cancel independently optional. External file/clipboard handoff uses same schema.
 
-## Task 12 — Production-cycle and release gates
+- [ ] Inspect installed runtime and fetch current official docs before selecting transport/flags. Qualify existing signed-in host only if proposal-only isolation is enforceable; otherwise explicit unavailable + external handoff. No install/billing fallback/inference as readiness side effect.
+- [ ] RED fake processes/events: missing binary/auth, bad protocol/JSON/schema, inherited tools/MCP/hooks, cancel/interruption/replay/late events, limits and sensitive-log redaction. Prove zero provider/shell/file-mutation authority.
+- [ ] Persist frozen context/turn/proposal; diff and explicit field application with expected revision. Stale output remains a draft; project switch cannot retarget. Chat never releases a request.
+- [ ] CLI host, API assistant, Studio assistant/AskAgent tests; browser fake-host stream/cancel/switch/reopen. Actual authenticated assistant turn is a separately explicit acceptance action, reported independently from mocks.
 
-**Owner:** independent QA worker after the milestone's implementation review; parent integrates fixes.
-**Files:** dedicated offline acceptance runner/fixtures under `scripts/film-production/acceptance/`, registered test/CI entrypoints, dated evidence under ignored workspace. Parent owns CI config.
-**Consumes:** actual Studio/API/host/domain/provider/editor build. **Produces:** reproducible pass/fail report with separate offline, authenticated-assistant, local-generation, live-provider and creative gates.
+## P9 — One qualified Kling release/result route
 
-- [ ] RED first: owned candidate cannot complete current register→select→edit→render→reopen loop; keep source copies and selections explicit, not guessed from legacy conflicts.
-- [ ] Prove persistence/revision/failure recovery and the complete offline Galileo-style exchange through actual UI. Include malicious assistant output, unknown submission, source refresh and project switch.
-- [ ] Decode exported frame count/duration and known boundary frames; compare expected independent audio timing/mix. Exercise 0.5x/2x only after native rate semantics are proved; otherwise expose unit-rate support honestly. No claim based only on HTML attributes.
-- [ ] Add CI that runs the new package, affected Studio/API/CLI checks and the offline browser gate. Remote status must be read after publication; do not label empty check lists green.
-- [ ] After offline success, qualify selected existing agent account without changing billing; live generation follows exact producer release. Creative scene/identity/voice/continuity acceptance stays the producer's decision.
+**Owner:** provider specialist. **Files:** `src/providers/kling/{capabilities,prepare,releaseBridge,reconcile}.ts`, narrow CLI host adapter/tests; retain blocked handoff compatibility.
 
-## Completion and reporting
+**Dependencies/interface:** P5 offline cycle, P6 compiler, P7 attempts; ProviderPort capability-declared operations, exact request/release/task/result binding and catalog intake.
 
-For every worker: read spec+own task, verify checkout/base, write meaningful regression first, implement within owned files, lint/format, report commands/results/limitations and commit only owned work after parent review. No worker reverts another's diff. Parent validates milestone integration before opening/updating draft PRs in `andreathar/hyperframes-film-studio`; no automatic PR merge.
+- [ ] RED transport/account/schema mismatch, unsafe ID caught before intent save, reference/prompt/bytes drift after release, expired quote/upload scope, lost submission response, duplicate trace/task, changed/missing result bytes.
+- [ ] Read-only qualification of canonical installed transport/current sanitized capabilities; never substitute another plugin/CLI envelope. Verify Python serialization/hash fixtures.
+- [ ] Canonical runner alone submits; bind compilation/native payload/references/quote/expiry/release. Unknown reconciles same native task. Verify downloaded bytes/provenance before catalog registration.
+- [ ] Offline provider/hash/sentinel + legacy handoff tests with zero uploads/submissions. Capability qualification is separate; one live cycle requires exact producer release, verified return and explicit creative review.
 
-Board cards track actual stage. Existing adapter/compiler/intake cards are reused. Add assistant host, shared package and API wiring cards because they are newly verified missing modules. Historical plans/delivery records stay historical; this plan is the current execution map after approval.
+## P10 — Further adapters through the proved lifecycle
+
+All modules remain in scope; each is a separate reviewable delivery using the same catalog/attempt/UI contracts. Schedule execution adapters after the first route, with no competing frontend state.
+
+### P10a — Higgsfield handoff/intake
+
+**Files/interface:** `src/providers/higgsfield/{handoff,receipt,qualification}.ts`; manual handoff + normalized receipt; automatic execution only after supported authenticated product-interface qualification.
+
+- [ ] RED wrong shot/attempt, changed/missing media, lost image metadata, false-ready capability. Implement byte-preserving manual exchange; provider/intake tests and actual P5 UI import. Report manual versus automatic availability separately.
+
+### P10b — ComfyUI workflow adapter
+
+**Files/interface:** `src/providers/comfyui/{profile,workflow,adapter,receipt}.ts`, fake-server tests; versioned workflow/input/resource profile, explicit readiness/queue/reconcile/results.
+
+- [ ] Current official/local docs; RED server offline, workflow/model/node drift, bad slot, resource conflict, duplicate callback, queue response loss, escaping output. Prepare deterministically and intake through catalog. Fake-server/provider tests; actual server start/inference is separately authorized.
+
+### P10c — Selected local profiles
+
+**Files/interface:** `src/providers/local/{profile,readiness,adapter,receipt}.ts`, fake-runtime tests; explicit runtime/model/resource profile and declared assistance/generation operations.
+
+- [ ] RED missing runtime/model, insufficient resources, lease conflict, cancel/unknown and unsupported operation. No automatic model loading; selective proposal application. Run profile/adapter tests; record real resource/inference acceptance separately.
+
+## P11 — Independent integration and final gates
+
+**Owner:** independent reviewer/QA after implementation slots free; fixes return to owners. **Files:** P5 runner, CI registration/docs, private evidence; coordinator owns status matrix.
+
+- [ ] Whole-change read-only review: one reducer/store per responsibility, parsed unknown inputs, no introduced `any`/unchecked casts, cycles, duplicate timeline/submit authority or leaked private state.
+- [ ] Changed-file oxlint/oxfmt, affected typechecks/tests, contract/subpath/cycle/reachability and Studio complexity/file-size gates; changed non-test Studio files stay within 600-line rule. Broad gate once at final integration, compare failures against P0.
+- [ ] Actual P5 browser/decoded cycle, assistant fake-host cancel/switch, provider unknown outcomes; keyboard/focus/narrow panel, partial-failure truth and path redaction; visible before/after captures.
+- [ ] Separate offline product, assistant mocks/authenticated host, provider fixtures/live qualification/execution, render correctness and creative acceptance. Incomplete/skipped/unavailable never means pass.
+- [ ] Reconcile README/TASKS/Board from results. Plan completion neither merges PRs nor activates an inspector; live operations retain their own authorization.
+
+## Completion and handoff
+
+First delivery requires P0–P5's durable, editable offline cycle in actual Studio. Full planned software also requires reviewed P6–P10 modules and P11. External capability availability, real inference and creative acceptance remain separately evidenced statuses.
+
+This file is the single execution map; checkpoint review is evidence, old deliveries are historical. Reuse existing Board cards for contracts/persistence/intake/attempts/Studio/compiler/assistant/providers/acceptance. Coordinator owns final integration and reports unresolved base failures/external qualification before readiness claims.
+
+## Corrective checkpoint before further feature work
+
+Observed after the quality correction: local commit `48693f33f` is reviewed/tested against `963d9b424`; concurrently shared PR7 advanced to last-observed `5769a890a`. Neither local green tests nor mounted disconnected panels establish readiness of that new head. The exact source reviews and state are linked from QUALITY-REPORT and PROJECT-STATE.
+
+| Order         | Owner and bounded responsibility                                                                                                                                | Required proof                                                                                                                     |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| 1             | Coordinator: identify active shared-branch owner, pin its revision, reconcile existing correction without losing concurrent files                               | Reviewed combined diff; no force push or duplicated extraction                                                                     |
+| 2             | Assistant specialist: valid output schema, prompt return of active turn ID, live event/cancel lifecycle, pre-execution qualification and sealed failures        | Public-port deferred-runner tests; valid schema acceptance; setup/cancel/restart cases; no paid calls                              |
+| 3             | Domain/compiler specialist: duplicate rejection, explicit timing/runtime/source identity, actual bound-reference roles and truthful release-mode validation     | Negative argument/timing/binding fixtures; independent producer serialization fixtures; exact-revision tests                       |
+| 4             | Studio specialist: structured proposal target/revision, controlled persisted native fields, raw continuity editing                                              | Late old-context regression; typing/reload tests; browser keyboard/workflow evidence                                               |
+| 5             | Domain/store specialist then API/Studio integration: original durable publication recovery and inspector read/descriptor bounds before native project lifecycle | Faults before/after replacement; retry/reopen reconciliation; FIFO/oversize/symlink cases; offline create/edit/render/reopen cycle |
+| Every handoff | Independent reviewer: inspect owned diff and repeat the original failing case; coordinator alone integrates shared contracts/exports/config                     | Findings closed on resulting revision; CI, local tests, deployment and product acceptance recorded separately                      |
+
+Use one implementation/integration lane while ownership and contracts are unresolved; specialized reviewers can inspect independent scopes. Resume disjoint consumer work only after its dependencies are frozen. No provider feature is a prerequisite for the offline production cycle. Do not expand debt budgets or mark a shell complete to satisfy a milestone.

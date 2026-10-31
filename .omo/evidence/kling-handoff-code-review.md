@@ -17,7 +17,7 @@ None found.
 
 ### H1 — A moved open export directory can receive canonical-workspace writes and still report success
 
-Location: `scripts/film-production/kling-handoff.mjs:295` through the writes at lines 299 and 304, and success return at line 315.
+Location: the historical handoff exporter at line 295 (before package extraction) through the writes at lines 299 and 304, and success return at line 315.
 
 The opened descriptor prevents replacement symlinks from redirecting the write, but it pins the inode rather than its namespace location. If the export parent is renamed into the canonical workspace immediately after the last `realpath` check, both files are created under that workspace. The function returns the stale original outside path successfully. This violates the stated canonical-workspace write exclusion and can misreport where the packet was saved. The existing parent-replacement test covers a symlink replacement before parent open, not relocation of an already-open ancestor.
 

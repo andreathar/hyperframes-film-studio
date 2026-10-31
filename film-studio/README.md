@@ -1,5 +1,11 @@
 # Film production in this fork
 
+## Consolidation update — 2026-10-31
+
+The producer requires one GitHub branch, `main`. The coordinator is consolidating existing heads and quality correction `48693f33f`; publication, remote branch cleanup and final integrated checks remain pending verification. Earlier branch/PR inventories are historical captures. [Project controls](PROJECT-CONTROL.md) and [the state register](PROJECT-STATE.json) record the verified backup and current policy. Recovery/input/descriptor findings, native offline acceptance, assistant/provider qualification and inspector activation remain open; consolidation does not close them.
+
+Current management entrypoints: [quality/efficiency report](QUALITY-REPORT.md), [observed project state](PROJECT-STATE.json) and [operating contract](PROJECT-CONTROL.md). Remote PR #7 contains shared package/contracts not present in this checkout; review/reuse it before assigning new extraction work. These documents distinguish local, remote, integrated and activated state.
+
 This fork adds a local preparation step to Hyperframes. Describe selected takes and an edit in a JSON manifest, then create an editable composition with verified local media. Use Claude Code or Codex to work with the files through the account you already use. Preparation and local rendering do not require HeyGen generation.
 
 Current scope: **local intake, explicit candidate review, a production inspector, one picture track, independently timed audio tracks, source trims, constant playback rate, shot/take IDs and direction notes**. Provider generation, approval management and automatic ComfyUI execution remain subsequent work.
@@ -14,9 +20,7 @@ The [Kling producer handoff](KLING-HANDOFF.md) exports a verified, blocked candi
 
 Use [explicit candidate placement](PLACEMENT.md) to turn selected takes and an authored frame-based cut plan into a new editable composition. It checks current media and retains original IDs/direction provenance while preserving existing edits.
 
-The [production execution proposal](EXECUTION-PLAN.md) and [design](PRODUCTION-DESIGN.md) define the next integrated Studio/assistant work.
-
-Shared scene, assistant and provider records live in `@hyperframes/film-production`. Browser code imports `/browser` or `/contracts`. The audited filesystem services stay on the server-only `/legacy` export, which these CLIs re-export. A compiled scene is never itself a Kling release.
+The revised [execution plan](EXECUTION-PLAN.md), [design](PRODUCTION-DESIGN.md) and [checkpoint review](CHECKPOINT-REVIEW.md) define the next integrated work. First delivery is a durable owned-media cycle in native Studio; scene assistance and qualified providers follow the same contracts. These remain proposals. Runtime repair is committed separately at `3532efca9` and still needs integration; activation is a distinct step.
 
 ## Prepare an edit
 
@@ -34,8 +38,8 @@ The new directory contains:
 
 - `index.html`: ordinary Hyperframes source, editable with its existing timeline tools.
 - `assets/`: copied media with the exact supplied SHA-256, checked against actual streams and source duration.
-- `production.json`: portable shot/direction metadata and frame-based edit input.
-- `preparation.json`: input/output hashes and preparation receipt. Preparation grants no artistic approval.
+- the generated production manifest JSON: portable shot/direction metadata and frame-based edit input.
+- the generated preparation receipt JSON: input/output hashes and preparation receipt. Preparation grants no artistic approval.
 
 The input's media paths are relative to its directory. Absolute paths, URLs, traversal and symlinks escaping that directory are refused. Copy owned inputs into a private preparation folder first; keep originals. Obtain their hashes with `sha256sum <file>` and put each actual hash in the manifest.
 
@@ -111,7 +115,7 @@ All timings are integer frames at the project's integer frame rate (1–120 fps)
 
 Picture clips occupy track 0 without gaps or overlaps and have `volume: 0`. Place their sound separately to support J/L cuts without doubling it. Audio tracks 1–64 can overlap each other and picture; clips on the same track cannot overlap. Every clip must remain inside the composition. Unknown fields, unsupported effects or picture tracks fail instead of silently disappearing.
 
-`direction` accepts `camera`, `acting`, `dialogue`, `lighting` and `continuity` text. These notes remain in `production.json`; they do not magically change footage or certify performance. Shot IDs and candidate take IDs provide traceability, not approval authority. This schema is an edit preparation format, not the final provider/reference/job database contract.
+`direction` accepts `camera`, `acting`, `dialogue`, `lighting` and `continuity` text. These notes remain in the generated production manifest JSON; they do not magically change footage or certify performance. Shot IDs and candidate take IDs provide traceability, not approval authority. This schema is an edit preparation format, not the final provider/reference/job database contract.
 
 ## Check, edit and render
 

@@ -1,0 +1,774 @@
+{
+  "schema_version": 1,
+  "observed_at_utc": "2026-10-31T10:09:17.864492+00:00",
+  "validity": "Historical per-surface captures below remain dated evidence; single-main consolidation in progress, final publication and verification not yet reconciled; not a background monitor.",
+  "repository": {
+    "root": "/mnt/data/Projects_SSD/hyperframes-film-studio",
+    "origin": "https://github.com/andreathar/hyperframes-film-studio.git",
+    "upstream": "https://github.com/heygen-com/hyperframes.git",
+    "default_branch": "main",
+    "main_sha": "a04b45a6db0d1f724be9cf1985c3b13657195f0d",
+    "checkout_branch": "docs/film-production-execution",
+    "checkout_sha": "658f01cd0b359d4a3998e019aa06dbccdb7c32e2",
+    "worktree_paths": [
+      "/mnt/data/Projects_SSD/hyperframes-film-studio",
+      "/mnt/data/Projects_SSD/hyperframes-film-kling-handoff"
+    ],
+    "working_tree": "dirty planning/report artifacts; WORKFLOW.mmd pre-existing and preserved"
+  },
+  "assessment": {
+    "merge_readiness": "not_ready",
+    "component_quality": "useful tested foundation with material recovery/boundary gaps",
+    "management_controls": "documented but incomplete enforcement",
+    "native_offline_cycle": "not_proven",
+    "live_provider_readiness": "not_qualified",
+    "current_inspector": "reachable but app module graph and jobs API incomplete; activation required after review preservation"
+  },
+  "branch_inventory": {
+    "fork_count": 1514,
+    "upstream_count": 1508,
+    "identical_upstream_refs": 1507,
+    "fork_only": [
+      "cursor/film-studio-integrations-a069",
+      "docs/film-production-execution",
+      "feat/film-inspector-jobs",
+      "feat/film-kling-handoff",
+      "feat/film-production",
+      "feat/film-runtime-consistency",
+      "feat/film-timeline-placement"
+    ]
+  },
+  "branch_inventory_cleanup_candidates_count": 1506,
+  "github_controls": {
+    "main_classic_protection": "absent (HTTP404 Branch not protected)",
+    "rulesets": [],
+    "delete_branch_on_merge": false,
+    "auto_merge": false,
+    "primary_ci_workflow": "active; pull_request base filter main; no recorded CI workflow run in current fork action inventory"
+  },
+  "pull_requests": [
+    {
+      "number": 1,
+      "title": "feat: add local film review, job tracking and edit preparation",
+      "url": "https://github.com/andreathar/hyperframes-film-studio/pull/1",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "base": "main",
+      "base_sha": "a04b45a6db0d1f724be9cf1985c3b13657195f0d",
+      "head": "feat/film-production",
+      "head_sha": "8aaabb102b0a503a0fcaec63a83596cec555a37c",
+      "github_author": "andreathar",
+      "requested_reviewers": [],
+      "requested_team_reviewers": [],
+      "changed_files": 51,
+      "additions": 5903,
+      "deletions": 2,
+      "created_at": "2026-10-31T04:11:40Z",
+      "updated_at": "2026-10-31T07:49:47Z",
+      "check_runs": {
+        "total": 0,
+        "conclusions": {}
+      },
+      "formal_github_reviews": 0,
+      "implementation": "exists_remote",
+      "integration_to_main": "not_merged",
+      "deployment": "not_verified",
+      "actual_implementation_session_owner": "unconfirmed; GitHub author is not session assignment",
+      "next_gate": "dependency-aware review and integration"
+    },
+    {
+      "number": 2,
+      "title": "feat: export blocked Kling producer handoffs",
+      "url": "https://github.com/andreathar/hyperframes-film-studio/pull/2",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "base": "feat/film-production",
+      "base_sha": "8aaabb102b0a503a0fcaec63a83596cec555a37c",
+      "head": "feat/film-kling-handoff",
+      "head_sha": "472b5f54c6d2d0afd9c93b6d384cb27156489c9a",
+      "github_author": "andreathar",
+      "requested_reviewers": [],
+      "requested_team_reviewers": [],
+      "changed_files": 15,
+      "additions": 1035,
+      "deletions": 4,
+      "created_at": "2026-10-31T07:00:14Z",
+      "updated_at": "2026-10-31T07:49:47Z",
+      "check_runs": {
+        "total": 0,
+        "conclusions": {}
+      },
+      "formal_github_reviews": 0,
+      "implementation": "exists_remote",
+      "integration_to_main": "not_merged",
+      "deployment": "not_verified",
+      "actual_implementation_session_owner": "unconfirmed; GitHub author is not session assignment",
+      "next_gate": "dependency-aware review and integration"
+    },
+    {
+      "number": 3,
+      "title": "feat: prepare explicit candidate timeline placements",
+      "url": "https://github.com/andreathar/hyperframes-film-studio/pull/3",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "base": "feat/film-kling-handoff",
+      "base_sha": "472b5f54c6d2d0afd9c93b6d384cb27156489c9a",
+      "head": "feat/film-timeline-placement",
+      "head_sha": "0d89778dc6c89695b671b749485d5af4366779f3",
+      "github_author": "andreathar",
+      "requested_reviewers": [],
+      "requested_team_reviewers": [],
+      "changed_files": 14,
+      "additions": 912,
+      "deletions": 9,
+      "created_at": "2026-10-31T07:16:27Z",
+      "updated_at": "2026-10-31T07:49:47Z",
+      "check_runs": {
+        "total": 0,
+        "conclusions": {}
+      },
+      "formal_github_reviews": 0,
+      "implementation": "exists_remote",
+      "integration_to_main": "not_merged",
+      "deployment": "not_verified",
+      "actual_implementation_session_owner": "unconfirmed; GitHub author is not session assignment",
+      "next_gate": "dependency-aware review and integration"
+    },
+    {
+      "number": 4,
+      "title": "feat: add production job controls to inspector",
+      "url": "https://github.com/andreathar/hyperframes-film-studio/pull/4",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "base": "feat/film-timeline-placement",
+      "base_sha": "0d89778dc6c89695b671b749485d5af4366779f3",
+      "head": "feat/film-inspector-jobs",
+      "head_sha": "5ff23acdd5aa5c97f489f09666bfcbe686db6c27",
+      "github_author": "andreathar",
+      "requested_reviewers": [],
+      "requested_team_reviewers": [],
+      "changed_files": 19,
+      "additions": 950,
+      "deletions": 23,
+      "created_at": "2026-10-31T07:37:43Z",
+      "updated_at": "2026-10-31T07:49:47Z",
+      "check_runs": {
+        "total": 0,
+        "conclusions": {}
+      },
+      "formal_github_reviews": 0,
+      "implementation": "exists_remote",
+      "integration_to_main": "not_merged",
+      "deployment": "not_verified",
+      "actual_implementation_session_owner": "unconfirmed; GitHub author is not session assignment",
+      "next_gate": "dependency-aware review and integration"
+    },
+    {
+      "number": 5,
+      "title": "fix: keep inspector frontend and server versions consistent",
+      "url": "https://github.com/andreathar/hyperframes-film-studio/pull/5",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "base": "feat/film-inspector-jobs",
+      "base_sha": "5ff23acdd5aa5c97f489f09666bfcbe686db6c27",
+      "head": "feat/film-runtime-consistency",
+      "head_sha": "3532efca917a2d7b412d3df06555752279a49006",
+      "github_author": "andreathar",
+      "requested_reviewers": [],
+      "requested_team_reviewers": [],
+      "changed_files": 3,
+      "additions": 84,
+      "deletions": 9,
+      "created_at": "2026-10-31T08:28:39Z",
+      "updated_at": "2026-10-31T08:28:39Z",
+      "check_runs": {
+        "total": 0,
+        "conclusions": {}
+      },
+      "formal_github_reviews": 0,
+      "implementation": "exists_remote",
+      "integration_to_main": "not_merged",
+      "deployment": "not_verified",
+      "actual_implementation_session_owner": "unconfirmed; GitHub author is not session assignment",
+      "next_gate": "dependency-aware review and integration"
+    },
+    {
+      "number": 6,
+      "title": "docs: plan native film Studio and structured assistant integration",
+      "url": "https://github.com/andreathar/hyperframes-film-studio/pull/6",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "base": "feat/film-inspector-jobs",
+      "base_sha": "5ff23acdd5aa5c97f489f09666bfcbe686db6c27",
+      "head": "docs/film-production-execution",
+      "head_sha": "658f01cd0b359d4a3998e019aa06dbccdb7c32e2",
+      "github_author": "andreathar",
+      "requested_reviewers": [],
+      "requested_team_reviewers": [],
+      "changed_files": 4,
+      "additions": 326,
+      "deletions": 2,
+      "created_at": "2026-10-31T08:29:12Z",
+      "updated_at": "2026-10-31T08:29:12Z",
+      "check_runs": {
+        "total": 0,
+        "conclusions": {}
+      },
+      "formal_github_reviews": 0,
+      "implementation": "exists_remote",
+      "integration_to_main": "not_merged",
+      "deployment": "not_verified",
+      "actual_implementation_session_owner": "unconfirmed; GitHub author is not session assignment",
+      "next_gate": "dependency-aware review and integration"
+    },
+    {
+      "number": 7,
+      "title": "feat: share film scene contracts for the Studio assistant",
+      "url": "https://github.com/andreathar/hyperframes-film-studio/pull/7",
+      "state": "open",
+      "draft": false,
+      "merged": false,
+      "base": "feat/film-runtime-consistency",
+      "base_sha": "3532efca917a2d7b412d3df06555752279a49006",
+      "head": "cursor/film-studio-integrations-a069",
+      "head_sha": "5769a890a887d939519dead1a5f4bfbdcce57f36",
+      "github_author": "andreathar",
+      "requested_reviewers": [],
+      "requested_team_reviewers": [],
+      "changed_files": 100,
+      "additions": 10023,
+      "deletions": 2098,
+      "created_at": "2026-10-31T08:55:17Z",
+      "updated_at": "2026-10-31T10:06:02Z",
+      "check_runs": {
+        "total_at_capture": 11,
+        "completed_success": 3,
+        "completed_failure": 1,
+        "in_progress": 2,
+        "queued": 5,
+        "note": "transient capture at pinned5769; not a final result; combinedStatuses empty"
+      },
+      "formal_github_reviews": 0,
+      "implementation": "exists_remote",
+      "integration_to_main": "not_merged",
+      "deployment": "not_verified",
+      "actual_implementation_session_owner": "unconfirmed; GitHub author is not session assignment",
+      "next_gate": "reconcile reviewed local correction and concurrent acceptance blockers; exact resulting revision validation",
+      "initial_audit_snapshot": {
+        "head_sha": "963d9b424c1d0612a584e55db46adc2cae3fbbf9",
+        "changed_files": 50,
+        "additions": 4586,
+        "deletions": 2095,
+        "updated_at": "2026-10-31T08:55:17Z",
+        "check_runs": {
+          "total": 26,
+          "conclusions": {
+            "success": 25,
+            "failure": 1
+          }
+        }
+      },
+      "integration_readiness": "request changes on pinned new-head source reviews",
+      "head_verified_by": "gh PR API and exact git fetch; branch active, may advance"
+    }
+  ],
+  "verification": [
+    {
+      "id": "V1",
+      "target": "checkout658f01cd0",
+      "command": "bun run test:scripts",
+      "result": "pass",
+      "node_tests": 1012,
+      "vitest_tests": 109,
+      "total": 1121,
+      "failures": 0,
+      "skips": 0,
+      "scope": "root script runner; includes film service tests, not whole monorepo",
+      "cwd": "/mnt/data/Projects_SSD/hyperframes-film-studio",
+      "exit_code": 0,
+      "source_sha": "658f01cd0b359d4a3998e019aa06dbccdb7c32e2",
+      "artifact": ".film-workspace/quality-audit-2026-10-31/root-scripts.log"
+    },
+    {
+      "id": "V2",
+      "target": "PR7 exact Git archive963d9b424",
+      "command": "bun run --cwd .film-workspace/quality-audit-2026-10-31/pr7-snapshot/packages/film-production test",
+      "result": "pass",
+      "tests": 4,
+      "scope": "isolated package snapshot; no frozen fresh workspace install",
+      "cwd": "/mnt/data/Projects_SSD/hyperframes-film-studio",
+      "exit_code": 0,
+      "source_sha": "963d9b424c1d0612a584e55db46adc2cae3fbbf9",
+      "artifact": ".film-workspace/quality-audit-2026-10-31/pr7-package.log",
+      "setup": "Git archive of package, film scripts and inspector assets; existing CLI package dependencies linked inside ignored snapshot; no install"
+    },
+    {
+      "id": "V3",
+      "target": "PR7 exact Git archive963d9b424",
+      "command": "node --test scripts/film-production/*.test.mjs",
+      "result": "pass",
+      "tests": 155,
+      "failures": 0,
+      "skips": 0,
+      "cwd": "/mnt/data/Projects_SSD/hyperframes-film-studio/.film-workspace/quality-audit-2026-10-31/pr7-snapshot",
+      "exit_code": 0,
+      "source_sha": "963d9b424c1d0612a584e55db46adc2cae3fbbf9",
+      "artifact": ".film-workspace/quality-audit-2026-10-31/pr7-film.log"
+    },
+    {
+      "id": "V4",
+      "target": "PR7 exact Git archive963d9b424",
+      "command": "bun run --cwd .film-workspace/quality-audit-2026-10-31/pr7-snapshot/packages/film-production typecheck",
+      "result": "pass",
+      "cwd": "/mnt/data/Projects_SSD/hyperframes-film-studio",
+      "exit_code": 0,
+      "source_sha": "963d9b424c1d0612a584e55db46adc2cae3fbbf9",
+      "artifact": ".film-workspace/quality-audit-2026-10-31/pr7-typecheck.log"
+    },
+    {
+      "id": "V5",
+      "target": "checkout658f01cd0",
+      "command": "workspace contracts, subpaths, package cycles, reachability, film oxlint/oxfmt",
+      "result": "pass",
+      "scope": "one existing explicit compatibility package cycle permitted by repository check",
+      "cwd": "/mnt/data/Projects_SSD/hyperframes-film-studio",
+      "exit_code": 0,
+      "commands": [
+        "node scripts/check-workspace-contracts.mjs",
+        "node scripts/package-subpaths.mjs",
+        "node scripts/check-package-cycles.mjs",
+        "node scripts/check-test-reachability.mjs",
+        "node_modules/.bin/oxlint scripts/film-production",
+        "node_modules/.bin/oxfmt --check scripts/film-production"
+      ],
+      "source_sha": "658f01cd0b359d4a3998e019aa06dbccdb7c32e2",
+      "artifact": ".film-workspace/quality-audit-2026-10-31/static-checks.log"
+    },
+    {
+      "id": "V6",
+      "target": "PR7 963d9b424",
+      "command": "gh api repos/andreathar/hyperframes-film-studio/commits/963d9b424c1d0612a584e55db46adc2cae3fbbf9/check-runs?per_page=100",
+      "result": "failed",
+      "success": 25,
+      "failure": 1,
+      "failed_check": "Comments",
+      "url": "https://github.com/andreathar/hyperframes-film-studio/actions/runs/41186545198",
+      "cwd": "/mnt/data/Projects_SSD/hyperframes-film-studio",
+      "source_sha": "963d9b424c1d0612a584e55db46adc2cae3fbbf9",
+      "artifact": ".film-workspace/quality-audit-2026-10-31/pr-7-checks.json"
+    },
+    {
+      "id": "V7",
+      "target": "whole workspace base/candidate",
+      "result": "not_established",
+      "reason": "prior run interrupted; controlled comparison not completed",
+      "cwd": "/mnt/data/Projects_SSD/hyperframes-film-studio"
+    },
+    {
+      "id": "V8",
+      "target": "actual native Studio candidate/edit/render/reopen",
+      "result": "not_proven",
+      "cwd": "/mnt/data/Projects_SSD/hyperframes-film-studio"
+    },
+    {
+      "id": "V9",
+      "target": "existing inspector port9362",
+      "command": "Python urllib GET /, /app.mjs, /jobs.mjs, /api/view, /api/jobs with2-second timeout; no mutation",
+      "result": "operational_failure",
+      "observed_at_utc": "2026-10-31T09:28:48.839855+00:00",
+      "artifact": ".film-workspace/quality-audit-2026-10-31/runtime-probe.json",
+      "scope": "app imports jobs.mjs, which returns404; api/jobs404; no browser or restart",
+      "source_sha": "running source revision unverified; served app SHA256 recorded in artifact"
+    }
+  ],
+  "quality_findings": [
+    {
+      "id": "Q1",
+      "severity": "medium",
+      "scope": "ledger publication",
+      "status": "reproduced; unfixed",
+      "next_owner_role": "domain specialist"
+    },
+    {
+      "id": "Q2",
+      "severity": "medium",
+      "scope": "inspector FIFO/unbounded input",
+      "status": "reproduced; unfixed",
+      "next_owner_role": "inspector boundary owner"
+    },
+    {
+      "id": "Q3",
+      "severity": "medium",
+      "scope": "inspector path replacement before read",
+      "status": "reproduced with expected hash retained; unfixed",
+      "next_owner_role": "inspector boundary owner"
+    },
+    {
+      "id": "Q4",
+      "severity": "medium",
+      "scope": "PR7 absolute path contract mismatch",
+      "status": "corrected and independently reviewed in local48693f33f; not published or integrated",
+      "next_owner_role": "PR7 implementation owner; session assignment unconfirmed",
+      "initial_audit_status": "reproduced; no consuming IO exploit claimed"
+    },
+    {
+      "id": "Q5",
+      "severity": "medium",
+      "scope": "PR7 test quality and coverage",
+      "status": "corrected and independently reviewed in local48693f33f; not published or integrated",
+      "next_owner_role": "PR7 implementation owner",
+      "initial_audit_status": "source reviewed; targeted additions needed"
+    },
+    {
+      "id": "Q6",
+      "severity": "low",
+      "scope": "PR7 legacy export environment and checkout asset dependency",
+      "status": "corrected and independently reviewed in local48693f33f; not published or integrated",
+      "next_owner_role": "package integration owner",
+      "initial_audit_status": "source reviewed; clarify/correct"
+    }
+  ],
+  "board_snapshot_before_reconciliation": [
+    {
+      "id": "crd_01M68H2R0TTE4EHRMP3CQPE20X",
+      "title": "Workspace baseline failures",
+      "column": "backlog"
+    },
+    {
+      "id": "crd_01M68H2R0KAVNZSBPEXY00H1GR",
+      "title": "Production API wiring",
+      "column": "backlog"
+    },
+    {
+      "id": "crd_01M68H2R0BCSTYJFE9SZ2DRTJ6",
+      "title": "Studio assistant host",
+      "column": "backlog"
+    },
+    {
+      "id": "crd_01M68H2R0300C2PDJNBRS39HP5",
+      "title": "Shared film contracts",
+      "column": "backlog"
+    },
+    {
+      "id": "crd_01M68FTKKQT27Q6DAQZQ9X09JN",
+      "title": "Production cycle proof",
+      "column": "backlog"
+    },
+    {
+      "id": "crd_01M68FTKKGCKCAMDX2FJDJBV3Q",
+      "title": "Job attempt recovery",
+      "column": "backlog"
+    },
+    {
+      "id": "crd_01M68FTKKAYTXDVD52BZX6D70M",
+      "title": "Review persistence recovery",
+      "column": "backlog"
+    },
+    {
+      "id": "crd_01M68FTKK4NQJQQZRGFKB5T8GB",
+      "title": "Source revision continuity",
+      "column": "backlog"
+    },
+    {
+      "id": "crd_01M68E8KEGSNJKCP8MCY5GB4XY",
+      "title": "Inspector recovery hardening",
+      "column": "backlog"
+    },
+    {
+      "id": "crd_01M68CJ13HKDET536SHJFFVEA4",
+      "title": "Film exchange acceptance",
+      "column": "backlog"
+    },
+    {
+      "id": "crd_01M68CJ139DFXZMJBEFTAWJPVG",
+      "title": "Concurrent preparation checks",
+      "column": "backlog"
+    },
+    {
+      "id": "crd_01M68CJ133ZWS2F9RR2KWCYGRK",
+      "title": "Render timing parity",
+      "column": "backlog"
+    },
+    {
+      "id": "crd_01M68CJ12KWQ6CKXM5247FJTQZ",
+      "title": "Local model adapter",
+      "column": "backlog"
+    },
+    {
+      "id": "crd_01M68CJ12A3D87A0FXCDVW2X6Y",
+      "title": "ComfyUI execution adapter",
+      "column": "backlog"
+    },
+    {
+      "id": "crd_01M68CJ122XNHC4Q9VGEX6A80V",
+      "title": "Higgsfield execution adapter",
+      "column": "backlog"
+    },
+    {
+      "id": "crd_01M68CJ11K0KZ80A39CAPVA0K7",
+      "title": "Kling result binding",
+      "column": "backlog"
+    },
+    {
+      "id": "crd_01M68CJ11DPJJB2Z7PBWNJ4KQ8",
+      "title": "Kling release binding",
+      "column": "backlog"
+    },
+    {
+      "id": "crd_01M68CJ115KBNAH8JZFH4GWH23",
+      "title": "Live Kling qualification",
+      "column": "backlog"
+    },
+    {
+      "id": "crd_01M68C2SJ59BPM2VDPFEAME96K",
+      "title": "Manual candidate intake",
+      "column": "backlog"
+    },
+    {
+      "id": "crd_01M68CJ12TWMDN5FS3DVAWDFX7",
+      "title": "Studio production integration",
+      "column": "designing"
+    },
+    {
+      "id": "crd_01M68CJ11TWHVK474B16J6F1Q9",
+      "title": "Dialogue motion compiler",
+      "column": "designing"
+    },
+    {
+      "id": "crd_01M68H08FF6V57NA9HNZZ4SATA",
+      "title": "Film execution plan",
+      "column": "your_look"
+    },
+    {
+      "id": "crd_01M6849EQQ66839BY53J4P8JQM",
+      "title": "Film studio foundation",
+      "column": "building"
+    },
+    {
+      "id": "crd_01M68FTKJXEJ2R8F0EH3A316B8",
+      "title": "Inspector runtime consistency",
+      "column": "your_review"
+    }
+  ],
+  "strategy": {
+    "first_delivery": "owned media intake -> explicit selection -> native edit/undo -> decoded render -> reopen",
+    "reuse_before_build": "review PR7 against P1 before new extraction work",
+    "immediate_work_limit": "one code integration/fix lane plus independent review; broader three-worker cap after contract reconciliation",
+    "no_new_provider_execution_until": "offline cycle proof and provider-specific release gate"
+  },
+  "active_session_controls": {
+    "whole_project_refresh_before_assignment": true,
+    "no_duplicate_P1_work": true,
+    "implementation_changes_in_this_audit": true,
+    "github_settings_changed": false,
+    "branches_deleted": false,
+    "services_restarted": false,
+    "commits_or_pushes": true,
+    "runtime_read_only_probe": true,
+    "commits_local": 1,
+    "pushes": 0,
+    "implementation_scope": "bounded correction in isolated managed worktree; original checkout changes remain reports/plans only",
+    "concurrent_owner_reconciled": false
+  },
+  "refresh_triggers": [
+    "new task assignment",
+    "PR head/base change",
+    "review outcome",
+    "CI completion",
+    "integration",
+    "runtime activation"
+  ],
+  "sources": {
+    "private_evidence_root": ".film-workspace/quality-audit-2026-10-31",
+    "report": "film-studio/QUALITY-REPORT.md",
+    "operating_contract": "film-studio/PROJECT-CONTROL.md",
+    "execution_map": "film-studio/EXECUTION-PLAN.md",
+    "board_thread": "http://plannotator.localhost:45365/#thread=msg_01M6848D8DSC5G382PDDC4F3QM"
+  },
+  "board_reconciliation": {
+    "shared_contracts": {
+      "card_id": "crd_01M68H2R0300C2PDJNBRS39HP5",
+      "from": "backlog",
+      "to": "building",
+      "pr": "https://github.com/andreathar/hyperframes-film-studio/pull/7"
+    },
+    "existing_cards_updated": ["Workspace baseline failures", "Inspector recovery hardening"],
+    "new_cards_created": 0
+  },
+  "runtime_observation": {
+    "observed_at_utc": "2026-10-31T09:28:48.839855+00:00",
+    "base_url": "http://127.0.0.1:9362",
+    "read_only": true,
+    "responses": [
+      {
+        "route": "/",
+        "status": 200,
+        "content_type": "text/html; charset=utf-8",
+        "bytes": 2313
+      },
+      {
+        "route": "/app.mjs",
+        "status": 200,
+        "content_type": "text/javascript",
+        "bytes": 14389,
+        "sha256": "d392acbb1200619fbae66a866bd7fc68763f7512e1ab8d6ef7d8aa373db9be76",
+        "imports_jobs": true
+      },
+      {
+        "route": "/jobs.mjs",
+        "status": 404,
+        "content_type": "application/json"
+      },
+      {
+        "route": "/api/view",
+        "status": 200,
+        "content_type": "application/json",
+        "bytes": 19788,
+        "review_revision": 0,
+        "counts": {
+          "shots": 47,
+          "references": 14,
+          "takes": 11
+        }
+      },
+      {
+        "route": "/api/jobs",
+        "status": 404,
+        "content_type": "application/json"
+      }
+    ]
+  },
+  "last_remote_heads_rechecked_at_utc": "2026-10-31T09:29:25.120396+00:00",
+  "validation": {
+    "local_links": "pass",
+    "verification_artifact_paths": "pass",
+    "remote_head_base_draft_reconciliation": "pass",
+    "preexisting_diagram_sha256": "unchanged"
+  },
+  "correction_execution": {
+    "observed_at_utc": "2026-10-31T10:08:22.374954+00:00",
+    "worktree": "/home/athar/.codex/worktrees/1931/hyperframes-film-studio",
+    "base_sha": "963d9b424c1d0612a584e55db46adc2cae3fbbf9",
+    "working_diff_sha256": null,
+    "publication": "local commit only; not pushed/merged/activated",
+    "review": "contracts, CI, final scoped fixes, argv, test fixtures and hook parity independently Approved",
+    "owners": {
+      "package": "/root/repair_contracts",
+      "integration": "/root",
+      "ci_fix": "/root/fix_ci_base",
+      "reviewers": [
+        "/root/review_contract_repair",
+        "/root/review_ci_repair",
+        "/root/final_quality_review"
+      ]
+    },
+    "local_verification": {
+      "package_tests": 82,
+      "film_tests": 155,
+      "routing_tests": 9,
+      "typecheck": "pass",
+      "root_build": "pass_with_documented_existing_warnings",
+      "whole_workspace": "initial completed exit1; failed packages corrected/rechecked in full",
+      "engine_tests": "2671 passed,4skipped afterverifiedfixture/testrepairs",
+      "producer_tests": "full script pass,1123Vitest+allBunsub-suites",
+      "root_scripts": "1130 passed,0failed/skipped",
+      "commit_hook": "pass normally; no bypass; commitlint pass",
+      "comments_committed": "pass47examined/59scope,3existingwarnings",
+      "comment_ratchet_committed": "pass11sourcefiles vs3532",
+      "fallow_committed": "pass against3532; central reviewed debt baseline; bootstrap limits recorded"
+    },
+    "fixed_locally": [
+      "Q4 path contract",
+      "Q5 weak assertions",
+      "Q6 legacy environment/docs",
+      "Comments citation errors and ratio",
+      "bounded CI base routing",
+      "stale base resolution",
+      "Fallow scope and baseline-only trigger coverage"
+    ],
+    "not_fixed": [
+      "Q1 durable publication recovery",
+      "Q2 inspector input bound",
+      "Q3 inspector descriptor race",
+      "native offline product cycle",
+      "live inspector activation"
+    ],
+    "shared_branch_head_rechecked": "5769a890a887d939519dead1a5f4bfbdcce57f36",
+    "commit_sha": "48693f33f303c39cadf5950d622d2066293a26f4"
+  },
+  "concurrent_remote_review": {
+    "observed_at_utc": "2026-10-31T10:08:22.374966+00:00",
+    "last_observed_head": "5769a890a887d939519dead1a5f4bfbdcce57f36",
+    "comparison_base": "963d9b424c1d0612a584e55db46adc2cae3fbbf9",
+    "delta": {
+      "commits": 8,
+      "files": 56,
+      "insertions": 5437,
+      "deletions": 3
+    },
+    "session_owner": "unknown; branch visibly active",
+    "review_targets": {
+      "cli_and_studio": "f55fb732b0a4d501edb1c040692288791d0523f7",
+      "compiler": "5769a890a887d939519dead1a5f4bfbdcce57f36"
+    },
+    "disposition": "request changes; no integration clearance",
+    "verification": "source inspection; Studio pure helper probes; no full tests/browser/provider qualification on concurrent head",
+    "evidence": [
+      ".omo/evidence/concurrent-cli-review.md",
+      ".omo/evidence/concurrent-studio-review.md",
+      ".omo/evidence/concurrent-compiler-review.md"
+    ],
+    "next_gate": "reconcile actual owner and pinned head; remediate acceptance blockers; integrate local correction preserving all concurrent changes; run affected exact-result gates"
+  },
+  "active_session_controls_initial_audit": {
+    "whole_project_refresh_before_assignment": true,
+    "no_duplicate_P1_work": true,
+    "implementation_changes_in_this_audit": false,
+    "github_settings_changed": false,
+    "branches_deleted": false,
+    "services_restarted": false,
+    "commits_or_pushes": false,
+    "runtime_read_only_probe": true
+  },
+  "single_main_consolidation": {
+    "instruction_date": "2026-10-31",
+    "authorized_by": "explicit producer request",
+    "published_branch_target": "main",
+    "status": "local consolidation in progress; publication and remote branch cleanup pending verification",
+    "managed_worktree": "/home/athar/.codex/worktrees/1931/hyperframes-film-studio",
+    "original_checkout": "/mnt/data/Projects_SSD/hyperframes-film-studio",
+    "quality_correction_commit": "48693f33f303c39cadf5950d622d2066293a26f4",
+    "backup": {
+      "path": "/mnt/data/Projects_SSD/.project-backups/hyperframes-film-studio/20261031T101523Z",
+      "verification": "coordinator verified before consolidation",
+      "heads_preserved": 1514,
+      "dirty_files_preserved": true
+    },
+    "historical_inventory": "repository, branch_inventory, pull_requests and dated audits retain their capture scope; not current publication claims",
+    "final_remote_main_sha": null,
+    "final_remote_branch_inventory": null,
+    "integrated_build_tests": "coordinator reports full combined build passed; integration selector correction reviewed separately; root/full workspace checks ongoing",
+    "acceptance_gaps": [
+      "Q1 durable publication recovery",
+      "Q2 inspector input bound",
+      "Q3 inspector descriptor race",
+      "native candidate-to-edit/render/reopen acceptance",
+      "assistant/provider qualification",
+      "live inspector activation"
+    ],
+    "workflow_diagram": "copied byte-for-byte from original; preserved without formatting",
+    "remote_cleanup_intermediate": {
+      "source": "coordinator live update",
+      "inherited_refs_deleted": 1506,
+      "remaining_remote_branches": 8,
+      "remaining_composition": "main plus seven project heads",
+      "single_branch_target_achieved": false
+    }
+  }
+}

@@ -13,7 +13,7 @@ None.
 
 ## HIGH
 
-H1 — Container duration cannot prove selected stream coverage (scripts/film-production/prepare.mjs:48, 99–102).
+H1 — Container duration cannot prove selected stream coverage (the preparation module at historical lines 48 and 99–102, before package extraction).
 
 The fallback `stream.duration ?? metadata.format?.duration` accepts a short audio/video stream whenever another stream makes the container long enough. Matroska commonly omits stream.duration. Independently reproduced with synthetic local FFmpeg media: 2s H.264 video plus 0.5s AAC audio in MKV, without -shortest. ffprobe reported video DURATION tag 00:00:02.000000000, audio DURATION tag 00:00:00.523000000, neither stream.duration, and format.duration 2.000000. A manifest containing a 48-frame picture clip and 48-frame audio clip at 24fps returned status prepared. Thus roughly 1.5 seconds of the declared dialogue is unavailable despite passing coverage validation.
 

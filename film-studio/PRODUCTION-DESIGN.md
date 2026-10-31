@@ -1,6 +1,12 @@
 # Film Studio production workflow design
 
-Status: concrete design for producer review. Implementation delegation is the requested execution method. Existing inspector runtime repair is already delegated under the previously approved inspector contract; the new product work follows this reviewed design.
+## Consolidation update — 2026-10-31
+
+The producer requires one GitHub branch, `main`. The coordinator is consolidating existing heads and quality correction `48693f33f`; publication, remote branch cleanup and final integrated checks remain pending verification. Earlier branch/PR inventories are historical captures. [Project controls](PROJECT-CONTROL.md) and [the state register](PROJECT-STATE.json) record the verified backup and current policy. Recovery/input/descriptor findings, native offline acceptance, assistant/provider qualification and inspector activation remain open; consolidation does not close them.
+
+Status: revised proposal for producer review, 2026-10-31. Delegation is the requested execution method. Runtime repair is committed separately at `3532efca9`, absent from planning HEAD `658f01cd0`. The [execution plan](EXECUTION-PLAN.md) and [checkpoint review](CHECKPOINT-REVIEW.md) distinguish delivered software, unintegrated repair and proposed work.
+
+Whole-project update: PR #7 at `963d9b424` already supplies shared package/contracts outside this checkout and needs review corrections before contract freeze. The [quality report](QUALITY-REPORT.md) and [state register](PROJECT-STATE.json) supersede local-only assumptions about missing implementation. Reuse existing work; the project store, native panels and complete cycle are still pending.
 
 ## Intent
 
@@ -10,7 +16,7 @@ Success is a recoverable production cycle: open project → choose shot/referenc
 
 ## Verified starting point
 
-Base `5ff23acdd`: existing source import, explicit review, durable jobs, blocked Kling handoff and new-composition placement. The current film snapshot contains six Galileo plan shots, 41 legacy shots, 14 references and 11 take records; mappings require explicit producer reconciliation. Current source/media hashes were checked during the preceding audit. Existing rendering feasibility is useful but does not certify a complete new-candidate cycle.
+Base `5ff23acdd`: existing source import, explicit review, durable jobs, blocked Kling handoff and new-composition placement. The previously audited film snapshot contained six Galileo plan shots, 41 legacy shots, 14 references and 11 take records; mappings required explicit producer reconciliation. Source/media hashes were checked during that preceding audit and were not refreshed in this planning pass. Existing rendering feasibility is useful but does not certify a complete new-candidate cycle.
 
 The public Studio's Ask Agent action copies contextual instructions to the clipboard (`packages/studio/src/hooks/useAskAgentModal.ts`). Its exported editor tools are usable seams. This checkout does **not** contain the desktop chat/login implementation described by `docs/studio-app/`. A connected assistant is new host functionality, not an already implemented endpoint.
 
@@ -87,15 +93,21 @@ Selected clip → film shot is an explicit metadata lookup, never an equality as
 
 ## Quality gates and delivery
 
-Milestone A: coherent runtime, shared contracts and durable/revision-safe lifecycle. Milestone B: native Studio panels, proposal-only assistant, deterministic scenes and owned-media closed loop. Milestone C: one qualified Kling route through release/result binding. Milestone D: Higgsfield, ComfyUI and local profiles on the same contracts. All modules are in scope; gates determine when execution claims are valid.
+Milestone A: coherent runtime, reproducible baseline, shared contracts and durable/revision-safe lifecycle. Milestone B: native Production and owned-media candidate → selection → edit/undo → render → reopen. Assistant/provider capabilities are optional and do not block this offline gate. Milestone C: guided scene/compiler and proposal-only Assistant, with independent host qualification. Milestone D: one qualified Kling release/result route, followed by Higgsfield, ComfyUI and local profiles. All modules remain in scope; gates determine execution claims.
 
-At most three independent implementation workers plus parent integrator. Stable contract commit precedes parallel consumers. Separate peer worktrees/branches and explicit file ownership; parent alone owns shared exports, workspace manifests, route registration and final wiring. Task-scoped tests and independent milestone review; no repeated whole-monorepo runs for documentation-only work. Each milestone has an actual browser/decoded-media acceptance case, not a larger test-count target.
+The native workflow offers explainable next actions, assigned-first reference/continuity guidance, guided compilation, proposal diffs, candidate comparison/placement preview and job recovery. Persist project/shot drafts and both sides of revision conflicts. Scope pending states; retain keyboard/focus continuity and textual live status. The execution plan defines observable acceptance.
+
+Mutation recovery distinguishes rejected, applied, conflict and uncertain outcomes. Durable project-scoped request IDs reconcile lost responses. Failure after state replacement can leave visible data without proving crash durability; verify or durably republish under writer ownership before dependent writes. Separate source evidence, additive catalog and project mutation revisions to preserve snapshots and selective invalidation.
+
+Placement crosses composition files and the private project store. Persist operation intent before file mutation, then retain a receipt with request/operation identity, input preview, before/after file versions and resulting clip identities. Reconcile interrupted operations from that evidence; an unprovable outcome stays uncertain and blocks duplicate application. Recovery never overwrites intervening human edits or assumes an atomic transaction across both stores.
+
+At most three independent implementation workers plus parent integrator. Stable contract commit precedes parallel consumers. Separate local worktrees and explicit file ownership, with `main` as the only published GitHub branch; parent alone owns shared exports, workspace manifests, route registration and final wiring. Task-scoped tests and independent milestone review; no repeated whole-monorepo runs for documentation-only work. Each milestone has an actual browser/decoded-media acceptance case, not a larger test-count target.
 
 No paid request, upload, real model inference or creative selection is authorized by plan acceptance alone. Live action uses the producer's existing exact-request release. No real process restart occurs before preserving/reconciling its current review.
 
 ## Current sources
 
-- Local: public Studio AskAgent/selection/dock/tool seams; shared Hono adapter; audited film services; Argon pure compiler/preflight; the canonical Movies contract, release and batch-runner modules in its external checkout.
+- Local: public Studio AskAgent/selection/dock/tool seams; shared Hono adapter; audited film services; Argon pure compiler/preflight; the external Movies checkout’s Kling contract, release and batch modules (not files in this repository).
 - [Codex structured CLI output](https://learn.chatgpt.com/docs/non-interactive-mode#create-structured-outputs-with-a-schema), [app-server](https://learn.chatgpt.com/docs/app-server).
 - [Claude programmatic CLI](https://code.claude.com/docs/en/headless), [Agent SDK integration restriction](https://code.claude.com/docs/en/agent-sdk/overview#get-started).
 - Context7 official Kling API documentation was consulted for API concepts only; selected CLI/account schemas and the canonical runner govern this product's native request.
