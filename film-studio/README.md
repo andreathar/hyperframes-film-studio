@@ -14,6 +14,8 @@ The [Kling producer handoff](KLING-HANDOFF.md) exports a verified, blocked candi
 
 Use [explicit candidate placement](PLACEMENT.md) to turn selected takes and an authored frame-based cut plan into a new editable composition. It checks current media and retains original IDs/direction provenance while preserving existing edits.
 
+The [production execution proposal](EXECUTION-PLAN.md) and [design](PRODUCTION-DESIGN.md) define the next integrated Studio/assistant work. They are a concrete review proposal; the existing runtime repair is delegated separately.
+
 ## Prepare an edit
 
 From the fork checkout:
