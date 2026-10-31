@@ -1,9 +1,11 @@
 # Stage A: information architecture and UI contract
 
-Status: Stage A deliverable for Gate A, **revision 3** (answers the Gate A round 2 review, verdict FAIL with nine small fixes; revision 2 answered round 1 and folded in the producer's three answers). Branch `film-studio-rebuild`. Date 2026-10-31.
+Status: Stage A deliverable for Gate A, **PASSED in round 3** with binding errata in 12.14 (docs only, no re-review). **Revision 3** (answers the Gate A round 2 review, verdict FAIL with nine small fixes; revision 2 answered round 1 and folded in the producer's three answers). Branch `film-studio-rebuild`. Date 2026-10-31.
 Author: Stage A (UI/UX). No React was written for this stage. This file is the only input contract for Stage B.
 
 Scored against `BEST-PRACTICES.md` Gate A items A1 to A20. Section 14 is the self-score. Section 15 lists decisions taken and what is still open.
+
+Round 3 errata (Gate A PASS): the six binding rulings and one relayed note are in 12.14 and take precedence over earlier text in section 12, the IA table and 9.4.
 
 Revision 3 changes, mapped to the round 2 fixes (R2-1 to R2-9):
 
@@ -116,13 +118,13 @@ One row per region. Gate B must map its component tree one-to-one onto these row
 | R0 | Film host (non-visual, above all film panels, always mounted) | Own film state, the single film history, the live region and the toast host so they survive dock tab switches | None visible | none | contains R0.1 and G3 |
 | R0.1 | Live status | Announce progress, errors and counts for all three panels | Visually hidden text | none (not focusable) | `status` (`aria-live="polite"`, `aria-atomic="true"`) |
 | R1 | Schedule panel (dock id `schedule`, left group, `keepMounted`) | Master list of all scenes; see state, choose a scene, run its next action | Panel wrapper carrying `data-film-scope` | Enter by `Tab` from the dock strip, order R1.1 → R1.2 → R1.3 | `region`, `aria-label="Schedule"` |
-| R1.1 | Schedule toolbar | Filter, rebuild from script, undo and redo, scene count, save status | "Show" select, "Update from script", "Undo", "Redo", count text, save-status text ("Saved", "Saving...", "Not saved: your schedule is kept only until Studio closes.", "Couldn't save. Retry") | `Tab` through the four controls in that order. Select opens with `Enter`, `Space` or `Alt+Down`, `Esc` closes | `toolbar` (`aria-label="Schedule actions"`), `combobox`, `button` |
+| R1.1 | Schedule toolbar | Filter, rebuild from script, undo and redo, scene count, save status | "Show" select, "Update from script", "Undo", "Redo", count text, save-status text ("Saved on this computer", "Saving...", "Not saved: your schedule is kept only until this page is closed or reloaded.", "Couldn't save. Retry"; the memory-host wording is in 12.14 item 5) | `Tab` through the four controls in that order. Select opens with `Enter`, `Space` or `Alt+Down`, `Esc` closes | `toolbar` (`aria-label="Schedule actions"`), `combobox`, `button` |
 | R1.2 | Asset-folder banner | Say plainly when the asset folder or its asset list cannot be used | Message, "Check again", "Folder details" | `Tab` after the toolbar (only when shown). "Folder details" opens D5, `Esc` closes and returns focus | `region` (`aria-labelledby` the message) |
 | R1.3 | Scene list | One fixed-height row per scene with state, title, next action and reason. **Options contain text only; no interactive descendants** | Options. No buttons, links or menus inside an option | One tab stop (roving `tabindex`). `Up/Down` move and select, `Home/End`, `PageUp/PageDown` ±10, digits type-ahead to a scene number, `Enter` runs the primary action, `Shift+F10` or `ContextMenu` opens R1.4, `Alt+Up/Alt+Down` move the scene, `Delete` clears the scene, `Cmd/Ctrl+Z` undo (film scope, 11.3). Pointer: click selects, double-click runs the primary action, right-click opens R1.4 | `listbox` (`aria-label="Scenes"`, `aria-orientation="vertical"`, `aria-describedby` the key hint) / `option` (`aria-selected`, `aria-posinset`, `aria-setsize`) |
 | R1.4 | Scene actions menu | Scene actions without dragging, for the selected scene | Items: "Ask the assistant to draft this scene", "Move up", "Move down", "Move to position...", "Duplicate scene", "Clear scene", "Remove scene". Opened from the list (`Shift+F10`, `ContextMenu`, right-click) and from the "Scene actions" button in R2.1 | `Up/Down` move, `Enter` choose, `Esc` closes and returns focus to where it opened | `menu` / `menuitem` |
 | R1.5 | Schedule empty state | No scenes yet: one action | "Create scenes from script" button, one-line reason | `Tab` after the toolbar | `region` with heading; `button` |
 | R2 | Production panel (dock id `production`, right group, not `keepMounted`) | Inspect and edit the selected scene with presets | Panel wrapper carrying `data-film-scope` | Enter by `Tab` from the dock strip | `region`, `aria-label="Production"` |
-| R2.1 | Scene header | Which scene, its state, step between scenes, scene actions, undo | Heading "Scene 12 of 100", state label, "Previous scene", "Next scene", "Scene actions" (opens R1.4), "Undo", "Redo" | `Tab` in that order. The heading is `tabindex="-1"` so "Open in Production" can move focus to it | `heading` level 2, `button`, `menu` button (`aria-haspopup="menu"`) |
+| R2.1 | Scene header | Which scene, its state, step between scenes, scene actions, undo | Heading "Scene 12 of 100", state label, "Previous scene", "Next scene", "Scene actions" (opens R1.4), "Undo", "Redo", save-status text (12.14 item 6) | `Tab` in that order. The heading is `tabindex="-1"` so "Open in Production" can move focus to it | `heading` level 2, `button`, `menu` button (`aria-haspopup="menu"`) |
 | R2.2 | Inspector tabs | Four sections: Scene, Look, References, Check | Tabs | `Tab` into the tablist (one stop), `Left/Right` switch and activate, `Home/End` | `tablist` (`aria-label="Scene sections"`) / `tab` / `tabpanel` |
 | R2.3 | Scene tab | Script line, voice, who, where, action steps, length, coverage, notes | Exact line (read-only text), "Voice" select (host list) or read-only voice, title field, "Who is in this scene" multi-select, "Place" select, "Production plan shot" select, "Output" segmented, "Action steps" list with selects and steppers, "Scene length" select, "Coverage style" select, notes box | `Tab` in reading order | `tabpanel`, `group`s with visible labels |
 | R2.4 | Look tab | Camera, lens, light, mood, sound, continuity | Selects `P-SIZE` to `P-MOOD`, "Sound plan" segmented, "Background sound" select, five continuity switches, entry and exit selects | `Tab` in reading order. Selects open as in R1.1 | `tabpanel`, `combobox`, `radiogroup`, `switch` |
@@ -634,6 +636,7 @@ Paste source adds, above Split:
 |    2 you never edited (removed)                  |
 |    6 you edited                                  |
 |  4 new scenes will be added                      |
+|  After: 107 scenes (101 if you replace the 6)    |
 | Edited scenes (the 6 above)                      |
 |  (o) Keep my edits (recommended)                 |
 |  ( ) Replace 6 edited scenes                     |
@@ -1081,7 +1084,7 @@ This is for `docs/` and the Stage B PR, not for any producer screen.
 | Validation at startup | Each entry must be absolute, exist (else reason `missing`), and be a readable directory (else reason `denied`). Unset gives `unset`. The result is a typed `root-unavailable` with that reason (B33), never a fallback to samples. Paths are canonicalised with `realpath`; escaping symlinks are refused (B30). |
 | Where the producer meets it | Only the banner and D5 (4.11, 9.3), in plain words. |
 | Read-only | The indexer never writes, creates or deletes inside a root (B26). |
-| Scene data folder | A second operator setting, `filmDataDir` (environment variable `HYPERFRAMES_FILM_DATA_DIR`), default unset, names the private folder where scene records are saved. It must not be inside any asset root and must not contain one (12.10). Never shown in the UI; when unset the Schedule says "Not saved: your schedule is kept only until Studio closes." |
+| Scene data folder | A second operator setting, `filmDataDir` (environment variable `HYPERFRAMES_FILM_DATA_DIR`), names the private folder where scene records are saved and overrides the runtime-resolved default `<config dir>/film` (12.14 item 5; the earlier "default unset" is superseded). It must not be inside any asset root and must not contain one (12.10). Never shown in the UI; when unset the Schedule says "Not saved: your schedule is kept only until Studio closes." |
 
 It fits the two producer roots in `local-asset-roots.md`: the Movies_Projects folder (the one holding `workspace.json`) and the film workspace (`.film-workspace/`: imports and the review file), as two list entries. Studio resolves the active film's project folder from `workspace.json` and reads `asset-registry.csv` there (9.5); an entry that is itself a project folder (it holds `asset-registry.csv`) is also accepted. This is a proposal for Stage B to ratify.
 
@@ -1212,7 +1215,7 @@ Targets, contrast and tokens are in section 3. Reflow is in 4.13. Under `prefers
 
 ## 12. Data and props contract (A20)
 
-This section is what Stage B would otherwise have to invent. Types are TypeScript sketches: field names and meanings are the contract, final spellings belong to Stage B, no `any`, no `as`. Panels are presentational: they receive data and callbacks, and import no host, routing or compile code (as the existing `ProductionPanel` and `AssistantPanel` already do).
+This section is what Stage B would otherwise have to invent. **Subsection 12.14 (errata from the Gate A round 3 PASS) supersedes any conflicting text here.** Types are TypeScript sketches: field names and meanings are the contract, final spellings belong to Stage B, no `any`, no `as`. Panels are presentational: they receive data and callbacks, and import no host, routing or compile code (as the existing `ProductionPanel` and `AssistantPanel` already do).
 
 ### 12.1 Script lines and scene identity
 
@@ -1358,7 +1361,7 @@ type TaskId = "draft" | "other-camera" | "tighten-action" | "check-continuity" |
 type ScopeId = "this" | "empty" | "filtered";
 type ProviderId = "codex" | "claude";
 type SuggestionGroup = "look" | "action" | "sound" | "continuity";
-type SaveStatus = "saved" | "saving" | "session-only" | "error";
+type SaveStatus = "saved" | "saving" | "session-only" | "error"; // superseded by 12.14 item 5
 type AssistantState = "ready" | "missing-cli" | "unauthenticated" | "unsupported-protocol"
   | "unavailable-mode" | "limited-usage" | "not-connected";
 
@@ -1639,6 +1642,47 @@ Stage B decides: file and hook names, store shape inside R0, the virtualizer wir
 
 Stage B depends on Stage C for: preset id to phrase maps, the compiler diagnostics that become checks, the hint rules, parsing of pasted suggestions, and the instruction that asks the other tool for only a final answer. Until Stage C exists the defaults are the ones in 12.7. Stage B also depends on the producer's real `path_base`, `kind` and `approved` values and the project script file layout (12.12, OQ-15, OQ-6), and uses the degraded states above until they are known.
 
+### 12.14 Errata: binding rulings from Gate A round 3 (PASS)
+
+Gate A passed in round 3 with six binding rulings, plus one relayed note. They close gaps below the level of an item failure and **take precedence over any earlier text in this document**; where 12.1 to 12.13 or the IA table disagree, this subsection wins. Stage B must be told all of it. Nothing here starts Stage B or any React code.
+
+**1. Multi-scene assistant requests.** `AssistantRequest.sceneIds` can hold many scenes ("All empty scenes (87)"), so the host returns a list and R0 keeps a queue. Supersedes the single `SuggestionView` in `FilmHost.requestSuggestion` and `AssistantPanelProps`:
+
+```ts
+// FilmHost
+requestSuggestion(request: AssistantRequest, signal: AbortSignal): Promise<HostResult<readonly SuggestionView[]>>;
+// SuggestionView gains
+interface SuggestionView { stale: boolean } // true when the scene's revision moved since the request; R0 sets it
+// AssistantPanelProps: replace `suggestion` with
+suggestions: readonly SuggestionView[]; // the remaining queue, current first
+queuePosition: { index: number; total: number } | null;
+onNextSuggestion: () => void;
+```
+
+Scope `this` returns a list of one. The panel shows "Suggestion 2 of 87" and a "Next suggestion" button (R3.5, after "Dismiss" in tab order); "Use this suggestion" and "Dismiss" advance the queue. A stale suggestion is shown but "Use this suggestion" is disabled with the reason "Scene 12 changed since this was asked. Ask again." The paste and file routes (`readClipboardSuggestion`, `readSuggestionFile`) stay single-scene and return one `SuggestionView`.
+
+**2. Plan-shot links.** At most one scene links to a given plan shot, because the brief's `shotKey` is the plan shot key when linked and review and job records are keyed by it. The host rejects a second link (`rejected`, reason "Already used by Scene N"). `ProductionPanelProps.planShots` becomes `readonly (HostOption & { disabledReason: string | null })[]`, and the "Production plan shot" select disables already-linked shots showing that reason. The picker filter `show: "plan-shot"` needs data, so `ReferenceAsset` gains `planShotKeys: readonly string[]` (the plan shots whose references include the asset, from the importer's plan references; provenance stays `import-json`; empty for registry rows). The filter shows assets whose `planShotKeys` contains the scene's `planShotKey`.
+
+**3. Id limits are tested at both ends.** Imported line ids are validated against the legacy manifest pattern `^[A-Za-z][A-Za-z0-9_-]{0,79}$` and the 74-character cap before use (8.3); a scene id is never longer than 80. Stage B tests, with synthetic fixtures: a 74-character line id is accepted and gives an 80-character scene id; a 75-character line id is rejected as `invalid-ids`; a line id that fails the legacy pattern is rejected; and a `scene-<id>` that is not a valid shot key (`^[A-Za-z0-9:_-]{1,200}$`) is reported as `invalid-ids`.
+
+**4. Undo, redo and revisions.** `restore(snapshot)` assigns fresh, ever-increasing revisions to every scene it changes (greater than any revision previously issued for that scene) and increments `scheduleRevision`; revisions never go backwards. An undo or redo that meets a `conflict` shows the conflict card and **leaves the history entry in place**, so it can be retried after the producer chooses. `FileFilmHost` re-reads the file under the revision check, so two Studio processes on the same data folder conflict instead of overwriting each other.
+
+**5. Persistence default, notice text and guard.** Supersedes the "default unset" parts of 12.10, 9.4, RISK5 and OQ-17.
+
+- **Default folder, resolved at run time by Studio, never written into the design.** The base is `HYPERFRAMES_CONFIG_DIR` if set, else `os.homedir()/.hyperframes` (the convention the CLI already uses), plus a `film/` subfolder. Records go to `<base>/film/<filmId>/schedule.json`, `filmId` from `workspace.json`. The operator setting `filmDataDir` (docs only, never in the UI) still overrides it, and then records go to `<filmDataDir>/<filmId>/schedule.json` as in 12.10.
+- **Same validation for the default and the override:** absolute, readable and writable, and disjoint from every asset root after `realpath`. If the default fails (not writable, or inside an asset root) the host falls back to browser or server memory, and the schedule folder line in "Folder details" says why in plain words (`FolderDetailsProps` gains `scheduleFolder: { path: string | null; status: "ok" | "not-writable" | "inside-asset-root" | "unavailable" }`).
+- **Never read any other file in the config folder** (its credentials file sits next to `film/`). Create only `film/`, with owner-only permissions where the OS supports them.
+- **Status text.** "Saved on this computer" when saved. When the host is browser memory: "Not saved: your schedule is kept only until this page is closed or reloaded." Only when the memory host runs in the server process: "Not saved: your schedule is kept only until Studio closes." `SaveStatus` becomes `"saved" | "saving" | "session-browser" | "session-server" | "error"`, replacing `"session-only"`.
+- **Leave-page guard.** In a memory-host mode with scenes present, register a `beforeunload` guard (the browser's own prompt, no custom dialog).
+- **Tests inject explicit temporary directories.** No test or CI run touches the default folder, and the cloud VM never assumes it exists.
+- **PENDING PRODUCER DECISION: how a browser reaches `FileFilmHost` in Stage B.** `studio-server` has no `/film/*` routes today, and they are outside Stage A. Option A: add a minimal `GET /film/schedule` and `PUT /film/schedule` snapshot store per `filmId`, with the revision and conflict logic staying in the client host and the server only storing and returning the snapshot. Option B: Stage B ships a browser-memory host only, with `FileFilmHost` built and tested but not reachable from the browser. Stage B must not assume either until the producer decides. Under B the notice above is the browser-memory wording and the leave-page guard is the only protection against loss.
+
+**6. Save status is visible where the producer is working.** The save-status text appears in the Production header (R2.1) as well as the Schedule toolbar (R1.1), because the Schedule may not be the visible tab. `SceneHeaderProps` gains `saveStatus: SaveStatus`. The message "Couldn't save changes to Scene N. Retry." also appears in the scene's field area in Production: `ProductionPanelProps` gains `saveMessage: string | null` and `onRetrySave: (sceneId: string) => void`.
+
+**7. Ownership and package boundaries (OQ-14 decided).** Stage B owns `ScheduleScene`, in `@hyperframes/film-production`, as an additive module; `SceneBriefV1` is not edited. Types and pure functions (`ScheduleScene`, `SceneEdit`, `PresetCatalogue`, `openChoices`, `sceneState`, `toRow`, the id and paste rules, `MemoryFilmHost`) are exported from the browser entry, `src/browser.ts` (`./browser`), which Studio already imports. Nothing in that entry may import `node:*` modules; id hashing there uses Web Crypto. `FileFilmHost` uses `node:fs` and is exported only from the Node entry or a new Node-only subpath, never from `./browser`. A new subpath needs an `exports` entry and, if it ships, a `files` entry.
+
+**Relayed notes.** (a) Tests inject their own `PATH_BASES`, `KINDS` and `APPROVED` tables; the production defaults stay empty, so real registry rows show "Studio doesn't know this location yet" until the producer supplies values (OQ-15). (b) D2 shows both the current and the resulting scene count: `UpdatePlan` gains `after: { keep: number; replace: number }`, and the dialog reads "Now: 105 scenes" and "After: 107 scenes" (101 if the 6 edited scenes are replaced), the second line following the radio choice. (c) Every host call the UI makes has a typed result, including batch requests.
+
 ## 13. Signature interaction slots (TBD by the Creative Director stage)
 
 Stage A does not propose signature interactions. Up to three are reserved, each attached to a region that already exists, so the conventional layout stays complete underneath (CD8: novelty never removes a familiar affordance). Each must arrive as a CD card that carries its own keyboard path, ARIA mapping, reduced-motion alternative and 100-scene performance note (CD5), and must pass A and B items on paper (CD10).
@@ -1711,8 +1755,8 @@ Totals under the current checklist: 16 of 16 musts pass at design level and 4 of
 | OQ-15 | The real values of `path_base`, `kind` and `approved` in `asset-registry.csv` (the header is known, no sample row was released) | Producer | Typed tables `PATH_BASES`, `KINDS`, `APPROVED` ship without invented values; unknown values degrade honestly and "Copy details for support" lists the distinct values with counts so they can be added (9.5) |
 | OQ-16 | Should an asset not recorded as approved be bindable (this doc: yes, with a host warning) or blocked? | Producer | Read-only display, never gates selection (9.5) |
 | OQ-12 | Does the copied request ask the other tool for only its final answer? | Stage C | Stated as a requirement (4.8); Stage C writes the instruction |
-| OQ-14 | Who owns the additive `ScheduleScene` record in `@hyperframes/film-production`? | Coordinator | Stage B owns the type; `SceneBriefV1` is not edited (12.2) |
-| OQ-17 | Where should scene records be saved by default? `filmDataDir` is unset by default so nothing is written near an asset root without the operator's say-so | Coordinator or producer | Session-only mode with the visible line "Not saved: your schedule is kept only until Studio closes." (12.10) |
+| OQ-14 | Who owns the additive `ScheduleScene` record in `@hyperframes/film-production`? | Decided (Gate A round 3) | Stage B owns it; types and pure functions in `./browser`, `FileFilmHost` outside it; `SceneBriefV1` unedited (12.14 item 7) |
+| OQ-17 | Where should scene records be saved by default? | Decided, with one open decision (Gate A round 3) | Runtime-resolved default `<config dir>/film` with `filmDataDir` override and validated session-only fallback (12.14 item 5). **PENDING PRODUCER DECISION:** a minimal `GET`/`PUT /film/schedule` store in `studio-server`, or a browser-memory host only for Stage B (12.14 item 5) |
 
 ## 16. Stage B dependencies and risks
 
@@ -1727,10 +1771,10 @@ Totals under the current checklist: 16 of 16 musts pass at design level and 4 of
 | DEP7 | Operator documentation for the host path (9.4) and `root-unavailable` results, in `docs/` in the same PR. The registry reader implements the strict header and row validation in 9.5 and runs the importer's validation of `workspace.json` rather than reimplementing it | Stage B index work, `legacy/import-movies.mjs` |
 | DEP8 | Each film file under 600 lines; extract per region (one component per IA row) | `packages/studio/AGENTS.md` |
 | DEP11 | `FilmHost` (12.10) with `MemoryFilmHost` and `FileFilmHost`, the `filmDataDir` validation (absolute, read-write, disjoint from every asset root after `realpath`) and the three persistence tests. `studio-server` film routes are a later task | `packages/film-production`, Stage B |
-| DEP9 | `ScheduleScene` and the related additive types (12.1 to 12.9) live in `@hyperframes/film-production` | OQ-14 |
+| DEP9 | `ScheduleScene` and the related additive types (12.1 to 12.10) live in `@hyperframes/film-production`: browser-safe types and pure functions in `./browser`, `FileFilmHost` outside it (12.14 item 7) | OQ-14 decided |
 | DEP10 | Stage C interfaces consumed as props: preset phrase maps, `checks`, `hints`, `writtenPrompt`, suggestion parsing (12.7, 12.13) | Stage C |
 | RISK1 | Undo meaning differs by focus (film scope against Studio's editor history). Mitigated by the Undo and Redo buttons in all three panels, labelled with the action | 11.3 |
 | RISK2 | Hint and label wrapping at 320px, and the 72px fixed row with larger text sizes (single-line truncation protects the height). Verify in a real browser; happy-dom has no layout | 4.13, 12.8 |
 | RISK3 | The producer's asset folder is unreachable from the cloud VM and no real asset is claimed. Every state is tested with synthetic fixtures (a miniature CSV with the exact header, a mini `workspace.json`, an absent root; B35). The value tables (OQ-15) must be filled from the producer's real vocabulary before real rows resolve | 9.5, 12.12 |
-| RISK5 | With `filmDataDir` unset (the default) the producer's schedule lives only in memory and is lost when Studio closes. The Schedule says so in plain words, but the loss is real until someone sets the folder (OQ-17) | 12.10 |
+| RISK5 | If the browser-memory host ships (option B in 12.14 item 5), the schedule is lost on close or reload. The notice says exactly that and a leave-page guard is registered; the loss is real until the producer chooses option A or sets the folder (OQ-17) | 12.14 |
 | RISK4 | The copy-and-paste return path depends on clipboard read permission. A file picker is the fallback and the message says so (4.8) | 4.8 |
