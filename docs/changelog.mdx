@@ -9,6 +9,46 @@ Recent HyperFrames releases, including user-facing features, fixes, and migratio
 {/* New release entries are prepended by `bun run changelog:draft <version> --write`. */}
 
 <Update
+  label="HyperFrames v0.8.223-film.1"
+  description="Released - 2026-10-31"
+  tags={["Release", "Film Production", "Studio", "CLI"]}
+>
+First tagged release of the HyperFrames Film Studio fork. It adds a local film production workflow on top of upstream v0.8.223, so you can plan shots, compile scene candidates, and review them inside Studio. The version suffix follows the fork tagging policy in [releases/README.md](https://github.com/andreathar/hyperframes-film-studio/blob/main/releases/README.md#fork-versioning).
+
+## Features
+
+- **Film Production:** New `@hyperframes/film-production` package with shared scene contracts and audited services for shots, candidates, and jobs ([963d9b424](https://github.com/andreathar/hyperframes-film-studio/commit/963d9b424c1d0612a584e55db46adc2cae3fbbf9), [4b12f3089](https://github.com/andreathar/hyperframes-film-studio/commit/4b12f3089434052706200108d5630a682fc1699a)).
+- **Film Production:** Compile deterministic Kling scene candidates from a project, with a server-only compiler export ([f83c51563](https://github.com/andreathar/hyperframes-film-studio/commit/f83c51563acb657e59d8e991062e87b292510436), [5769a890a](https://github.com/andreathar/hyperframes-film-studio/commit/5769a890a887d939519dead1a5f4bfbdcce57f36)).
+- **Film Production:** Prepare and reconcile local film jobs, import existing film records as review candidates, and place candidates on the timeline explicitly ([edb6a469c](https://github.com/andreathar/hyperframes-film-studio/commit/edb6a469cd81ea66eeaba0ca104214fbf5e26c9a), [37d7e7d5e](https://github.com/andreathar/hyperframes-film-studio/commit/37d7e7d5ed4690a350d663570ae23b00c548e0fb), [163e613dd](https://github.com/andreathar/hyperframes-film-studio/commit/163e613dd1911987e1cd96574e3e491720cb01e1), [7f5eddaec](https://github.com/andreathar/hyperframes-film-studio/commit/7f5eddaec279f8712db0a487adcf53b7cbf12572)).
+- **Film Production:** Hand off blocked Kling jobs to the producer instead of failing silently ([84ec48ba0](https://github.com/andreathar/hyperframes-film-studio/commit/84ec48ba08c317fddd638b11c1a66e5796e72499)).
+- **Studio:** Film production and assistant panels, docked into the main layout ([d9b4bd5b4](https://github.com/andreathar/hyperframes-film-studio/commit/d9b4bd5b4146eb224833dfe448bbdd538cac8f8e), [f2126a086](https://github.com/andreathar/hyperframes-film-studio/commit/f2126a0865a8b3fbd162ce61cea6485a037ced4f)).
+- **Inspector:** Local film production inspector with production job controls ([21e1ddefd](https://github.com/andreathar/hyperframes-film-studio/commit/21e1ddefd45893b9f9b249c9de34a45f900a010e), [afc2fce0a](https://github.com/andreathar/hyperframes-film-studio/commit/afc2fce0a1596b1f7845e417cfaed12c0d554132)).
+- **CLI:** Proposal-only film assistant host, so the assistant suggests edits without applying them ([509ce4d2e](https://github.com/andreathar/hyperframes-film-studio/commit/509ce4d2e7539f5e9e68ed7855b3eff54d644c0d)).
+
+## Fixes
+
+- Harden film contracts and restore scoped quality gates ([48693f33f](https://github.com/andreathar/hyperframes-film-studio/commit/48693f33f303c39cadf5950d622d2066293a26f4)).
+- Keep inspector assets consistent for each server ([3532efca9](https://github.com/andreathar/hyperframes-film-studio/commit/3532efca917a2d7b412d3df06555752279a49006)).
+- **Studio Server:** Download exports larger than 2 GiB ([164d6c7a3](https://github.com/andreathar/hyperframes-film-studio/commit/164d6c7a36eba26e9126b364beab98437e2eeec7), upstream [#6602](https://github.com/heygen-com/hyperframes/pull/6602)).
+
+## Docs & Examples
+
+- Film studio execution plan, research, and review evidence are tracked in the repo ([1a1d128ab](https://github.com/andreathar/hyperframes-film-studio/commit/1a1d128ab5fa30da40a65b79844fb8a296d8e293), [45674e0fc](https://github.com/andreathar/hyperframes-film-studio/commit/45674e0fc95b2f2b0e485eee83b0de7d5b647d53), [8aaabb102](https://github.com/andreathar/hyperframes-film-studio/commit/8aaabb102b0a503a0fcaec63a83596cec555a37c)).
+- Clarify generated outputs and external source references ([af7be89cf](https://github.com/andreathar/hyperframes-film-studio/commit/af7be89cfd37efa5246d71b7b20e98929d3b68fe)).
+- List OpenAI and Nate Herk as HyperFrames adopters ([a04b45a6d](https://github.com/andreathar/hyperframes-film-studio/commit/a04b45a6db0d1f724be9cf1985c3b13657195f0d), upstream [#6876](https://github.com/heygen-com/hyperframes/pull/6876)).
+
+## Internal
+
+- Packages are attributed to the fork and the fork tagging policy is documented ([644e641ef](https://github.com/andreathar/hyperframes-film-studio/commit/644e641ef420fcdfb962032769fc3a2951fd4ef9)).
+- **CLI:** Import film contracts from the workspace package ([ae2e4350f](https://github.com/andreathar/hyperframes-film-studio/commit/ae2e4350f5c012e2438782652e3c5e160a034f95)).
+- **Core:** Split the frozen-picture judgement so it stays under the complexity limit ([2bd8cd95c](https://github.com/andreathar/hyperframes-film-studio/commit/2bd8cd95cb43fba47de906530e043900bb283371), upstream [#6870](https://github.com/heygen-com/hyperframes/pull/6870)).
+
+## Full changelog
+
+https://github.com/andreathar/hyperframes-film-studio/compare/v0.8.223...v0.8.223-film.1
+</Update>
+
+<Update
   label="HyperFrames v0.8.223"
   description="Released - 2026-10-31"
   tags={["Release", "Skills", "Lint", "Player"]}
