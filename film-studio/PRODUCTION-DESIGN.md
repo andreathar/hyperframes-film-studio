@@ -2,11 +2,11 @@
 
 ## Consolidation update — 2026-10-31
 
-The producer requires one GitHub branch, `main`. The coordinator is consolidating existing heads and quality correction `48693f33f`; publication, remote branch cleanup and final integrated checks remain pending verification. Earlier branch/PR inventories are historical captures. [Project controls](PROJECT-CONTROL.md) and [the state register](PROJECT-STATE.json) record the verified backup and current policy. Recovery/input/descriptor findings, native offline acceptance, assistant/provider qualification and inspector activation remain open; consolidation does not close them.
+The producer requires one GitHub branch, `main`. The coordinator is consolidating existing heads and quality correction `48693f33f`; publication, remote branch cleanup and final integrated checks remain pending verification. Earlier branch/PR inventories are historical captures. [Project controls](PROJECT-CONTROL.md) and [the state register](archive/2026-10-31-stale-controls/PROJECT-STATE.json) record the verified backup and current policy. Recovery/input/descriptor findings, native offline acceptance, assistant/provider qualification and inspector activation remain open; consolidation does not close them.
 
-Status: revised proposal for producer review, 2026-10-31. Delegation is the requested execution method. Runtime repair is committed separately at `3532efca9`, absent from planning HEAD `658f01cd0`. The [execution plan](EXECUTION-PLAN.md) and [checkpoint review](CHECKPOINT-REVIEW.md) distinguish delivered software, unintegrated repair and proposed work.
+Status: revised proposal for producer review, 2026-10-31. Delegation is the requested execution method. Runtime repair is committed separately at `3532efca9`, absent from planning HEAD `658f01cd0`. The [execution plan](EXECUTION-PLAN.md) and [checkpoint review](archive/2026-10-31-stale-controls/CHECKPOINT-REVIEW.md) distinguish delivered software, unintegrated repair and proposed work.
 
-Whole-project update: PR #7 at `963d9b424` already supplies shared package/contracts outside this checkout and needs review corrections before contract freeze. The [quality report](QUALITY-REPORT.md) and [state register](PROJECT-STATE.json) supersede local-only assumptions about missing implementation. Reuse existing work; the project store, native panels and complete cycle are still pending.
+Whole-project update: PR #7 at `963d9b424` already supplies shared package/contracts outside this checkout and needs review corrections before contract freeze. The [quality report](archive/2026-10-31-stale-controls/QUALITY-REPORT.md) and [state register](archive/2026-10-31-stale-controls/PROJECT-STATE.json) supersede local-only assumptions about missing implementation. Reuse existing work; the project store, native panels and complete cycle are still pending.
 
 ## Intent
 

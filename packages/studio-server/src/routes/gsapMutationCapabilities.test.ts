@@ -5,7 +5,6 @@ import {
   GSAP_MUTATION_CAPABILITIES,
   behavioralParityOps,
   renderGsapMutationCapabilityReport,
-  resolveGsapWriter,
 } from "./gsapMutationCapabilities.js";
 
 const source = readFileSync(resolve(process.cwd(), "src/routes/files.ts"), "utf8");
@@ -20,49 +19,33 @@ function dispatcherCases(startMarker: string, endMarker: string): string[] {
 describe("GSAP writer capability matrix", () => {
   const operations = Object.keys(GSAP_MUTATION_CAPABILITIES).sort();
 
-  it("matches every Acorn and Recast dispatcher case", () => {
+  it("matches the Acorn dispatcher and has no recast writer", () => {
     expect(
-      dispatcherCases(
-        "function executeGsapMutationAcorn",
-        "async function executeGsapMutationRecast",
-      ).sort(),
+      dispatcherCases("function executeGsapMutationAcorn", "function foldAtomicCutFile").sort(),
     ).toEqual(operations);
-    expect(
-      dispatcherCases(
-        "async function executeGsapMutationRecast",
-        "function registerFileRoutes",
-      ).sort(),
-    ).toEqual(operations);
+    expect(source).not.toContain("executeGsapMutationRecast");
+    expect(source).not.toContain("loadGsapParser");
+    expect(source).not.toContain("gsap-parser-recast");
+    expect(source).not.toContain("HYPERFRAMES_GSAP_WRITER");
   });
 
-  it("keeps the Acorn dispatcher free of Recast and gates hold sync with the selected writer", () => {
-    const acornBody = source.slice(
-      source.indexOf("function executeGsapMutationAcorn"),
-      source.indexOf("async function executeGsapMutationRecast"),
-    );
+  it("syncs holds with the acorn writer", () => {
     const mutationHelperBody = source.slice(
       source.indexOf("async function applyGsapMutations"),
       source.indexOf("function executeGsapMutationAcorn"),
     );
     const atomicCutHelperBody = source.slice(
-      source.indexOf("async function foldAtomicCutFile"),
+      source.indexOf("function foldAtomicCutFile"),
       source.indexOf("function registerFileRoutes"),
     );
-    expect(acornBody).not.toContain("loadGsapParser");
-    expect(mutationHelperBody).toContain('writer === "acorn"');
     expect(mutationHelperBody).toContain(
-      "? syncPositionHoldsBeforeKeyframes(newScript, previousScript)",
-    );
-    expect(mutationHelperBody).toContain(
-      "(await loadGsapParser()).syncPositionHoldsBeforeKeyframes",
-    );
-    expect(atomicCutHelperBody).toContain('writer === "acorn"');
-    expect(atomicCutHelperBody).toContain(
-      "? syncPositionHoldsBeforeKeyframes(script, block.scriptText)",
+      "syncPositionHoldsBeforeKeyframes(newScript, previousScript)",
     );
     expect(atomicCutHelperBody).toContain(
-      "(await loadGsapParser()).syncPositionHoldsBeforeKeyframes(script, block.scriptText)",
+      "syncPositionHoldsBeforeKeyframes(script, block.scriptText)",
     );
+    expect(mutationHelperBody).not.toContain('writer === "acorn"');
+    expect(atomicCutHelperBody).not.toContain('writer === "recast"');
   });
 
   it("renders every classified operation and names the behavioral-only ops", () => {
@@ -93,12 +76,8 @@ describe("GSAP writer capability matrix", () => {
     );
   });
 
-  it("defaults to Acorn; recast is an explicit fallback", () => {
-    expect(resolveGsapWriter({})).toBe("acorn");
-    expect(resolveGsapWriter({ HYPERFRAMES_GSAP_WRITER: "recast" })).toBe("recast");
-    expect(resolveGsapWriter({ HYPERFRAMES_GSAP_WRITER: "acorn" })).toBe("acorn");
-    expect(() => resolveGsapWriter({ HYPERFRAMES_GSAP_WRITER: "unknown" })).toThrow(
-      "expected recast or acorn",
-    );
+  it("names acorn as the only writer", () => {
+    expect(renderGsapMutationCapabilityReport()).toContain("Writer: acorn");
+    expect(renderGsapMutationCapabilityReport()).not.toContain("HYPERFRAMES_GSAP_WRITER");
   });
 });

@@ -6,21 +6,15 @@ type GsapParityEvidence = "differential" | "behavioral";
 
 interface GsapMutationCapability {
   family: GsapMutationFamily;
-  acorn: "supported";
-  recast: "supported";
   parity: GsapParityEvidence;
 }
 
 const differential = (family: GsapMutationFamily): GsapMutationCapability => ({
   family,
-  acorn: "supported",
-  recast: "supported",
   parity: "differential",
 });
 const behavioral = (family: GsapMutationFamily): GsapMutationCapability => ({
   family,
-  acorn: "supported",
-  recast: "supported",
   parity: "behavioral",
 });
 
@@ -63,21 +57,7 @@ export const GSAP_MUTATION_CAPABILITIES = {
   "scale-positions": behavioral("timing"),
 } as const satisfies Record<GsapMutationType, GsapMutationCapability>;
 
-const GSAP_WRITER_MIGRATION = Object.freeze({
-  flag: "HYPERFRAMES_GSAP_WRITER",
-  owner: "studio-foundations",
-  deadline: "2026-09-30",
-  graduationCriteria:
-    "Acorn is the default writer. Recast is retained one watch window as HYPERFRAMES_GSAP_WRITER=recast, then deleted (spec 2026-09-17 §5).",
-});
-
-export function resolveGsapWriter(env: { HYPERFRAMES_GSAP_WRITER?: string }): "recast" | "acorn" {
-  const configured = env.HYPERFRAMES_GSAP_WRITER ?? "acorn";
-  if (configured === "recast" || configured === "acorn") return configured;
-  throw new Error(`Invalid ${GSAP_WRITER_MIGRATION.flag}=${configured}; expected recast or acorn`);
-}
-
-/** Ops whose acorn/recast parity rests on behavioral tests, not a byte-diff oracle. */
+/** Ops whose parity rests on behavioral tests, not a byte-diff oracle. */
 export function behavioralParityOps(): GsapMutationType[] {
   return (
     Object.entries(GSAP_MUTATION_CAPABILITIES) as Array<[GsapMutationType, GsapMutationCapability]>
@@ -89,19 +69,14 @@ export function behavioralParityOps(): GsapMutationType[] {
 export function renderGsapMutationCapabilityReport(): string {
   const rows = (
     Object.entries(GSAP_MUTATION_CAPABILITIES) as Array<[GsapMutationType, GsapMutationCapability]>
-  ).map(
-    ([type, capability]) =>
-      `| ${type} | ${capability.family} | ${capability.acorn} | ${capability.recast} | ${capability.parity} |`,
-  );
+  ).map(([type, capability]) => `| ${type} | ${capability.family} | ${capability.parity} |`);
   return [
     "# GSAP writer capability report",
     "",
-    `Owner: ${GSAP_WRITER_MIGRATION.owner}`,
-    `Deadline: ${GSAP_WRITER_MIGRATION.deadline}`,
-    `Flag: \`${GSAP_WRITER_MIGRATION.flag}=recast|acorn\` (default: acorn)`,
+    "Writer: acorn",
     "",
-    "| Operation | Family | Acorn | Recast | Parity evidence |",
-    "| --- | --- | --- | --- | --- |",
+    "| Operation | Family | Parity evidence |",
+    "| --- | --- | --- |",
     ...rows,
     "",
     `Behavioral-only parity (no byte-diff oracle): ${behavioralParityOps().join(", ") || "none"}`,

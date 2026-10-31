@@ -2,7 +2,7 @@
 
 ## Consolidation update — 2026-10-31
 
-The producer requires one GitHub branch, `main`. The coordinator is consolidating existing heads and quality correction `48693f33f`; publication, remote branch cleanup and final integrated checks remain pending verification. Earlier branch/PR inventories are historical captures. [Project controls](PROJECT-CONTROL.md) and [the state register](PROJECT-STATE.json) record the verified backup and current policy. Recovery/input/descriptor findings, native offline acceptance, assistant/provider qualification and inspector activation remain open; consolidation does not close them.
+The producer requires one GitHub branch, `main`. The coordinator is consolidating existing heads and quality correction `48693f33f`; publication, remote branch cleanup and final integrated checks remain pending verification. Earlier branch/PR inventories are historical captures. [Project controls](../PROJECT-CONTROL.md) and [the state register](PROJECT-STATE.json) record the verified backup and current policy. Recovery/input/descriptor findings, native offline acceptance, assistant/provider qualification and inspector activation remain open; consolidation does not close them.
 
 **Date:** 2026-10-31. **Evidence capture:** approximately 09:20–09:30 UTC. **Accountable audit coordinator:** Codex. **Method:** live GitHub inspection, exact Git-object review, isolated tests and three specialist assessments. **Scope:** this fork's film-production changes and integration management; not a line-by-line certification of the complete upstream framework.
 
@@ -57,7 +57,7 @@ At 09:28:48 UTC, read-only GETs to the existing inspector on port 9362 returned 
 
 ## Code-quality findings
 
-Severity describes impact under stated conditions. A documented limitation is kept separate from a newly reproduced defect. The review's evidence reports are [domain/boundaries](../.omo/evidence/film-domain-audit-code-review.md) and [PR #7 contracts](../.omo/evidence/pr7-shared-contracts-code-review.md).
+Severity describes impact under stated conditions. A documented limitation is kept separate from a newly reproduced defect. The review's evidence reports are [domain/boundaries](omo-evidence/film-domain-audit-code-review.md) and [PR #7 contracts](omo-evidence/pr7-shared-contracts-code-review.md).
 
 ### Q1 — Medium: rejected publication can leave new state visible
 
@@ -169,7 +169,7 @@ Initial snapshot setup failed because an assumed root tsconfig did not exist; th
 
 Start with **one implementation/integration lane plus independent review**, not another set of feature workers. Restore the existing maximum of three workers plus coordinator only after contract/ownership reconciliation. Keep P0–P5 as the first product gate; compiler/assistant can proceed independently when contracts permit, and provider execution follows the proven lifecycle.
 
-The [operating contract](PROJECT-CONTROL.md) defines mandatory checks for the coordinator's ongoing work, evidence states, WIP and handoffs. These controls are documented now; GitHub settings are not silently represented as enforced. The [execution plan](EXECUTION-PLAN.md) remains the implementation map, corrected to acknowledge PR #7.
+The [operating contract](../PROJECT-CONTROL.md) defines mandatory checks for the coordinator's ongoing work, evidence states, WIP and handoffs. These controls are documented now; GitHub settings are not silently represented as enforced. The [execution plan](../EXECUTION-PLAN.md) remains the implementation map, corrected to acknowledge PR #7.
 
 ## Accountability and limits
 
@@ -185,7 +185,7 @@ Verification: full build passed; film package82 and services155 passed; root scr
 
 During final checks, the shared PR7 branch advanced through eight additional commits to last-observed `5769a890a887d939519dead1a5f4bfbdcce57f36`:56files,5437insertions,3deletions beyond the correction base. These are concurrent assistant, Studio and compiler additions. They were not silently folded into previously green evidence. Session ownership is unknown and the branch remains active. The tested local correction has not been pushed, merged or activated.
 
-Three specialized source reviews found integration blockers: [CLI assistant](../.omo/evidence/concurrent-cli-review.md), [Studio components](../.omo/evidence/concurrent-studio-review.md), [scene/native compiler](../.omo/evidence/concurrent-compiler-review.md). CLI/Studio were pinned to `f55fb732b`, whose files are unchanged by the subsequent compiler commits; compiler review was pinned to `5769a890a`. The Studio reviewer additionally ran isolated exact-source helper probes. No full test/build/browser/provider qualification of the new shared revision is claimed.
+Three specialized source reviews found integration blockers: [CLI assistant](omo-evidence/concurrent-cli-review.md), [Studio components](omo-evidence/concurrent-studio-review.md), [scene/native compiler](omo-evidence/concurrent-compiler-review.md). CLI/Studio were pinned to `f55fb732b`, whose files are unchanged by the subsequent compiler commits; compiler review was pinned to `5769a890a`. The Studio reviewer additionally ran isolated exact-source helper probes. No full test/build/browser/provider qualification of the new shared revision is claimed.
 
 Priority blockers are an unsatisfiable assistant output schema, unusable public streaming/cancel lifecycle, post-execution isolation qualification, stale-context proposal application, native controls that can display unapplied values, destructive per-keystroke continuity normalization, duplicate native-argument acceptance and loss of frame-rate semantics. The dock is explicitly disconnected; it is a partial shell, not a completed production workflow. Original durable publication and inspector-input/descriptor findings also remain open.
 

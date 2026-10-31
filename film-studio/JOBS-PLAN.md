@@ -6,7 +6,7 @@
 
 **Architecture:** Reuse the import and replay-checked review contract. A pure job reducer preserves prepared intent and evidence; a checkout-local CLI writes one atomic JSON ledger under an explicit store directory, with an exclusive writer lock and revision checks. No new dependencies or inspector changes.
 
-**Spec:** This document records the next bounded increment of film-studio/PLAN.md and the accepted preparation/reconciliation roadmap. Live adapters and approval authority remain later work.
+**Spec:** This document records the next bounded increment of film-studio/archive/2026-10-31-stale-controls/PLAN.md and the accepted preparation/reconciliation roadmap. Live adapters and approval authority remain later work.
 
 ## Contract and constraints
 

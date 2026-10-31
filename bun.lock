@@ -76,10 +76,8 @@
         "citty": "^0.2.1",
         "compare-versions": "^6.1.1",
         "css-tree": "^3.2.1",
-        "debug": "^4.4.0",
         "esbuild": "^0.28.2",
         "fontkit": "^2.0.4",
-        "giget": "^3.2.0",
         "hono": "^4.0.0",
         "ignore": "^5.3.2",
         "open": "^10.0.0",
@@ -94,7 +92,6 @@
         "@hyperframes/aws-lambda": "workspace:*",
         "@hyperframes/core": "workspace:*",
         "@hyperframes/engine": "workspace:*",
-        "@hyperframes/film-production": "workspace:*",
         "@hyperframes/gcp-cloud-run": "workspace:*",
         "@hyperframes/inspector": "workspace:*",
         "@hyperframes/lint": "workspace:*",
@@ -221,8 +218,6 @@
         "hyperframes-inspector": "./dist/server.js",
       },
       "dependencies": {
-        "@hyperframes/core": "workspace:*",
-        "@hyperframes/parsers": "workspace:*",
         "@jridgewell/trace-mapping": "^0.3.29",
         "acorn": "^8.17.0",
         "esbuild": "^0.28.2",
@@ -305,7 +300,6 @@
         "@hyperframes/studio-server": "workspace:*",
         "hono": "^4.6.0",
         "linkedom": "^0.18.12",
-        "postcss": "^8.4.0",
         "puppeteer": "~25.11.0",
         "puppeteer-core": "^25.11.0",
       },
@@ -1658,8 +1652,6 @@
     "get-proto": ["get-proto@1.0.1", "", { "dependencies": { "dunder-proto": "^1.0.1", "es-object-atoms": "^1.0.0" } }, "sha512-sTSfBjoXBp89JvIKIefqw7U2CCebsc74kiY6awiGogKtoSGbgjYE/G/+l9sF3MWFPNc9IcoOC4ODfKHfxFmp0g=="],
 
     "get-tsconfig": ["get-tsconfig@4.14.0", "", { "dependencies": { "resolve-pkg-maps": "^1.0.0" } }, "sha512-yTb+8DXzDREzgvYmh6s9vHsSVCHeC0G3PI5bEXNBHtmshPnO+S5O7qgLEOn0I5QvMy6kpZN8K1NKGyilLb93wA=="],
-
-    "giget": ["giget@3.2.0", "", { "bin": { "giget": "dist/cli.mjs" } }, "sha512-GvHTWcykIR/fP8cj8dMpuMMkvaeJfPvYnhq0oW+chSeIr+ldX21ifU2Ms6KBoyKZQZmVaUAAhQ2EZ68KJF8a7A=="],
 
     "git-raw-commits": ["git-raw-commits@5.0.1", "", { "dependencies": { "@conventional-changelog/git-client": "^2.6.0", "meow": "^13.0.0" }, "bin": { "git-raw-commits": "src/cli.js" } }, "sha512-Y+csSm2GD/PCSh6Isd/WiMjNAydu0VBiG9J7EdQsNA5P9uXvLayqjmTsNlK5Gs9IhblFZqOU0yid5Il5JPoLiQ=="],
 

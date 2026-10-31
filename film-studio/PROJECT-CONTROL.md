@@ -4,10 +4,10 @@ Effective for the coordinator's workstream from 2026-10-31. This documents the o
 
 ## Authority and surfaces
 
-- [PROJECT-STATE.json](PROJECT-STATE.json): observed state, exact source revisions, PRs, checks, limitations and next gates. A snapshot expires when related remote heads, local changes or runtime state change.
+- [PROJECT-STATE.json](archive/2026-10-31-stale-controls/PROJECT-STATE.json): observed state, exact source revisions, PRs, checks, limitations and next gates. A snapshot expires when related remote heads, local changes or runtime state change.
 - Plannotator Board: scheduling/visibility. A card is not implementation or test proof.
 - [EXECUTION-PLAN.md](EXECUTION-PLAN.md): requirements, dependencies, ownership boundaries and acceptance criteria. A plan is not observed implementation.
-- [QUALITY-REPORT.md](QUALITY-REPORT.md): dated findings, evidence, decisions and corrective strategy. Historical delivery reports retain their original scope.
+- [QUALITY-REPORT.md](archive/2026-10-31-stale-controls/QUALITY-REPORT.md): dated findings, evidence, decisions and corrective strategy. Historical delivery reports retain their original scope.
 - Canonical film records, producer release and creative acceptance retain their existing authority. Registration, passing software tests and project management do not replace them.
 
 ## Before any implementation assignment

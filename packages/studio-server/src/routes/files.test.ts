@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { Hono } from "hono";
+import * as gsapWriter from "@hyperframes/parsers/gsap-writer-acorn";
 import { parseHTML } from "linkedom";
 import { ensureHfIds } from "@hyperframes/parsers/hf-ids";
 import {
@@ -24,22 +25,9 @@ import {
   resetFileWriteReceipts,
 } from "../helpers/fileVersion";
 
-const recastImportGate = vi.hoisted<{
-  wait: Promise<void> | null;
-  onEnter: (() => void) | null;
-}>(() => ({ wait: null, onEnter: null }));
-
-vi.mock("@hyperframes/parsers/gsap-parser-recast", async (importOriginal) => {
-  recastImportGate.onEnter?.();
-  if (recastImportGate.wait) await recastImportGate.wait;
-  return importOriginal();
-});
-
 const tempDirs: string[] = [];
 
 afterEach(() => {
-  recastImportGate.wait = null;
-  recastImportGate.onEnter = null;
   resetFileWriteReceipts();
   for (const dir of tempDirs.splice(0)) {
     rmSync(dir, { recursive: true, force: true });
@@ -221,9 +209,9 @@ describe("registerFileRoutes", () => {
     expect(response.status).toBe(404);
   });
 
-  it("returns a clean 400 for an invalid GSAP writer flag", async () => {
+  it("ignores a retired GSAP writer flag and mutates with the acorn writer", async () => {
     const previous = process.env.HYPERFRAMES_GSAP_WRITER;
-    process.env.HYPERFRAMES_GSAP_WRITER = "true";
+    process.env.HYPERFRAMES_GSAP_WRITER = "recast";
     try {
       const projectDir = createProjectDir();
       writeFileSync(
@@ -241,10 +229,8 @@ describe("registerFileRoutes", () => {
           body: JSON.stringify({ type: "shift-positions", targetSelector: "#box", delta: 1 }),
         },
       );
-      const payload = (await response.json()) as { error?: string };
-
-      expect(response.status).toBe(400);
-      expect(payload.error).toContain("expected recast or acorn");
+      expect(response.status).toBe(200);
+      expect(await response.json()).toMatchObject({ ok: true });
     } finally {
       if (previous === undefined) delete process.env.HYPERFRAMES_GSAP_WRITER;
       else process.env.HYPERFRAMES_GSAP_WRITER = previous;
@@ -1530,39 +1516,33 @@ tl.fromTo("#box", { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 1.5, eas
   });
 
   it("rejects a stale semantic no-op after a concurrent file write", async () => {
-    // Pins the recast writer: this test's interleave seam is recast's LAZY module
-    // import, which the acorn default no longer performs (acorn is statically
-    // imported). The 409 revalidation under test is writer-independent.
-    const previousWriter = process.env.HYPERFRAMES_GSAP_WRITER;
-    process.env.HYPERFRAMES_GSAP_WRITER = "recast";
+    const projectDir = createProjectDir();
+    writeHtml(projectDir, "comp.html", FROMTO_COMP);
+    const app = new Hono();
+    registerFileRoutes(app, createAdapter(projectDir));
+    const successor = FROMTO_COMP.replace('data-duration="3"', 'data-duration="9"');
+    const target = join(projectDir, "comp.html");
+    const originalSync = gsapWriter.syncPositionHoldsBeforeKeyframes;
+    let armed = true;
+    const spy = vi
+      .spyOn(gsapWriter, "syncPositionHoldsBeforeKeyframes")
+      .mockImplementation((script, previous) => {
+        if (armed) {
+          armed = false;
+          writeFileSync(target, successor);
+        }
+        return originalSync(script, previous);
+      });
     try {
-      const projectDir = createProjectDir();
-      writeHtml(projectDir, "comp.html", FROMTO_COMP);
-      const app = new Hono();
-      registerFileRoutes(app, createAdapter(projectDir));
-      const successor = FROMTO_COMP.replace('data-duration="3"', 'data-duration="9"');
-      let releaseImport = () => {};
-      recastImportGate.wait = new Promise<void>((resolve) => {
-        releaseImport = resolve;
-      });
-      const parserEntered = new Promise<void>((resolve) => {
-        recastImportGate.onEnter = resolve;
-      });
-
-      const pending = postGsapMutationBatch(app, "comp.html", {
+      const response = await postGsapMutationBatch(app, "comp.html", {
         mutations: [{ type: "shift-positions", targetSelector: "#missing", delta: 1 }],
       });
-      await parserEntered;
-      writeHtml(projectDir, "comp.html", successor);
-      releaseImport();
-      const response = await pending;
 
       expect(response.status).toBe(409);
       expect(await response.json()).toMatchObject({ conflict: true });
-      expect(readFileSync(join(projectDir, "comp.html"), "utf-8")).toBe(successor);
+      expect(readFileSync(target, "utf-8")).toBe(successor);
     } finally {
-      if (previousWriter === undefined) delete process.env.HYPERFRAMES_GSAP_WRITER;
-      else process.env.HYPERFRAMES_GSAP_WRITER = previousWriter;
+      spy.mockRestore();
     }
   });
 

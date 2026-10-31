@@ -3,11 +3,27 @@
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { FilmSession } from "./FilmSession";
+import { AssistantPanel } from "./AssistantPanel";
+import { ProductionPanel } from "./ProductionPanel";
+import { useFilmSession } from "./useFilmSession";
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
 
-describe("FilmSession", () => {
+function DisconnectedFilmPanels({
+  showToast,
+}: {
+  showToast: (message: string, tone?: "error" | "info") => void;
+}) {
+  const { production, assistant } = useFilmSession(showToast);
+  return (
+    <>
+      <ProductionPanel {...production} />
+      <AssistantPanel {...assistant} />
+    </>
+  );
+}
+
+describe("disconnected film panels", () => {
   let root: Root | null = null;
 
   afterEach(() => {
@@ -22,7 +38,7 @@ describe("FilmSession", () => {
     document.body.appendChild(host);
     root = createRoot(host);
     act(() => {
-      root?.render(<FilmSession showToast={showToast} />);
+      root?.render(<DisconnectedFilmPanels showToast={showToast} />);
     });
     expect(host.textContent).toContain("No shot connected");
     expect(host.textContent).toContain("unavailable");

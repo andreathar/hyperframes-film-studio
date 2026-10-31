@@ -1,6 +1,6 @@
 # Initial production foundation — verification
 
-The fork now has a local manifest-to-composition preparation tool. See [the guide](README.md) and [implementation scope](PLAN.md).
+The fork now has a local manifest-to-composition preparation tool. See [the guide](README.md) and [implementation scope](archive/2026-10-31-stale-controls/PLAN.md).
 
 ## Implemented
 

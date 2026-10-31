@@ -1,7 +1,5 @@
 // fallow-ignore-file code-duplication
-// executeGsapMutationRecast and executeGsapMutationAcorn are intentionally
-// parallel — two writers, same switch-case interface. Structural duplication
-// is load-bearing (both paths must remain testable in isolation).
+// GSAP script mutations use the acorn writer.
 import type { Hono } from "hono";
 import { encodeUrlPath, decodedUrlPath, decodeCssEscapes } from "@hyperframes/parsers/asset-paths";
 import {
@@ -112,27 +110,11 @@ import {
   CompositionInsertionError,
   insertCompositionIntoSource,
 } from "../helpers/compositionInsertion.js";
-import { resolveGsapWriter } from "./gsapMutationCapabilities.js";
 import { decodeWellFormedEscapes, requestSubPath } from "../helpers/requestSubPath.js";
 import {
   hasCompositionOutsideTemplates,
   insertBeforeCloseTag,
 } from "@hyperframes/core/compiler/html-document";
-
-// ── Server cutover flag ─────────────────────────────────────────────────────
-
-/**
- * Writer selection is deliberately independent from the Studio SDK cutover.
- * Recast remains the default until the capability report has no parity blockers.
- */
-/**
- * Lazy-load gsapParser for write ops (recast-backed) — the default server writer.
- * The read path uses the browser-safe acorn parser; this loader is only needed
- * for the recast write path (the default until the migration gate graduates).
- */
-async function loadGsapParser() {
-  return import("@hyperframes/parsers/gsap-parser-recast");
-}
 
 // ── Shared helpers ──────────────────────────────────────────────────────────
 
@@ -1646,20 +1628,6 @@ const HOLD_SYNC_MUTATION_TYPES = new Set<string>([
   "delete-all-for-selector",
 ]);
 
-async function executeGsapMutation(
-  body: GsapMutationRequest,
-  block: NonNullable<ReturnType<typeof extractGsapScriptBlock>>,
-  respond: (data: unknown, status?: number) => Response,
-  writer: "recast" | "acorn",
-): Promise<GsapMutationResult | Response> {
-  // Keep writer selection explicit at the route boundary so a batch cannot
-  // switch implementations between operations.
-  if (writer === "recast") {
-    return executeGsapMutationRecast(body, block, respond);
-  }
-  return executeGsapMutationAcorn(body, block, respond);
-}
-
 function validateGsapMutationRequest(
   c: RouteContext,
   body: GsapMutationRequest | null,
@@ -1801,17 +1769,9 @@ async function applyGsapMutations(
   const skippedSelectors = new Set<string>();
   const respond = (data: unknown, status?: number) =>
     status ? c.json(data, status) : c.json(data);
-  let writer: "recast" | "acorn";
-  try {
-    writer = resolveGsapWriter({
-      HYPERFRAMES_GSAP_WRITER: process.env["HYPERFRAMES_GSAP_WRITER"],
-    });
-  } catch (error) {
-    return c.json({ error: error instanceof Error ? error.message : String(error) }, 400);
-  }
 
   const mutationChanges: boolean[] = [];
-  const retimes = writer === "acorn" ? retimeRuns(mutations) : new Map<number, RetimeSlot[]>();
+  const retimes = retimeRuns(mutations);
   for (let index = 0; index < mutations.length; index++) {
     const run = retimes.get(index);
     if (run) {
@@ -1823,7 +1783,7 @@ async function applyGsapMutations(
     }
     const mutation = mutations[index]!;
     const previousScript = block.scriptText;
-    const result = await executeGsapMutation(mutation, block, respond, writer);
+    const result = executeGsapMutationAcorn(mutation, block, respond);
     if (result instanceof Response) return result;
     let newScript = typeof result === "string" ? result : result.script;
     if (typeof result !== "string") {
@@ -1832,10 +1792,7 @@ async function applyGsapMutations(
     if (HOLD_SYNC_MUTATION_TYPES.has(mutation.type)) {
       lengthIsAuthored ??= !lengthIsTimeline(res.project.dir, res.filePath);
       if (lengthIsAuthored) newScript = trimTrailingKeyframeSpans(previousScript, newScript);
-      newScript =
-        writer === "acorn"
-          ? syncPositionHoldsBeforeKeyframes(newScript, previousScript)
-          : (await loadGsapParser()).syncPositionHoldsBeforeKeyframes(newScript, previousScript);
+      newScript = syncPositionHoldsBeforeKeyframes(newScript, previousScript);
     }
     mutationChanges.push(newScript !== previousScript);
     block.scriptText = newScript;
@@ -1844,9 +1801,9 @@ async function applyGsapMutations(
   const changed = block.scriptText !== initialScript;
   const newHtml = changed ? block.replaceScript(block.scriptText) : html;
   let backupPath: string | null = null;
-  // Parsing can await lazy imports. Revalidate before EVERY successful response,
-  // including semantic no-ops: a stale no-op response would otherwise claim
-  // the old bytes and let the client keep a preview that missed a successor.
+  // Revalidate before EVERY successful response, including semantic no-ops:
+  // a stale no-op response would otherwise claim the old bytes and let the
+  // client keep a preview that missed a successor.
   if (readFileSync(res.absPath, "utf-8") !== beforeHtml) {
     return c.json({ error: "file changed during GSAP mutation", conflict: true }, 409);
   }
@@ -2189,371 +2146,6 @@ function executeGsapMutationAcorn(
   }
 }
 
-async function executeGsapMutationRecast(
-  body: GsapMutationRequest,
-  block: NonNullable<ReturnType<typeof extractGsapScriptBlock>>,
-  respond: (data: unknown, status?: number) => Response,
-): Promise<GsapMutationResult | Response> {
-  const parser = await loadGsapParser();
-  const {
-    updateAnimationInScript,
-    addAnimationToScript,
-    removeAnimationFromScript,
-    addKeyframeToScript,
-    removeKeyframeFromScript,
-    moveKeyframeInScript,
-    resizeKeyframedTweenInScript,
-    updateKeyframeInScript,
-    convertToKeyframesInScript,
-    removeAllKeyframesFromScript,
-    materializeKeyframesInScript,
-    unrollDynamicAnimations,
-    setArcPathInScript,
-    updateArcSegmentInScript,
-    updateMotionPathPointInScript,
-    addMotionPathPointInScript,
-    removeMotionPathPointInScript,
-    addMotionPathToScript,
-    removeArcPathFromScript,
-    addAnimationWithKeyframesToScript,
-    splitAnimationsInScript,
-    splitIntoPropertyGroups,
-    dedupePositionWritesInScript,
-  } = parser;
-
-  function requireAnimation(
-    scriptText: string,
-    animationId: string,
-  ): { anim: GsapAnimation } | { err: Response } {
-    const parsed = parseGsapScriptAcorn(scriptText);
-    const anim = parsed.animations.find((a) => a.id === animationId);
-    if (!anim) return { err: respond({ error: "animation not found" }, 404) };
-    return { anim };
-  }
-
-  function requireFromToAnimation(
-    scriptText: string,
-    animationId: string,
-  ): { anim: GsapAnimation } | { err: Response } {
-    const result = requireAnimation(scriptText, animationId);
-    if ("err" in result) return result;
-    if (result.anim.method !== "fromTo")
-      return { err: respond({ error: "animation is not a fromTo" }, 400) };
-    return result;
-  }
-
-  switch (body.type) {
-    case "update-property":
-    case "add-property": {
-      const r = requireAnimation(block.scriptText, body.animationId);
-      if ("err" in r) return r.err;
-      const val = body.type === "update-property" ? body.value : body.defaultValue;
-      return updateAnimationInScript(block.scriptText, body.animationId, {
-        properties: { ...r.anim.properties, [body.property]: val },
-      });
-    }
-    case "update-properties": {
-      const r = requireAnimation(block.scriptText, body.animationId);
-      if ("err" in r) return r.err;
-      return updateAnimationInScript(block.scriptText, body.animationId, {
-        properties: { ...r.anim.properties, ...body.properties },
-      });
-    }
-    case "update-from-property":
-    case "add-from-property": {
-      const r = requireFromToAnimation(block.scriptText, body.animationId);
-      if ("err" in r) return r.err;
-      const val = body.type === "update-from-property" ? body.value : body.defaultValue;
-      return updateAnimationInScript(block.scriptText, body.animationId, {
-        fromProperties: { ...(r.anim.fromProperties ?? {}), [body.property]: val },
-      });
-    }
-    case "update-meta": {
-      return updateAnimationInScript(block.scriptText, body.animationId, body.updates);
-    }
-    case "add": {
-      if (body.fromProperties && body.method !== "fromTo") {
-        return respond({ error: "fromProperties is only valid for method=fromTo" }, 400);
-      }
-      // A new position/rotation animation owns that channel — strip the matching
-      // legacy studio CSS var (--hf-studio-offset / --hf-studio-rotation) so it can't
-      // double with the tween, matching add-with-keyframes/replace-with-keyframes.
-      if (
-        Object.keys(body.properties).some((k) => {
-          const group = classifyPropertyGroup(k);
-          return group === "position" || group === "rotation";
-        })
-      ) {
-        stripStudioEditsFromTarget(block.document, body.targetSelector);
-      }
-      const result = addAnimationToScript(block.scriptText, {
-        targetSelector: body.targetSelector,
-        method: body.method,
-        position: body.position,
-        duration: body.duration,
-        ease: body.ease,
-        properties: body.properties,
-        fromProperties: body.fromProperties,
-        ...(body.global ? { global: true } : {}),
-      });
-      return result.script;
-    }
-    case "delete": {
-      const delTarget = requireAnimation(block.scriptText, body.animationId);
-      if (!("err" in delTarget) && body.stripStudioEdits) {
-        stripStudioEditsFromTarget(block.document, delTarget.anim.targetSelector);
-        bakeVisibilityOnDelete(block.document, delTarget.anim);
-      }
-      return removeAnimationFromScript(block.scriptText, body.animationId);
-    }
-    case "delete-all-for-selector": {
-      const parsed = parseGsapScriptAcorn(block.scriptText);
-      const matching = parsed.animations.filter((a) => a.targetSelector === body.targetSelector);
-      if (matching.length === 0) return block.scriptText;
-      stripStudioEditsFromTarget(block.document, body.targetSelector);
-      let script = block.scriptText;
-      for (const anim of matching.reverse()) {
-        script = removeAnimationFromScript(script, anim.id);
-      }
-      return script;
-    }
-    case "consolidate-position-writes": {
-      if (!body.targetSelector) return block.scriptText;
-      return dedupePositionWritesInScript(
-        block.scriptText,
-        body.targetSelector,
-        body.keepAnimationId,
-      );
-    }
-    case "remove-property": {
-      const r = requireAnimation(block.scriptText, body.animationId);
-      if ("err" in r) return r.err;
-      const filtered = { ...r.anim.properties };
-      delete filtered[body.property];
-      return updateAnimationInScript(block.scriptText, body.animationId, {
-        properties: filtered,
-      });
-    }
-    case "remove-from-property": {
-      const r = requireFromToAnimation(block.scriptText, body.animationId);
-      if ("err" in r) return r.err;
-      const filtered = { ...(r.anim.fromProperties ?? {}) };
-      delete filtered[body.property];
-      return updateAnimationInScript(block.scriptText, body.animationId, {
-        fromProperties: filtered,
-      });
-    }
-    case "add-keyframe": {
-      return addKeyframeToScript(
-        block.scriptText,
-        body.animationId,
-        body.percentage,
-        body.properties,
-        body.ease,
-        body.backfillDefaults,
-      );
-    }
-    case "remove-keyframe": {
-      return removeKeyframeFromScript(block.scriptText, body.animationId, body.percentage);
-    }
-    case "move-keyframe": {
-      return moveKeyframeInScript(
-        block.scriptText,
-        body.animationId,
-        body.fromPercentage,
-        body.toPercentage,
-      );
-    }
-    case "resize-keyframed-tween": {
-      return resizeKeyframedTweenInScript(
-        block.scriptText,
-        body.animationId,
-        body.position,
-        body.duration,
-        body.pctRemap,
-      );
-    }
-    case "update-keyframe": {
-      return updateKeyframeInScript(
-        block.scriptText,
-        body.animationId,
-        body.percentage,
-        body.properties,
-        body.ease,
-      );
-    }
-    case "convert-to-keyframes": {
-      return convertToKeyframesInScript(
-        block.scriptText,
-        body.animationId,
-        body.resolvedFromValues,
-        body.duration,
-      );
-    }
-    case "remove-all-keyframes": {
-      const preCollapse = requireAnimation(block.scriptText, body.animationId);
-      if (!("err" in preCollapse)) {
-        bakeVisibilityOnDelete(block.document, preCollapse.anim);
-      }
-      return removeAllKeyframesFromScript(block.scriptText, body.animationId);
-    }
-    case "materialize-keyframes": {
-      if (body.allElements && body.allElements.length > 0) {
-        return unrollDynamicAnimations(block.scriptText, body.animationId, body.allElements);
-      }
-      return materializeKeyframesInScript(
-        block.scriptText,
-        body.animationId,
-        body.keyframes,
-        body.easeEach,
-        body.resolvedSelector,
-      );
-    }
-    case "set-arc-path": {
-      return setArcPathInScript(block.scriptText, body.animationId, {
-        enabled: body.enabled,
-        autoRotate: body.autoRotate ?? false,
-        segments: body.segments ?? [],
-      });
-    }
-    case "update-arc-segment": {
-      return updateArcSegmentInScript(block.scriptText, body.animationId, body.segmentIndex, {
-        ...(body.curviness !== undefined ? { curviness: body.curviness } : {}),
-        ...(body.cp1 ? { cp1: body.cp1 } : {}),
-        ...(body.cp2 ? { cp2: body.cp2 } : {}),
-      });
-    }
-    case "update-motion-path-point": {
-      return updateMotionPathPointInScript(block.scriptText, body.animationId, body.pointIndex, {
-        x: body.x,
-        y: body.y,
-      });
-    }
-    case "add-motion-path-point": {
-      return addMotionPathPointInScript(block.scriptText, body.animationId, body.index, {
-        x: body.x,
-        y: body.y,
-      });
-    }
-    case "remove-motion-path-point": {
-      return removeMotionPathPointInScript(block.scriptText, body.animationId, body.index);
-    }
-    case "add-motion-path": {
-      const result = addMotionPathToScript(
-        block.scriptText,
-        body.targetSelector,
-        body.position,
-        body.duration,
-        { x: body.x, y: body.y },
-        body.ease,
-      );
-      return result.script;
-    }
-    case "remove-arc-path": {
-      return removeArcPathFromScript(block.scriptText, body.animationId);
-    }
-    case "add-with-keyframes": {
-      if (keyframesWritePosition(body.keyframes) || keyframesWriteRotation(body.keyframes)) {
-        stripStudioEditsFromTarget(block.document, body.targetSelector);
-      }
-      const result = addAnimationWithKeyframesToScript(
-        block.scriptText,
-        body.targetSelector,
-        body.position,
-        body.duration,
-        body.keyframes,
-        body.ease,
-        body.easeEach,
-      );
-      return result.script;
-    }
-    case "replace-with-keyframes": {
-      if (keyframesWritePosition(body.keyframes) || keyframesWriteRotation(body.keyframes)) {
-        stripStudioEditsFromTarget(block.document, body.targetSelector);
-      }
-      return replaceInPlaceUnlessSetOrUnknown(block.scriptText, body);
-    }
-    case "split-animations": {
-      if (
-        typeof body.originalId !== "string" ||
-        !body.originalId ||
-        typeof body.newId !== "string" ||
-        !body.newId ||
-        typeof body.splitTime !== "number" ||
-        !Number.isFinite(body.splitTime) ||
-        typeof body.elementStart !== "number" ||
-        !Number.isFinite(body.elementStart) ||
-        typeof body.elementDuration !== "number" ||
-        !Number.isFinite(body.elementDuration) ||
-        body.elementDuration <= 0
-      ) {
-        return respond(
-          {
-            error:
-              "split-animations requires originalId, newId (non-empty strings), splitTime, elementStart (finite numbers), and elementDuration (positive number)",
-          },
-          400,
-        );
-      }
-      return splitAnimationsInScript(block.scriptText, {
-        originalId: body.originalId,
-        newId: body.newId,
-        splitTime: body.splitTime,
-        elementStart: body.elementStart,
-        elementDuration: body.elementDuration,
-      });
-    }
-    case "split-into-property-groups": {
-      const result = splitIntoPropertyGroups(block.scriptText, body.animationId);
-      return result.script;
-    }
-    case "unroll-timeline": {
-      return unrollComputedTimeline(block.scriptText);
-    }
-    case "shift-positions": {
-      const { targetSelector, delta } = body;
-      if (!targetSelector || !Number.isFinite(delta) || delta === 0) return block.scriptText;
-      const { shiftPositionsInScript } = parser;
-      return shiftPositionsInScript(block.scriptText, targetSelector, delta, block.root);
-    }
-    case "shift-positions-batch": {
-      const { shiftPositionsInScript } = parser;
-      let script = block.scriptText;
-      for (const s of body.shifts) {
-        if (!s.targetSelector || !Number.isFinite(s.delta) || s.delta === 0) continue;
-        script = shiftPositionsInScript(script, s.targetSelector, s.delta, block.root);
-      }
-      return script;
-    }
-    case "scale-positions": {
-      const { targetSelector, oldStart, oldDuration, newStart, newDuration } = body;
-      if (
-        !targetSelector ||
-        !Number.isFinite(oldStart) ||
-        !Number.isFinite(oldDuration) ||
-        !Number.isFinite(newStart) ||
-        !Number.isFinite(newDuration) ||
-        oldDuration <= 0 ||
-        newDuration <= 0
-      )
-        return block.scriptText;
-      if (oldStart === newStart && oldDuration === newDuration) return block.scriptText;
-      const { scalePositionsInScript } = parser;
-      return scalePositionsInScript(
-        block.scriptText,
-        targetSelector,
-        oldStart,
-        oldDuration,
-        newStart,
-        newDuration,
-        block.root,
-      );
-    }
-    default:
-      return respond({ error: `unknown mutation type: ${(body as { type: string }).type}` }, 400);
-  }
-}
-
 interface FoldedAtomicCutFile {
   path: string;
   absPath: string;
@@ -2564,13 +2156,12 @@ interface FoldedAtomicCutFile {
 }
 
 /** Fold every split and optional GSAP retarget for one file without touching disk. */
-async function foldAtomicCutFile(
+function foldAtomicCutFile(
   c: RouteContext,
   file: AtomicCutFileRequest,
   absPath: string,
   before: string,
-  writer: "recast" | "acorn",
-): Promise<FoldedAtomicCutFile | Response> {
+): FoldedAtomicCutFile | Response {
   let after = before;
   let splitCount = 0;
   const skippedSelectors = new Set<string>();
@@ -2620,7 +2211,7 @@ async function foldAtomicCutFile(
     if (!cut.originalId) continue;
     const block = extractGsapScriptBlock(after);
     if (!block) continue;
-    const result = await executeGsapMutation(
+    const result = executeGsapMutationAcorn(
       {
         type: "split-animations",
         originalId: cut.originalId,
@@ -2631,7 +2222,6 @@ async function foldAtomicCutFile(
       },
       block,
       respond,
-      writer,
     );
     if (result instanceof Response) return result;
     let script = typeof result === "string" ? result : result.script;
@@ -2639,10 +2229,7 @@ async function foldAtomicCutFile(
       for (const selector of result.skippedSelectors) skippedSelectors.add(selector);
     }
     if (script !== block.scriptText) {
-      script =
-        writer === "acorn"
-          ? syncPositionHoldsBeforeKeyframes(script, block.scriptText)
-          : (await loadGsapParser()).syncPositionHoldsBeforeKeyframes(script, block.scriptText);
+      script = syncPositionHoldsBeforeKeyframes(script, block.scriptText);
       after = block.replaceScript(script);
     }
   }
@@ -3141,14 +2728,6 @@ export function registerFileRoutes(api: Hono, adapter: StudioApiAdapter): void {
     const files = body.files as AtomicCutFileRequest[];
     const project = await adapter.resolveProject(c.req.param("id"));
     if (!project) return c.json({ error: "not found" }, 404);
-    let writer: "recast" | "acorn";
-    try {
-      writer = resolveGsapWriter({
-        HYPERFRAMES_GSAP_WRITER: process.env["HYPERFRAMES_GSAP_WRITER"],
-      });
-    } catch (error) {
-      return c.json({ error: error instanceof Error ? error.message : String(error) }, 400);
-    }
 
     return serializeAtomicCut(async () => {
       const seen = new Set<string>();
@@ -3179,7 +2758,7 @@ export function registerFileRoutes(api: Hono, adapter: StudioApiAdapter): void {
         }
         let folded: FoldedAtomicCutFile | Response;
         try {
-          folded = await foldAtomicCutFile(c, file, absPath, before, writer);
+          folded = await foldAtomicCutFile(c, file, absPath, before);
         } catch (error) {
           const message = error instanceof Error ? error.message : "Cut transform failed";
           return c.json({ error: message }, 400);
@@ -3188,7 +2767,7 @@ export function registerFileRoutes(api: Hono, adapter: StudioApiAdapter): void {
         prepared.push(folded);
       }
 
-      // Lazy GSAP parsing above can yield; revalidate every base before the first write.
+      // The fold is awaited; revalidate every base before the first write.
       for (const file of prepared) {
         const current = readFileSync(file.absPath, "utf-8");
         if (current !== file.before) {

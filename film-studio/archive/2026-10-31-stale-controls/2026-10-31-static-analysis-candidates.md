@@ -1,6 +1,6 @@
 # Static-analysis candidate inventory
 
-Companion to [the audit](2026-10-31-code-quality.md). Generated from installed Knip on 2026-10-31 at HEAD `658f01cd0`. **Not a deletion authorization or proof of dead code.** Public exports, vendored assets, standalone scripts and packaging tools require manual verification. No fixes applied.
+Companion to [the audit](../../audits/2026-10-31-code-quality.md). Generated from installed Knip on 2026-10-31 at HEAD `658f01cd0`. **Not a deletion authorization or proof of dead code.** Public exports, vendored assets, standalone scripts and packaging tools require manual verification. No fixes applied.
 
 The absolute original-checkout paths below identify local generated/copied files reported by Knip; they are not tracked files in the audited Git object or promises of files in the managed checkout. Unresolved import strings remain tool findings, not repository citations.
 

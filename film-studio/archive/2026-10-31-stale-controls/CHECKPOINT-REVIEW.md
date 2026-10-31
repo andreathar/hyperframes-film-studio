@@ -2,11 +2,11 @@
 
 ## Consolidation update — 2026-10-31
 
-The producer requires one GitHub branch, `main`. The coordinator is consolidating existing heads and quality correction `48693f33f`; publication, remote branch cleanup and final integrated checks remain pending verification. Earlier branch/PR inventories are historical captures. [Project controls](PROJECT-CONTROL.md) and [the state register](PROJECT-STATE.json) record the verified backup and current policy. Recovery/input/descriptor findings, native offline acceptance, assistant/provider qualification and inspector activation remain open; consolidation does not close them.
+The producer requires one GitHub branch, `main`. The coordinator is consolidating existing heads and quality correction `48693f33f`; publication, remote branch cleanup and final integrated checks remain pending verification. Earlier branch/PR inventories are historical captures. [Project controls](../PROJECT-CONTROL.md) and [the state register](PROJECT-STATE.json) record the verified backup and current policy. Recovery/input/descriptor findings, native offline acceptance, assistant/provider qualification and inspector activation remain open; consolidation does not close them.
 
 Scope correction: this was a local-checkout checkpoint, not a complete remote project audit. Later [quality review](QUALITY-REPORT.md) confirms PR #7 already implements shared package/contracts. Use [PROJECT-STATE.json](PROJECT-STATE.json) for the reconciled observation and review/reuse that PR rather than repeating P1. Historical local findings below retain their original scope.
 
-This review answers where implementation stopped and informs the revised [execution plan](EXECUTION-PLAN.md). It combines independent read-only assessments of architecture/domain, UX/workflow, and reliability/code quality. The coordinator verified the checkout, prior planning/Inbox checkpoint, repair commit and targeted tests. Proposed paths in the plan are not implemented files.
+This review answers where implementation stopped and informs the revised [execution plan](../EXECUTION-PLAN.md). It combines independent read-only assessments of architecture/domain, UX/workflow, and reliability/code quality. The coordinator verified the checkout, prior planning/Inbox checkpoint, repair commit and targeted tests. Proposed paths in the plan are not implemented files.
 
 ## Exact starting point
 
@@ -58,6 +58,6 @@ No product code, dependencies, canonical sources, processes or provider state ch
 
 Keep native Studio and one shared domain. Separate optional assistant/provider capability from FilmPort. First gate: owned intake → explicit selection → placement/edit/undo → decoded render → reopen. Compiler/assistant develop behind stable contracts without making offline production depend on host qualification. Finish one external route before expanding execution; retain all requested modules and separate evidence gates.
 
-The [revised plan](EXECUTION-PLAN.md) defines exact ownership, dependency waves, failure cases and six concrete smart features. This file is evidence, not a second checklist.
+The [revised plan](../EXECUTION-PLAN.md) defines exact ownership, dependency waves, failure cases and six concrete smart features. This file is evidence, not a second checklist.
 
 Independent final architecture review identified one additional planning gap: placement spans editor files and project-state publication. The revised P1/P5 now require a durable placement intent/receipt, shared request/operation identity and interruption tests around both writes, with explicit uncertainty instead of duplicate insertion. It also corrected the design's film inventory to identify it as a prior audit rather than a current requalification.

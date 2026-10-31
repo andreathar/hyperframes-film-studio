@@ -2,7 +2,7 @@
 
 ## Consolidation update — 2026-10-31
 
-The producer requires one GitHub branch, `main`. The coordinator is consolidating existing heads and quality correction `48693f33f`; publication, remote branch cleanup and final integrated checks remain pending verification. Earlier branch/PR inventories are historical captures. [Project controls](PROJECT-CONTROL.md) and [the state register](PROJECT-STATE.json) record the verified backup and current policy. Recovery/input/descriptor findings, native offline acceptance, assistant/provider qualification and inspector activation remain open; consolidation does not close them.
+The producer requires one GitHub branch, `main`. The coordinator is consolidating existing heads and quality correction `48693f33f`; publication, remote branch cleanup and final integrated checks remain pending verification. Earlier branch/PR inventories are historical captures. [Project controls](PROJECT-CONTROL.md) and [the state register](archive/2026-10-31-stale-controls/PROJECT-STATE.json) record the verified backup and current policy. Recovery/input/descriptor findings, native offline acceptance, assistant/provider qualification and inspector activation remain open; consolidation does not close them.
 
 > **For agentic workers:** Use superpowers:subagent-driven-development to execute reviewed tasks. The producer requested specialized subagents. The coordinator integrates shared seams; workers own isolated modules. Checkboxes describe this revision, not historical delivery.
 
@@ -12,7 +12,7 @@ The producer requires one GitHub branch, `main`. The coordinator is consolidatin
 
 **Tech Stack:** Existing Bun workspace, ESM/TypeScript, React/dockview, Hono, workspace build/test tools, Node filesystem primitives, existing Hyperframes/FFmpeg pipeline. Preserve audited algorithms during extraction.
 
-**Spec:** [PRODUCTION-DESIGN.md](PRODUCTION-DESIGN.md), with delivery and interaction requirements revised below. [CHECKPOINT-REVIEW.md](CHECKPOINT-REVIEW.md) records fresh evidence. This is a new review proposal; no product implementation is claimed.
+**Spec:** [PRODUCTION-DESIGN.md](PRODUCTION-DESIGN.md), with delivery and interaction requirements revised below. [CHECKPOINT-REVIEW.md](archive/2026-10-31-stale-controls/CHECKPOINT-REVIEW.md) records fresh evidence. This is a new review proposal; no product implementation is claimed.
 
 ## Verified starting point — 2026-10-31
 
@@ -23,7 +23,7 @@ The producer requires one GitHub branch, `main`. The coordinator is consolidatin
 - New finding: synthetic directory-open failure after ledger rename rejected the mutation while reread showed revision 0 → 1. A failed response does not prove nothing was saved.
 - Preserve concurrent `film-studio/WORKFLOW.mmd`. No merge, restart, provider action or model execution occurred in this review.
 
-The [quality audit](QUALITY-REPORT.md), [observed state register](PROJECT-STATE.json) and [operating contract](PROJECT-CONTROL.md) now govern state reconciliation. First reconcile PR #7, contract changes and CI; use one implementation/integration lane plus independent review until that gate is closed. Later dependency waves retain the maximum three-worker cap.
+The [quality audit](archive/2026-10-31-stale-controls/QUALITY-REPORT.md), [observed state register](archive/2026-10-31-stale-controls/PROJECT-STATE.json) and [operating contract](PROJECT-CONTROL.md) now govern state reconciliation. First reconcile PR #7, contract changes and CI; use one implementation/integration lane plus independent review until that gate is closed. Later dependency waves retain the maximum three-worker cap.
 
 ## Global constraints
 

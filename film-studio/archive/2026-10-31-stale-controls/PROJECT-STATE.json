@@ -586,7 +586,7 @@
   ],
   "sources": {
     "private_evidence_root": ".film-workspace/quality-audit-2026-10-31",
-    "report": "film-studio/QUALITY-REPORT.md",
+    "report": "film-studio/archive/2026-10-31-stale-controls/QUALITY-REPORT.md",
     "operating_contract": "film-studio/PROJECT-CONTROL.md",
     "execution_map": "film-studio/EXECUTION-PLAN.md",
     "board_thread": "http://plannotator.localhost:45365/#thread=msg_01M6848D8DSC5G382PDDC4F3QM"
@@ -720,9 +720,9 @@
     "disposition": "request changes; no integration clearance",
     "verification": "source inspection; Studio pure helper probes; no full tests/browser/provider qualification on concurrent head",
     "evidence": [
-      ".omo/evidence/concurrent-cli-review.md",
-      ".omo/evidence/concurrent-studio-review.md",
-      ".omo/evidence/concurrent-compiler-review.md"
+      "film-studio/archive/2026-10-31-stale-controls/omo-evidence/concurrent-cli-review.md",
+      "film-studio/archive/2026-10-31-stale-controls/omo-evidence/concurrent-studio-review.md",
+      "film-studio/archive/2026-10-31-stale-controls/omo-evidence/concurrent-compiler-review.md"
     ],
     "next_gate": "reconcile actual owner and pinned head; remediate acceptance blockers; integrate local correction preserving all concurrent changes; run affected exact-result gates"
   },

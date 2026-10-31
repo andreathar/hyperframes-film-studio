@@ -2,7 +2,7 @@
 
 ## Consolidation update — 2026-10-31
 
-The producer requires one GitHub branch, `main`. The coordinator is consolidating existing heads and quality correction `48693f33f`; publication, remote branch cleanup and final integrated checks remain pending verification. Earlier branch/PR inventories are historical captures. [Project controls](PROJECT-CONTROL.md) and [the state register](PROJECT-STATE.json) record the verified backup and current policy. Recovery/input/descriptor findings, native offline acceptance, assistant/provider qualification and inspector activation remain open; consolidation does not close them.
+The producer requires one GitHub branch, `main`. The coordinator is consolidating existing heads and quality correction `48693f33f`; publication, remote branch cleanup and final integrated checks remain pending verification. Earlier branch/PR inventories are historical captures. [Project controls](PROJECT-CONTROL.md) and [the state register](archive/2026-10-31-stale-controls/PROJECT-STATE.json) record the verified backup and current policy. Recovery/input/descriptor findings, native offline acceptance, assistant/provider qualification and inspector activation remain open; consolidation does not close them.
 
 The Plannotator Board is the active task surface. This checklist records implementation scope and dependencies in the fork. Software delivery does not approve film content or release paid generation.
 
@@ -38,4 +38,4 @@ The Plannotator Board is the active task surface. This checklist records impleme
 - [ ] Prove an offline candidate → selected take → native Studio edit/render → reopen production cycle before broad adapter execution.
 - [ ] Review a complete film exchange for picture, identity, historical-face restrictions, dialogue, sound and continuity.
 
-Implementation references: PLAN.md, IMPORT.md, REVIEW.md, INSPECTOR.md, JOB-CONTROLS.md, JOBS.md, PLACEMENT.md and KLING-HANDOFF-PLAN.md. The single current map is [the revised delegated plan](EXECUTION-PLAN.md); [checkpoint review](CHECKPOINT-REVIEW.md) records fresh evidence. P0–P5 deliver the offline native Studio cycle without compiler/assistant readiness; P6–P10 add those capabilities/providers, P11 reviews integrated quality. No merge, live activation or provider approval is implied by a checked item.
+Implementation references: [PLAN.md](archive/2026-10-31-stale-controls/PLAN.md), IMPORT.md, REVIEW.md, INSPECTOR.md, JOB-CONTROLS.md, JOBS.md, PLACEMENT.md and KLING-HANDOFF-PLAN.md. The single current map is [the revised delegated plan](EXECUTION-PLAN.md); [checkpoint review](archive/2026-10-31-stale-controls/CHECKPOINT-REVIEW.md) records fresh evidence. P0–P5 deliver the offline native Studio cycle without compiler/assistant readiness; P6–P10 add those capabilities/providers, P11 reviews integrated quality. No merge, live activation or provider approval is implied by a checked item.

@@ -1,15 +1,13 @@
 /**
- * Node-only GSAP AST parser. Depends on recast / @babel/parser, which compile
- * to CommonJS that calls `require("fs")` — so this module must never be in the
- * static import graph of isomorphic/browser code. It is reachable only via the
- * `@hyperframes/core/gsap-parser` subpath (studio-api mutations + the linter).
- *
- * Recast-free helpers (serialization, keyframe conversion, validation, types)
- * live in `./gsapSerialize` and are re-exported here so this subpath exposes the
- * full surface for tests and server-side consumers.
+ * Node-only recast GSAP parser and writer. Depends on recast / @babel/parser,
+ * which compile to CommonJS that calls `require("fs")`, so this module must
+ * never be in the static import graph of browser code. The public read path is
+ * `parseGsapScriptAcorn`. Studio mutations use the acorn writer. This module
+ * remains for parity tests and `@hyperframes/parsers/gsap-parser-recast`.
  */
 import * as recast from "recast";
 import { parse as babelParse } from "@babel/parser";
+import { isStudioHoldSet, STUDIO_HOLD_MARKER } from "./gsapStudioHold";
 import {
   type ArcPathConfig,
   type ArcPathSegment,
@@ -1826,17 +1824,6 @@ function insertInheritedStateSet(
     parsed.ast.program.body.push(newStatement);
   }
   return recast.print(parsed.ast).code;
-}
-
-/** Marker on Studio-emitted pre-keyframe hold `set`s. `data` is a GSAP-reserved
- * config key (attached to the tween, never applied to the target), so it carries
- * the tag without triggering GSAP's "Invalid property" warning. */
-const STUDIO_HOLD_MARKER = "hf-hold";
-
-/** True for a `tl.set(...)` this module emitted to hold a keyframe before its tween.
- * The Studio filters these out so they never appear as user keyframes/diamonds. */
-export function isStudioHoldSet(anim: GsapAnimation): boolean {
-  return anim.method === "set" && anim.properties?.data === STUDIO_HOLD_MARKER;
 }
 
 /**

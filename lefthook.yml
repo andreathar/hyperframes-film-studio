@@ -26,7 +26,9 @@ pre-commit:
       glob: "*.{ts,tsx}"
       run: cd packages/core && node_modules/.bin/tsc --noEmit && cd ../studio && node_modules/.bin/tsc --noEmit && cd ../.. && node_modules/.bin/tsc --noEmit -p scripts/tsconfig.json
     # Mirrors the CI gate (same `--base origin/main` so the local hook can't
-    # pass on a branch CI would fail). Audits the working tree, which means
+    # pass on a branch CI would fail). `--baseline-base origin/main` is required
+    # when that base is HEAD, which is every commit on an up-to-date main.
+    # Audits the working tree, which means
     # unstaged WIP in `packages/**` is part of the diff — stash before
     # committing if that surprises you. `--gate new-only` (the default) only
     # fails on issues introduced by the branch, not inherited findings.
@@ -37,7 +39,7 @@ pre-commit:
       # env -u is safe in non-worktree contexts (no-op when var is unset).
       # fallow reuses one base-snapshot cache per checkout; `audit-cache prune` drops caches unused for a day,
       # including those of removed checkouts. The commit gets the audit's own status.
-      run: env -u GIT_DIR -u GIT_INDEX_FILE -u GIT_WORK_TREE sh -c 'node_modules/.bin/fallow audit --base origin/main --fail-on-issues --fail-on-baseline-growth; status=$?; node_modules/.bin/fallow audit-cache prune --max-age-days 1 > /dev/null; exit $status'
+      run: env -u GIT_DIR -u GIT_INDEX_FILE -u GIT_WORK_TREE sh -c 'node_modules/.bin/fallow audit --base origin/main --fail-on-issues --fail-on-baseline-growth --baseline-base origin/main; status=$?; node_modules/.bin/fallow audit-cache prune --max-age-days 1 > /dev/null; exit $status'
     - name: cli-process-ownership
       glob: "packages/cli/src/**/*.ts"
       run: bun run check:cli-process-ownership

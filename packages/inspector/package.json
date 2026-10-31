@@ -66,8 +66,6 @@
     "serve:node": "node dist/server.js"
   },
   "dependencies": {
-    "@hyperframes/core": "workspace:*",
-    "@hyperframes/parsers": "workspace:*",
     "@jridgewell/trace-mapping": "^0.3.29",
     "acorn": "^8.17.0",
     "esbuild": "^0.28.2",

@@ -1,5 +1,5 @@
-import { open, realpath, mkdir, mkdtemp, writeFile, rename, rm, lstat } from "node:fs/promises";
-import { constants } from "node:fs";
+import { realpath, mkdir, mkdtemp, writeFile, rename, rm, lstat } from "node:fs/promises";
+import { openPinnedDirectory } from "./pinned-directory.mjs";
 import { resolve, relative, isAbsolute, sep, join, dirname, basename, extname } from "node:path";
 import { restoreReview, reviewFingerprint } from "./review.mjs";
 import { validateManifest } from "./manifest.mjs";
@@ -179,11 +179,9 @@ export async function preparePlacement({ bundle, review, plan, workspace, output
     actual = join(parent, basename(target));
   if (actual === root || inside(root, actual) || inside(actual, root))
     throw new Error("Placement output must be separate from canonical workspace");
-  const flags =
-      constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NONBLOCK | constants.O_NOFOLLOW,
-    parentHandle = await open(parent, flags);
+  const parentPin = await openPinnedDirectory(parent);
   try {
-    const pinnedParent = `/proc/self/fd/${parentHandle.fd}`,
+    const pinnedParent = parentPin.pinned,
       pinnedOutput = join(pinnedParent, basename(target));
     const assertParent = async () => {
       if ((await realpath(pinnedParent)) !== parent)
@@ -235,6 +233,6 @@ export async function preparePlacement({ bundle, review, plan, workspace, output
       preparation,
     };
   } finally {
-    await parentHandle.close();
+    await parentPin.handle.close();
   }
 }

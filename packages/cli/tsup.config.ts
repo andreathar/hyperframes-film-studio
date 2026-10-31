@@ -58,7 +58,6 @@ var __dirname = __hf_dirname(__filename);`,
     "@hono/node-server",
     "adm-zip",
     "esbuild",
-    "giget",
     "postcss",
     // aws-lambda transitively pulls @aws-sdk/* + @smithy/* which include
     // .browser.js conditional exports esbuild can't bundle cleanly into

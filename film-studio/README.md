@@ -2,9 +2,9 @@
 
 ## Consolidation update — 2026-10-31
 
-The producer requires one GitHub branch, `main`. The coordinator is consolidating existing heads and quality correction `48693f33f`; publication, remote branch cleanup and final integrated checks remain pending verification. Earlier branch/PR inventories are historical captures. [Project controls](PROJECT-CONTROL.md) and [the state register](PROJECT-STATE.json) record the verified backup and current policy. Recovery/input/descriptor findings, native offline acceptance, assistant/provider qualification and inspector activation remain open; consolidation does not close them.
+The producer requires one GitHub branch, `main`. The coordinator is consolidating existing heads and quality correction `48693f33f`; publication, remote branch cleanup and final integrated checks remain pending verification. Earlier branch/PR inventories are historical captures. [Project controls](PROJECT-CONTROL.md) and [the state register](archive/2026-10-31-stale-controls/PROJECT-STATE.json) record the verified backup and current policy. Recovery/input/descriptor findings, native offline acceptance, assistant/provider qualification and inspector activation remain open; consolidation does not close them.
 
-Current management entrypoints: [quality/efficiency report](QUALITY-REPORT.md), [observed project state](PROJECT-STATE.json) and [operating contract](PROJECT-CONTROL.md). Remote PR #7 contains shared package/contracts not present in this checkout; review/reuse it before assigning new extraction work. These documents distinguish local, remote, integrated and activated state.
+Current management entrypoints: [quality/efficiency report](archive/2026-10-31-stale-controls/QUALITY-REPORT.md), [observed project state](archive/2026-10-31-stale-controls/PROJECT-STATE.json) and [operating contract](PROJECT-CONTROL.md). Remote PR #7 contains shared package/contracts not present in this checkout; review/reuse it before assigning new extraction work. These documents distinguish local, remote, integrated and activated state.
 
 This fork adds a local preparation step to Hyperframes. Describe selected takes and an edit in a JSON manifest, then create an editable composition with verified local media. Use Claude Code or Codex to work with the files through the account you already use. Preparation and local rendering do not require HeyGen generation.
 
@@ -20,7 +20,7 @@ The [Kling producer handoff](KLING-HANDOFF.md) exports a verified, blocked candi
 
 Use [explicit candidate placement](PLACEMENT.md) to turn selected takes and an authored frame-based cut plan into a new editable composition. It checks current media and retains original IDs/direction provenance while preserving existing edits.
 
-The revised [execution plan](EXECUTION-PLAN.md), [design](PRODUCTION-DESIGN.md) and [checkpoint review](CHECKPOINT-REVIEW.md) define the next integrated work. First delivery is a durable owned-media cycle in native Studio; scene assistance and qualified providers follow the same contracts. These remain proposals. Runtime repair is committed separately at `3532efca9` and still needs integration; activation is a distinct step.
+The revised [execution plan](EXECUTION-PLAN.md), [design](PRODUCTION-DESIGN.md) and [checkpoint review](archive/2026-10-31-stale-controls/CHECKPOINT-REVIEW.md) define the next integrated work. First delivery is a durable owned-media cycle in native Studio; scene assistance and qualified providers follow the same contracts. These remain proposals. Runtime repair is committed separately at `3532efca9` and still needs integration; activation is a distinct step.
 
 ## Prepare an edit
 
@@ -28,9 +28,11 @@ From the fork checkout:
 
 ```sh
 bun install --frozen-lockfile
-bun run build
+bun run build:local
 bun run film:prepare --manifest .film-workspace/inputs/manifest.json --output .film-workspace/exchange-v1
 ```
+
+`build:local` is the film loop. It does not compile the AWS Lambda, Cloud Run, or SDK playground packages. `bun run build:cloud` builds those three, and `bun run build` runs both.
 
 Both arguments are required. Output must be a new directory. To try another edit without replacing hand edits, choose `exchange-v2`. Originals and the input manifest remain unchanged.
 

@@ -458,30 +458,6 @@ export interface FilmCommandV1 {
   action: FilmActionV1;
 }
 
-export interface FilmCommandResultV1 {
-  projectId: string;
-  revision: number;
-  requestId: string;
-  accepted: boolean;
-  diagnostics: DiagnosticV1[];
-}
-
-export interface FilmEventV1 {
-  projectId: string;
-  sequence: number;
-  requestId: string;
-  version: 1;
-  revision: number;
-  kind: "accepted" | "rejected";
-  summary: string;
-}
-
-export interface FilmPort {
-  readProject(projectId: string): Promise<ProjectViewV1>;
-  dispatch(projectId: string, command: FilmCommandV1): Promise<FilmCommandResultV1>;
-  events(projectId: string, afterSequence: number): AsyncIterable<FilmEventV1>;
-}
-
 export type AssistantProviderV1 = "codex" | "claude-external" | "local";
 
 export type AssistantReadinessStateV1 =
@@ -538,56 +514,6 @@ export interface AssistantPort {
   start(context: AssistantContextV1, instruction: string): Promise<AssistantTurnV1>;
   events(turnId: string, afterSequence: number): AsyncIterable<AssistantEventV1>;
   cancel(turnId: string): Promise<void>;
-}
-
-export type ProviderOperationV1 = "prepare" | "submit" | "reconcile" | "importResult";
-
-export interface ProviderReadinessV1 {
-  profileId: string;
-  route: ProviderRouteV1;
-  mode: "executable" | "manual-handoff" | "unsupported" | "unavailable";
-  operations: ProviderOperationV1[];
-  evidence: string;
-}
-
-export interface ProviderCandidateV1 {
-  route: ProviderRouteV1;
-  executable: boolean;
-  nativeCandidate: NativeCandidateV1 | null;
-  handoffPath: string | null;
-  diagnostics: DiagnosticV1[];
-}
-
-export interface ProviderPort {
-  inspectReadiness(profileId: string): Promise<ProviderReadinessV1>;
-  prepare(compilation: CompilationV1): Promise<ProviderCandidateV1>;
-  submit?(release: {
-    attemptId: string;
-    canonicalSha256: string;
-    reason: string;
-  }): Promise<ProviderReceiptV1>;
-  reconcile?(attemptId: string): Promise<ProviderReceiptV1>;
-  importResult?(receipt: ProviderReceiptV1): Promise<CandidateV1>;
-}
-
-export function filmProjectPath(projectId: string): string {
-  return `/projects/${encodeURIComponent(projectId)}/film`;
-}
-
-export function filmCommandPath(projectId: string): string {
-  return `${filmProjectPath(projectId)}/commands`;
-}
-
-export function filmEventsPath(projectId: string): string {
-  return `${filmProjectPath(projectId)}/events`;
-}
-
-export function assistantReadinessPath(projectId: string): string {
-  return `/projects/${encodeURIComponent(projectId)}/assistant/readiness`;
-}
-
-export function assistantTurnPath(projectId: string): string {
-  return `/projects/${encodeURIComponent(projectId)}/assistant/turns`;
 }
 
 export function scenePattern(id: ScenePatternId): ScenePatternV1 {

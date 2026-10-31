@@ -34,6 +34,7 @@ import {
   keyframeHoldForAnimation,
 } from "./gsapConstants.js";
 import type { PropertyGroupName } from "./gsapConstants.js";
+import { isStudioHoldSet, STUDIO_HOLD_MARKER } from "./gsapStudioHold.js";
 import {
   findObjectArrayKeyframeIndex,
   getCompatibleObjectArrayKeyframeTiming,
@@ -2487,12 +2488,6 @@ function insertInheritedStateSetInScript(
     ms.append("\n" + code);
   }
   return ms.toString();
-}
-
-const STUDIO_HOLD_MARKER = "hf-hold";
-
-function isStudioHoldSet(animation: GsapAnimation): boolean {
-  return animation.method === "set" && animation.properties.data === STUDIO_HOLD_MARKER;
 }
 
 function removeStudioHoldSets(script: string, parsed: ParsedGsapAcornForWrite): string {

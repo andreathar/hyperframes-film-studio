@@ -4,7 +4,7 @@
 **Audited implementation:** `docs/film-production-execution`, HEAD `658f01cd0b359d4a3998e019aa06dbccdb7c32e2`  
 **Mode:** read-only investigation; this report and its candidate appendix are the only authored changes. Existing dirty planning/control files were not modified. Four independent read-only investigations covered architecture, backend, inspector and quality gates.
 
-**Companion:** [complete static-analysis candidate inventory](2026-10-31-static-analysis-candidates.md).
+**Companion:** [complete static-analysis candidate inventory](../archive/2026-10-31-stale-controls/2026-10-31-static-analysis-candidates.md).
 
 ## Verdict
 
@@ -154,7 +154,7 @@ Knip reported **268 files, 157 exports, 236 types, 9 dependencies, 30 devDepende
 
 **Priority: P3 navigation/maintenance · confidence: high · effort: small–medium**
 
-There are overlapping plan/delivery descriptions, e.g. `film-studio/IMPORT-PLAN.md:5–11` and `film-studio/IMPORT-DELIVERY.md:3–11`. Operational instructions repeat across `film-studio/README.md` and `docs/guides/film-production.mdx:14–88`. README, TASKS, checkpoint and reports repeat branch/integration state. Current control already identifies distinct observed-state and contract surfaces at `film-studio/PROJECT-CONTROL.md:7–10`.
+There are overlapping plan/delivery descriptions, e.g. `film-studio/archive/2026-10-31-stale-controls/IMPORT-PLAN.md:5–11` and `film-studio/IMPORT-DELIVERY.md:3–11`. Operational instructions repeat across `film-studio/README.md` and `docs/guides/film-production.mdx:14–88`. README, TASKS, checkpoint and reports repeat branch/integration state. Current control already identifies distinct observed-state and contract surfaces at `film-studio/PROJECT-CONTROL.md:7–10`.
 
 **Remove from active navigation:** superseded milestone plans and duplicate status prose. Archive unique rationale and acceptance evidence instead of deleting it. Do not create yet another competing project-status register from this audit.
 

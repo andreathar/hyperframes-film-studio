@@ -35,13 +35,6 @@
       "import": "./src/contracts.ts",
       "types": "./src/contracts.ts"
     },
-    "./compile": {
-      "bun": "./src/compile.ts",
-      "node": "./dist/compile.js",
-      "import": "./src/compile.ts",
-      "types": "./src/compile.ts"
-    },
-    "./legacy": "./src/legacy/index.mjs",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -59,11 +52,6 @@
         "import": "./dist/contracts.js",
         "types": "./dist/contracts.d.ts"
       },
-      "./compile": {
-        "import": "./dist/compile.js",
-        "types": "./dist/compile.d.ts"
-      },
-      "./legacy": "./src/legacy/index.mjs",
       "./package.json": "./package.json"
     },
     "main": "./dist/index.js",

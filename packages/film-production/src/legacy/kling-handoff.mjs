@@ -1,7 +1,7 @@
-import { mkdir, realpath, writeFile, open } from "node:fs/promises";
+import { mkdir, realpath, writeFile } from "node:fs/promises";
 import { resolve, relative, isAbsolute, sep, join, dirname, basename } from "node:path";
 import { execFileSync } from "node:child_process";
-import { constants } from "node:fs";
+import { openPinnedDirectory } from "./pinned-directory.mjs";
 import { restoreJobs } from "./jobs.mjs";
 import { restoreReview, reviewFingerprint } from "./review.mjs";
 import { verifyJobMedia } from "./job-store.mjs";
@@ -278,20 +278,18 @@ export async function writeKlingHandoff(packet, output, workspace) {
     throw new Error("Only blocked candidate packets can be exported");
   if (process.platform !== "linux")
     throw new Error("Verified export requires Linux descriptor paths");
-  const flags =
-    constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NONBLOCK | constants.O_NOFOLLOW;
-  const parentHandle = await open(parent, flags);
+  const parentPin = await openPinnedDirectory(parent);
   try {
-    const pinnedParent = `/proc/self/fd/${parentHandle.fd}`;
+    const pinnedParent = parentPin.pinned;
     const openedParent = await realpath(pinnedParent);
     const destination = join(openedParent, basename(target));
     if (destination === root || inside(root, destination) || inside(destination, root))
       throw new Error("Opened output parent overlaps canonical workspace");
     const pinnedTarget = join(pinnedParent, basename(target));
     await mkdir(pinnedTarget, { mode: 0o700 });
-    const directory = await open(pinnedTarget, flags);
+    const directoryPin = await openPinnedDirectory(pinnedTarget);
     try {
-      const pinned = `/proc/self/fd/${directory.fd}`;
+      const pinned = directoryPin.pinned;
       const opened = await realpath(pinned);
       if (opened === root || inside(root, opened) || inside(opened, root))
         throw new Error("Opened output overlaps canonical workspace");
@@ -321,10 +319,10 @@ export async function writeKlingHandoff(packet, output, workspace) {
       );
       await assertLocation();
     } finally {
-      await directory.close();
+      await directoryPin.handle.close();
     }
   } finally {
-    await parentHandle.close();
+    await parentPin.handle.close();
   }
   return actual;
 }

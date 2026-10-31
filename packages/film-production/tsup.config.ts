@@ -5,7 +5,6 @@ export default defineConfig([
     entry: {
       index: "src/index.ts",
       contracts: "src/contracts.ts",
-      compile: "src/compile.ts",
     },
     format: ["esm"],
     outDir: "dist",

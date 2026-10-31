@@ -13,7 +13,7 @@ The first version supports one continuous picture track, independent audio track
 
 ## Prepare, check and render
 
-From this fork's checkout, with its dependencies installed and packages built:
+From this fork's checkout, with dependencies installed. Build the local packages with `bun run build:local` before the commands below. That build does not compile the AWS Lambda, Cloud Run, or SDK playground packages; `bun run build:cloud` builds those, and `bun run build` runs both.
 
 ```sh
 bun run film:prepare --manifest .film-workspace/inputs/manifest.json --output .film-workspace/exchange-v1

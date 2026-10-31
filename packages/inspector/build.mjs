@@ -8,7 +8,7 @@ import { rewriteRelativeImportExtensions } from "../../scripts/rewrite-relative-
 
 const at = (path) => fileURLToPath(new URL(path, import.meta.url));
 const { dependencies } = JSON.parse(readFileSync(at("./package.json"), "utf8"));
-// Declared dependencies stay imports; the workspace's own sources (core, parsers) are bundled in.
+// Declared dependencies stay imports. packages/core is bundled through relative source imports.
 const external = Object.keys(dependencies).filter((name) => !name.startsWith("@hyperframes/"));
 // Bundled CommonJS dependencies call require(); an ES module has none until the banner defines it.
 const banner = {
