@@ -4,7 +4,7 @@ import {
   SCENE_AUTHORING_INSTRUCTIONS,
   type AssistantContextV1,
   type AssistantReadinessV1,
-} from "../../../../film-production/src/contracts.js";
+} from "@hyperframes/film-production/contracts";
 
 /**
  * External authoring writes one handoff file and never starts Claude.

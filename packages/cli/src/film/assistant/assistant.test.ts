@@ -16,7 +16,7 @@ import {
   type AssistantEventV1,
   type AssistantPort,
   type AssistantTurnV1,
-} from "../../../../film-production/src/contracts.js";
+} from "@hyperframes/film-production/contracts";
 import {
   resolveCodexExecutable,
   type AssistantProcessRunner,

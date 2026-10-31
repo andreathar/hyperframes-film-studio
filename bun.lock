@@ -94,6 +94,7 @@
         "@hyperframes/aws-lambda": "workspace:*",
         "@hyperframes/core": "workspace:*",
         "@hyperframes/engine": "workspace:*",
+        "@hyperframes/film-production": "workspace:*",
         "@hyperframes/gcp-cloud-run": "workspace:*",
         "@hyperframes/inspector": "workspace:*",
         "@hyperframes/lint": "workspace:*",

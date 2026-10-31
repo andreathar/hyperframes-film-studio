@@ -7,7 +7,7 @@ import type {
   AssistantReadinessV1,
   AssistantTurnV1,
   DiagnosticV1,
-} from "../../../../film-production/src/contracts.js";
+} from "@hyperframes/film-production/contracts";
 import { authoringPrompt, freezeContext, interpretModelOutput } from "./context.js";
 import {
   createPrivateTemp,

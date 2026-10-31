@@ -5,7 +5,7 @@ import {
   type AssistantContextV1,
   type DiagnosticV1,
   type SceneBriefV1,
-} from "../../../../film-production/src/contracts.js";
+} from "@hyperframes/film-production/contracts";
 import { assistantDiagnostic, redactSecrets } from "./events.js";
 
 const APPROVAL = /["']?approval["']?\s*:|["']?approved["']?\s*:\s*true|\bapproval\b/i;

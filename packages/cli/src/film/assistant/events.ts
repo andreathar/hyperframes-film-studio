@@ -3,7 +3,7 @@ import type {
   AssistantTurnV1,
   DiagnosticV1,
   SceneBriefV1,
-} from "../../../../film-production/src/contracts.js";
+} from "@hyperframes/film-production/contracts";
 
 export interface ActiveTurn {
   turn: AssistantTurnV1;
