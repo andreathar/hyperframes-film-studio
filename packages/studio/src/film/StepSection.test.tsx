@@ -1,8 +1,8 @@
 // @vitest-environment happy-dom
 
-import { act } from "react";
+import { act, useEffect } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { StepSection } from "./StepSection";
 import type { StepState, StepView } from "./steps";
 
@@ -21,16 +21,28 @@ function step(state: StepState, blockedBy: StepView["blockedBy"] = null): StepVi
   return { id: "prompt", state, summary: "Summary text", hint: "Hint text", blockedBy };
 }
 
-function render(view: StepView) {
+function Field({ onUnmount }: { onUnmount: () => void }) {
+  useEffect(() => onUnmount, [onUnmount]);
+  return <textarea defaultValue="draft" />;
+}
+
+function render(view: StepView, onUnmount: () => void = () => {}, tick = 0) {
   if (!host.isConnected) document.body.appendChild(host);
   root ??= createRoot(host);
   act(() => {
     root?.render(
       <StepSection step={view}>
-        <p>Body content</p>
+        <Field onUnmount={onUnmount} />
+        <p data-tick={tick}>Body content</p>
       </StepSection>,
     );
   });
+}
+
+function toggle(): HTMLButtonElement {
+  const button = host.querySelector("button[aria-expanded]");
+  if (!(button instanceof HTMLButtonElement)) throw new Error("missing toggle");
+  return button;
 }
 
 describe("StepSection", () => {
@@ -59,5 +71,30 @@ describe("StepSection", () => {
     render(step("blocked", "shot"));
     expect(host.textContent).toContain("Summary text");
     expect(host.querySelector('[aria-label="Blocked by Film project"]')).not.toBeNull();
+  });
+
+  it("keeps the same text field node when the step state changes", () => {
+    const onUnmount = vi.fn();
+    render(step("later"), onUnmount);
+    act(() => toggle().click());
+    const before = host.querySelector("textarea");
+    expect(before).not.toBeNull();
+    render(step("current"), onUnmount);
+    expect(host.querySelector("textarea")).toBe(before);
+    expect(onUnmount).not.toHaveBeenCalled();
+  });
+
+  it("keeps a section the maker opened open across an unrelated rerender", () => {
+    render(step("done"));
+    expect(host.textContent).not.toContain("Body content");
+    act(() => toggle().click());
+    expect(host.textContent).toContain("Body content");
+    render(step("done"), () => {}, 1);
+    expect(host.textContent).toContain("Body content");
+  });
+
+  it("puts the state in the toggle's accessible name", () => {
+    render(step("current"));
+    expect(toggle().getAttribute("aria-label")).toBe("Prompt, current step");
   });
 });

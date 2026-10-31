@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { Section } from "../components/editor/propertyPanelPrimitives";
 import { mutedClass } from "./chrome";
 import { STEP_TERMS } from "./glossary";
@@ -16,17 +16,26 @@ function glyphFor(step: StepView): { mark: string; label: string } {
 
 /**
  * One step of the Production panel. The current step is open; done and later
- * steps fold. Section reads defaultCollapsed only on mount, so the state is
- * its key: a state change remounts it and re-folds it.
+ * steps fold. Section reads defaultCollapsed only on mount, so the fold is controlled here: it opens when the step becomes current and
+ * folds when it becomes done, on that transition only. Otherwise the maker's
+ * own toggle wins. Nothing remounts, so typing is never interrupted.
  */
-export function StepSection({ step, children }: { step: StepView; children: ReactNode }) {
+export function StepSection({ step, children }: { step: StepView; children?: ReactNode }) {
   const glyph = glyphFor(step);
+  const [fold, setFold] = useState({ state: step.state, collapsed: step.state !== "current" });
+  if (fold.state !== step.state) {
+    const collapsed =
+      step.state === "current" ? false : step.state === "done" ? true : fold.collapsed;
+    setFold({ state: step.state, collapsed });
+  }
+  const label = STEP_TERMS[step.id].label;
   return (
     <Section
-      key={step.state}
-      title={STEP_TERMS[step.id].label}
+      title={label}
       icon={null}
-      defaultCollapsed={step.state !== "current"}
+      collapsed={fold.collapsed}
+      onCollapsedChange={(collapsed) => setFold({ state: step.state, collapsed })}
+      toggleLabel={`${label}, ${glyph.label.toLowerCase()}`}
       accessory={
         <span className="flex items-center gap-1.5">
           <span role="img" aria-label={glyph.label} data-step-glyph={step.state}>

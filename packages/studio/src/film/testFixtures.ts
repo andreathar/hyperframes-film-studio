@@ -125,13 +125,10 @@ export function snapshot(): CapabilitySnapshotV1 {
   };
 }
 
-/** Opens every folded section, nested ones included, as a person would. */
+/** Opens every folded step, as a person would. One pass: groups inside are not collapsible. */
 export function expandAll(host: ParentNode): void {
-  for (let pass = 0; pass < 4; pass += 1) {
-    const folded = [...host.querySelectorAll<HTMLElement>('button[aria-expanded="false"]')];
-    if (folded.length === 0) return;
-    act(() => {
-      for (const control of folded) control.click();
-    });
-  }
+  const folded = [...host.querySelectorAll<HTMLElement>('button[aria-expanded="false"]')];
+  act(() => {
+    for (const control of folded) control.click();
+  });
 }

@@ -175,3 +175,9 @@ export const NEXT_ACTION_TERMS: Record<StepId, string> = {
   takes: "Make a take",
   place: "Place a take in the cut",
 };
+
+export const PATTERN_FIRST_HINT =
+  "Choose a scene pattern first. It decides which pictures are needed.";
+
+export const PROPOSAL_HINT =
+  "The assistant wrote a proposal. Apply it, or edit the direction yourself.";

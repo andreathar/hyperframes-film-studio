@@ -151,8 +151,10 @@ describe("ProductionPanel", () => {
       "Continuity and exclusions",
       "Diagnostics",
       "Native parameters",
-      "Prepare",
     ]);
+    // Actions sit above the steps so they never fold away.
+    const text = host.textContent ?? "";
+    expect(text.indexOf("Prepare")).toBeLessThan(text.indexOf(dialogue));
   });
 
   it("keeps the dialogue exact when a pattern is chosen", async () => {

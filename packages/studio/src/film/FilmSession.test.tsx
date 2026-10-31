@@ -33,7 +33,7 @@ describe("disconnected film panels", () => {
     document.body.innerHTML = "";
   });
 
-  it("says to connect a film project, with one primary action and nothing open", () => {
+  it("says to connect a film project, with one primary action and only the current step open", () => {
     const showToast = vi.fn();
     const host = document.createElement("div");
     document.body.appendChild(host);
@@ -44,7 +44,9 @@ describe("disconnected film panels", () => {
     const card = host.querySelector('section[aria-label="Next step"]');
     expect(card?.textContent).toContain("Next: connect a film project");
     expect(card?.querySelectorAll("button")).toHaveLength(1);
-    expect(host.querySelectorAll('button[aria-expanded="true"]')).toHaveLength(0);
+    const open = host.querySelectorAll('button[aria-expanded="true"]');
+    expect(open).toHaveLength(1);
+    expect(open[0]?.textContent).toContain("Film project");
     act(() => {
       card?.querySelector("button")?.click();
     });

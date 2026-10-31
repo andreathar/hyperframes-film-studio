@@ -103,4 +103,39 @@ describe("planSteps", () => {
     expect(plan.steps.every((step) => step.state === "done")).toBe(true);
     expect(plan.steps.find((step) => step.id === "place")?.summary).toBe("Ready");
   });
+
+  it("keeps the prompt for later while a role is missing and nothing is compiled", () => {
+    const plan = planSteps({
+      ...ready,
+      shot: { ...shot(), references: [] },
+      brief: { ...sceneBrief(), references: [] },
+      compilation: null,
+      takes: 0,
+      placed: false,
+    });
+    expect(state(plan, "references")).toBe("current");
+    expect(state(plan, "prompt")).toBe("later");
+  });
+
+  it("asks for a scene pattern first when there is a shot but no brief", () => {
+    const plan = planSteps({ ...ready, brief: null, compilation: null, takes: 0, placed: false });
+    const references = plan.steps.find((step) => step.id === "references");
+    expect(references).toMatchObject({ state: "current", summary: "Not started" });
+    expect(references?.hint).toContain("scene pattern");
+    expect(state(plan, "direction")).toBe("later");
+  });
+
+  it("keeps direction current for an unapplied assistant proposal", () => {
+    const plan = planSteps({
+      ...ready,
+      brief: sceneBrief("A line.", "assistant"),
+      compilation: null,
+      takes: 0,
+      placed: false,
+    });
+    expect(state(plan, "references")).toBe("done");
+    const direction = plan.steps.find((step) => step.id === "direction");
+    expect(direction?.state).toBe("current");
+    expect(direction?.hint).toMatch(/apply/i);
+  });
 });

@@ -5,7 +5,14 @@ import {
   type ReferenceRole,
   type SceneBriefV1,
 } from "@hyperframes/film-production/browser";
-import { NEXT_ACTION_TERMS, REFERENCE_ROLE_TERMS, STEP_TERMS } from "./glossary";
+import { unappliedProposal } from "./proposal";
+import {
+  NEXT_ACTION_TERMS,
+  PATTERN_FIRST_HINT,
+  PROPOSAL_HINT,
+  REFERENCE_ROLE_TERMS,
+  STEP_TERMS,
+} from "./glossary";
 import type { ProductionShot } from "./types";
 
 export type StepId = "shot" | "references" | "direction" | "prompt" | "takes" | "place";
@@ -73,6 +80,9 @@ function count(n: number, one: string, many: string): string {
 }
 
 function referencesCheck(input: StepInput): Check {
+  if (input.brief === null) {
+    return { done: false, summary: "Not started", hint: PATTERN_FIRST_HINT };
+  }
   const missing = input.shot ? missingRoles(input.shot, input.brief) : [];
   const labels = missing.map((role) => REFERENCE_ROLE_TERMS[role].label).join(", ");
   if (missing.length === 0) {
@@ -82,6 +92,14 @@ function referencesCheck(input: StepInput): Check {
     };
   }
   return { done: false, summary: `Missing: ${labels}`, hint: `Still needed: ${labels}.` };
+}
+
+function directionCheck(brief: SceneBriefV1 | null): Check {
+  if (brief === null) return { done: false, summary: "Not started" };
+  if (unappliedProposal(brief)) {
+    return { done: false, summary: "Proposal waiting", hint: PROPOSAL_HINT };
+  }
+  return { done: true, summary: "Written" };
 }
 
 function promptCheck(compilation: CompilationV1 | null): Check {
@@ -99,7 +117,7 @@ function checks(input: StepInput): Record<StepId, Check> {
   return {
     shot: { done: shot !== null, summary: shot?.title ?? "Not connected" },
     references: referencesCheck(input),
-    direction: { done: brief !== null, summary: brief ? "Written" : "Not started" },
+    direction: directionCheck(brief),
     prompt: promptCheck(input.compilation),
     takes: { done: takes > 0, summary: takes > 0 ? count(takes, "take", "takes") : "None yet" },
     place: { done: placed, summary: placed ? "Ready" : "Not placed" },

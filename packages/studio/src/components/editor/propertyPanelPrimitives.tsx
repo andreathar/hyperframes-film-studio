@@ -288,14 +288,28 @@ export function Section({
   children,
   accessory,
   defaultCollapsed = false,
+  collapsed: controlledCollapsed,
+  onCollapsedChange,
+  toggleLabel,
 }: {
   title: string;
   icon: ReactNode;
   children: ReactNode;
   accessory?: ReactNode;
   defaultCollapsed?: boolean;
+  /** Controlled fold state. Leave unset to let the section hold its own. */
+  collapsed?: boolean;
+  onCollapsedChange?: (next: boolean) => void;
+  /** Accessible name for the toggle, when it must say more than the title. */
+  toggleLabel?: string;
 }) {
-  const [collapsed, setCollapsed] = useState(defaultCollapsed);
+  const [ownCollapsed, setOwnCollapsed] = useState(defaultCollapsed);
+  const collapsed = controlledCollapsed ?? ownCollapsed;
+  const toggle = () => {
+    const next = !collapsed;
+    if (controlledCollapsed === undefined) setOwnCollapsed(next);
+    onCollapsedChange?.(next);
+  };
   const collapseIcon = (
     <svg
       width="10"
@@ -317,8 +331,9 @@ export function Section({
         <div className="flex w-full items-center gap-2 px-4 py-2.5">
           <button
             type="button"
-            onClick={() => setCollapsed((v) => !v)}
+            onClick={toggle}
             aria-expanded={!collapsed}
+            aria-label={toggleLabel}
             className="flex min-w-0 flex-1 items-center justify-between gap-2 text-left"
           >
             <h3 className="text-[12px] font-semibold text-panel-text-1">{title}</h3>

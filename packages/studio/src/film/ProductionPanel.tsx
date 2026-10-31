@@ -7,10 +7,10 @@ import {
 } from "@hyperframes/film-production/browser";
 import { Button } from "../components/ui";
 import { withPattern } from "./briefEdit";
-import { Section } from "../components/editor/propertyPanelPrimitives";
-import { mutedClass, panelClass } from "./chrome";
+import { headingClass, mutedClass, panelClass } from "./chrome";
 import { DiagnosticsList } from "./DiagnosticsList";
 import { NativeParameters } from "./NativeParameters";
+import { unappliedProposal } from "./proposal";
 import { PatternChoice } from "./PatternChoice";
 import { usePinnedPattern } from "./patternPin";
 import { PromptSections } from "./PromptSections";
@@ -41,29 +41,6 @@ function pickPattern(
   onBriefChange(withPattern(brief, id));
 }
 
-function ApplyProposalButton({
-  brief,
-  onApplyProposal,
-}: {
-  brief: SceneBriefV1 | null;
-  onApplyProposal: (brief: SceneBriefV1) => void;
-}) {
-  const proposal = brief?.authoring.producer === "assistant" ? brief : null;
-  return (
-    <Button
-      type="button"
-      size="sm"
-      variant="secondary"
-      disabled={proposal === null}
-      onClick={() => {
-        if (proposal) onApplyProposal(proposal);
-      }}
-    >
-      Apply proposal
-    </Button>
-  );
-}
-
 function ProductionActions({
   brief,
   onPrepare,
@@ -73,12 +50,23 @@ function ProductionActions({
   onPrepare: () => void;
   onApplyProposal: (brief: SceneBriefV1) => void;
 }) {
+  const proposal = unappliedProposal(brief);
   return (
-    <div className="flex flex-wrap gap-1.5">
-      <Button type="button" size="sm" variant="primary" onClick={onPrepare}>
+    <div className="flex flex-wrap gap-1.5" role="group" aria-label="Production actions">
+      <Button type="button" size="sm" variant="secondary" onClick={onPrepare}>
         Prepare
       </Button>
-      <ApplyProposalButton brief={brief} onApplyProposal={onApplyProposal} />
+      <Button
+        type="button"
+        size="sm"
+        variant="secondary"
+        disabled={proposal === null}
+        onClick={() => {
+          if (proposal) onApplyProposal(proposal);
+        }}
+      >
+        Apply proposal
+      </Button>
     </div>
   );
 }
@@ -111,11 +99,14 @@ export const ProductionPanel = memo(function ProductionPanel({
     <div className={panelClass} aria-label="Production">
       <h2 className="text-step-12 font-medium text-panel-text-0">Production</h2>
       {next && <NextStep next={next} onAct={() => onNextStep?.(next.step)} />}
+      <ProductionActions brief={brief} onPrepare={onPrepare} onApplyProposal={onApplyProposal} />
       <ShotSummary shot={shot} />
+      <StepSection step={step("shot")} />
       <StepSection step={step("references")}>
-        <Section title="Reference roles" icon={null}>
+        <div className="flex flex-col gap-2">
+          <h4 className={headingClass}>Reference roles</h4>
           <ReferenceRoles shot={shot} brief={brief} onBriefChange={onBriefChange} />
-        </Section>
+        </div>
         <PatternChoice
           pattern={pattern}
           onPick={(id) => pickPattern(id, brief, pick, onBriefChange)}
@@ -131,12 +122,14 @@ export const ProductionPanel = memo(function ProductionPanel({
       </StepSection>
       <StepSection step={step("prompt")}>
         <DiagnosticsList compilation={compilation} />
-        <Section title="Native parameters" icon={null}>
+        <div className="flex flex-col gap-2">
+          <h4 className={headingClass}>Native parameters</h4>
           <p className={mutedClass}>Account controls from the current snapshot.</p>
           <NativeParameters snapshot={snapshot} brief={brief} onBriefChange={onBriefChange} />
-        </Section>
-        <ProductionActions brief={brief} onPrepare={onPrepare} onApplyProposal={onApplyProposal} />
+        </div>
       </StepSection>
+      <StepSection step={step("takes")} />
+      <StepSection step={step("place")} />
     </div>
   );
 });
