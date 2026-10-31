@@ -16,6 +16,8 @@ Add `--jobs <existing-store>` to connect durable local job controls. Add `--resu
 
 The server binds to `127.0.0.1` only. Its configured import and review files are read at startup. The browser cannot choose arbitrary filesystem paths. Stop this process with Ctrl+C when finished.
 
+Each server captures the complete inspector HTML, JavaScript and stylesheet when it is created. Later checkout or asset changes take effect in a new server instance; refreshing the browser keeps the running server's UI version. A missing required UI asset prevents startup. Download any unsaved review before stopping a session to load an updated version.
+
 ## Review records
 
 1. Search shots by ID, title or direction, or filter by source.

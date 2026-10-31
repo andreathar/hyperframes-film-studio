@@ -1,9 +1,10 @@
 import { test } from "node:test";
 import { request } from "node:http";
 import assert from "node:assert/strict";
-import { mkdtemp, writeFile, rm, symlink } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, writeFile, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 import { createHash } from "node:crypto";
 import { createInspectorServer } from "./inspector-server.mjs";
 function fixture() {
@@ -32,8 +33,8 @@ function fixture() {
     ],
   };
 }
-async function app(fn, options = {}) {
-  const server = createInspectorServer({ bundle: fixture(), ...options });
+async function app(fn, options = {}, makeServer = createInspectorServer) {
+  const server = makeServer({ bundle: fixture(), ...options });
   await new Promise((r) => server.listen(0, "127.0.0.1", r));
   const base = `http://127.0.0.1:${server.address().port}`;
   try {
@@ -41,6 +42,23 @@ async function app(fn, options = {}) {
   } finally {
     server.closeAllConnections();
     await new Promise((r) => server.close(r));
+  }
+}
+async function isolatedAssets(fn) {
+  const root = await mkdtemp(join(tmpdir(), "inspector-assets-"));
+  try {
+    // Preserve the production layout so import.meta.url resolves only this fixture's assets.
+    await cp(new URL(".", import.meta.url), join(root, "scripts/film-production"), {
+      recursive: true,
+    });
+    const assets = join(root, "film-studio/inspector");
+    await mkdir(assets, { recursive: true });
+    const { createInspectorServer: makeServer } = await import(
+      pathToFileURL(join(root, "scripts/film-production/inspector-server.mjs")).href
+    );
+    await fn(assets, makeServer);
+  } finally {
+    await rm(root, { recursive: true, force: true });
   }
 }
 async function view(base) {
@@ -70,6 +88,52 @@ test("serves local inspector and a bounded projection without raw documents", ()
     assert.equal(v.shots[0].title, "<script>bad()</script>");
     assert.equal(v.review.revision, 0);
     assert.equal(JSON.stringify(v).includes("PRIVATE DOCUMENT"), false);
+  }));
+test("one server keeps its initial asset set and a later server sees disk replacements", () =>
+  isolatedAssets(async (assets, makeServer) => {
+    const versions = {
+      "/": ["index.html", '<script type="module" src="/app.mjs"></script><!-- v1 -->', "text/html"],
+      "/app.mjs": ["app.mjs", 'import { version } from "/jobs.mjs"; // v1', "text/javascript"],
+      "/jobs.mjs": ["jobs.mjs", 'export const version = "v1";', "text/javascript"],
+      "/style.css": ["style.css", "/* v1 */ body { color: black; }", "text/css"],
+    };
+    const writeVersion = async (version) => {
+      for (const [name, contents] of Object.values(versions))
+        await writeFile(join(assets, name), contents.replace("v1", version));
+    };
+    const checkVersion = async (base, version) => {
+      for (const [path, [, contents, type]] of Object.entries(versions)) {
+        const response = await fetch(base + path);
+        assert.equal(response.status, 200);
+        assert.ok(response.headers.get("content-type").startsWith(type));
+        assert.equal(response.headers.get("cache-control"), "no-store");
+        assert.equal(await response.text(), contents.replace("v1", version));
+      }
+    };
+    await writeVersion("v1");
+    await app(
+      async (base) => {
+        // Replace before the first request to rule out lazy per-route caching.
+        await writeVersion("v2");
+        await writeFile(join(assets, "extra.mjs"), 'export const extra = "new";');
+        await checkVersion(base, "v1");
+        assert.equal((await fetch(base + "/extra.mjs")).status, 404);
+        await rm(join(assets, "jobs.mjs"));
+        await checkVersion(base, "v1");
+        await writeVersion("v2");
+        await app((nextBase) => checkVersion(nextBase, "v2"), {}, makeServer);
+        await checkVersion(base, "v1");
+      },
+      {},
+      makeServer,
+    );
+  }));
+test("missing required UI module refuses server initialization instead of a partial page", () =>
+  isolatedAssets(async (assets, makeServer) => {
+    await writeFile(join(assets, "index.html"), '<script type="module" src="/app.mjs"></script>');
+    await writeFile(join(assets, "app.mjs"), 'import "/jobs.mjs";');
+    await writeFile(join(assets, "style.css"), "body { color: black; }");
+    assert.throws(() => makeServer({ bundle: fixture() }), { code: "ENOENT" });
   }));
 test("explicit proposal advances session revision and stale request is refused", () =>
   app(async (base) => {

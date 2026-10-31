@@ -1,5 +1,6 @@
 import { createServer } from "node:http";
 import { randomBytes, createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import { readFile, realpath, stat } from "node:fs/promises";
 import { resolve, relative, isAbsolute, sep, extname } from "node:path";
 import { createReview, restoreReview, applyReview, reviewFingerprint } from "./review.mjs";
@@ -25,6 +26,18 @@ export function createInspectorServer({
   jobStore,
   resultsWorkspace,
 } = {}) {
+  // Capture the whole UI before exposing a server; checkout changes cannot mix versions.
+  const assets = new Map(
+    ["/", "/app.mjs", "/jobs.mjs", "/style.css"].map((path) => [
+      path,
+      readFileSync(
+        new URL(
+          `../../film-studio/inspector/${path === "/" ? "index.html" : path.slice(1)}`,
+          import.meta.url,
+        ),
+      ),
+    ]),
+  );
   let review = state ? restoreReview(bundle, state) : createReview(bundle);
   const csrf = randomBytes(24).toString("hex");
   const jobs = createJobControls({ bundle, jobStore, resultsWorkspace, getReview: () => review });
@@ -108,14 +121,10 @@ export function createInspectorServer({
     }
     try {
       const path = new URL(req.url, origin).pathname;
-      if (req.method === "GET" && ["/", "/app.mjs", "/jobs.mjs", "/style.css"].includes(path)) {
-        const name = path === "/" ? "index.html" : path.slice(1);
-        const bytes = await readFile(
-          new URL(`../../film-studio/inspector/${name}`, import.meta.url),
-        );
+      if (req.method === "GET" && assets.has(path)) {
         send(
           200,
-          bytes,
+          assets.get(path),
           path === "/"
             ? "text/html; charset=utf-8"
             : path.endsWith("css")
