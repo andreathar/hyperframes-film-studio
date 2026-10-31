@@ -11,6 +11,7 @@ import {
   readNullableInt,
   readOptionalHash,
   readProducerId,
+  readProjectRelativePath,
   readShotKey,
   readString,
 } from "./common.js";
@@ -64,14 +65,7 @@ export function parseCandidate(value: unknown, fieldPath: string): CandidateV1 {
     "receiptId",
     "originalOutputId",
   ]);
-  const mediaPath = readString(record, fieldPath, "mediaPath", { required: true, max: 4096 });
-  if (mediaPath.split("/").some((part) => !part || part === "." || part === "..")) {
-    throw new FilmContractError(
-      "invalid",
-      `${fieldPath}.mediaPath`,
-      "Media path must stay confined",
-    );
-  }
+  const mediaPath = readProjectRelativePath(record, fieldPath, "mediaPath");
   return {
     id: readProducerId(record, fieldPath, "id"),
     projectId: readProducerId(record, fieldPath, "projectId"),
@@ -152,17 +146,10 @@ export function parseReceipt(value: unknown, fieldPath: string): ProviderReceipt
     "outputSha256",
     "evidencePath",
   ]);
-  const evidencePath = record.evidencePath;
-  if (evidencePath !== null && (typeof evidencePath !== "string" || evidencePath.length > 4096)) {
-    throw new FilmContractError("invalid", `${fieldPath}.evidencePath`, "Evidence path is invalid");
-  }
-  if (typeof evidencePath === "string" && evidencePath.split("/").some((part) => part === "..")) {
-    throw new FilmContractError(
-      "invalid",
-      `${fieldPath}.evidencePath`,
-      "Evidence path must stay confined",
-    );
-  }
+  const evidencePath =
+    record.evidencePath === null
+      ? null
+      : readProjectRelativePath(record, fieldPath, "evidencePath");
   return {
     id: readProducerId(record, fieldPath, "id"),
     attemptId: readProducerId(record, fieldPath, "attemptId"),
@@ -171,7 +158,7 @@ export function parseReceipt(value: unknown, fieldPath: string): ProviderReceipt
     nativeTaskId: readNullableId(record, fieldPath, "nativeTaskId"),
     traceId: readNullableId(record, fieldPath, "traceId"),
     outputSha256: readOptionalHash(record, fieldPath, "outputSha256"),
-    evidencePath: typeof evidencePath === "string" ? evidencePath : null,
+    evidencePath,
   };
 }
 

@@ -20,13 +20,13 @@ on:
         type: boolean
         default: false
   pull_request:
-    # `edited` is required so the workflow re-fires when a PR's base ref is
-    # set back to `main` after a Graphite stack restack momentarily flips
-    # the base off of `main`. Without it, `pull_request` triggers are not
-    # re-evaluated on `base_ref_changed`, leaving required checks skipped
-    # for that head SHA forever.
+    # Base changes must re-evaluate the validation filters for the film stack.
     types: [opened, synchronize, reopened, edited]
-    branches: [main]
+    branches:
+      - main
+      - "feat/film-*"
+      - docs/film-production-execution
+      - "cursor/film-studio-integrations-*"
   push:
     branches: [main]
 
@@ -138,6 +138,9 @@ jobs:
               - "package.json"
               - ".github/workflows/ci.yml"
             code:
+              - "film-studio/quality/**"
+              - "film-studio/inspector/**"
+              - ".fallowrc.jsonc"
               - "registry/**"
               - "packages/**"
               - "scripts/**"
@@ -455,8 +458,7 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          # Full history so `--base origin/main` can diff against the merge
-          # base on stacked PRs, not just the shallow tip.
+          # Full history resolves the actual PR base and its accepted baselines.
           fetch-depth: 0
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
@@ -478,8 +480,11 @@ jobs:
         # against fallow crashing before producing markdown (e.g. transient
         # parse failure) — without it we'd post a blank sticky comment.
         run: |
+          git rev-parse --verify -q HEAD^2 > /dev/null || { echo "::error::HEAD is not the pull request merge commit"; exit 1; }
+          FALLOW_BASE="$(git rev-parse --verify HEAD^1)"
           set +e
-          bunx fallow audit --base origin/main --fail-on-issues \
+          bunx fallow audit --base "$FALLOW_BASE" --fail-on-issues \
+            --fail-on-baseline-growth --baseline-base "$FALLOW_BASE" \
             --format pr-comment-github \
             > /tmp/fallow-comment.md
           echo "exit_code=$?" >> "$GITHUB_OUTPUT"

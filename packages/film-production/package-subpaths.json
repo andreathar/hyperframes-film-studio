@@ -24,7 +24,7 @@
       "source": "./src/legacy/index.mjs",
       "runtime": "./src/legacy/index.mjs",
       "types": null,
-      "environments": ["browser", "bun", "node"]
+      "environments": ["bun", "node"]
     },
     "./package.json": {
       "source": "./package.json",

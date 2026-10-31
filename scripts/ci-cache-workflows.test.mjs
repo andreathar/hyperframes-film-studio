@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
+import picomatch from "picomatch";
 import { parse } from "yaml";
 
 const root = join(import.meta.dirname, "..");
@@ -41,4 +42,21 @@ test("preflight installs without downloading ffmpeg or Chrome", () => {
   assert.ok(install >= 0, "preflight runs bun install");
   assert.ok(ffmpeg >= 0 && ffmpeg < install, "prepare-ffmpeg-bin runs before bun install");
   assert.equal(steps[install].env?.PUPPETEER_SKIP_DOWNLOAD, "true");
+});
+
+test("quality inputs route through the code filter that enables Fallow", async (t) => {
+  const ci = load(join(workflowsDir, "ci.yml"));
+  const filter = ci.jobs.changes.steps.find((step) => step.id === "filter");
+  const matchesCode = picomatch(parse(filter.with.filters).code, { dot: true });
+  const cases = [
+    ["health baseline only", "film-studio/quality/legacy-health-baseline.json", true],
+    ["duplicate baseline only", "film-studio/quality/legacy-dupes-baseline.json", true],
+    ["inspector only", "film-studio/inspector/app.mjs", true],
+    ["Fallow config only", ".fallowrc.jsonc", true],
+    ["production plan only", "film-studio/EXECUTION-PLAN.md", false],
+    ["docs only", "docs/introduction.mdx", false],
+  ];
+  for (const [name, path, expected] of cases) {
+    await t.test(name, () => assert.equal(matchesCode(path), expected, path));
+  }
 });

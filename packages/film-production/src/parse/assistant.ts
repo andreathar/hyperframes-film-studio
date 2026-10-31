@@ -5,6 +5,7 @@ import {
   readInt,
   readNullableInt,
   readProducerId,
+  readProjectRelativePath,
   readShotKey,
 } from "./common.js";
 
@@ -12,13 +13,6 @@ function optionalString(value: unknown, fieldPath: string, max: number): string 
   if (value === null) return null;
   if (typeof value !== "string" || value.length > max) {
     throw new FilmContractError("invalid", fieldPath, `${fieldPath} is invalid`);
-  }
-  return value;
-}
-
-function confinedPath(value: string | null, fieldPath: string): string | null {
-  if (value?.split("/").includes("..")) {
-    throw new FilmContractError("invalid", fieldPath, `${fieldPath} must stay inside the project`);
   }
   return value;
 }
@@ -37,10 +31,10 @@ export function parseAssistantContext(value: unknown): AssistantContextV1 {
   return {
     projectId: readProducerId(record, "assistantContext", "projectId"),
     shotKey: readShotKey(record, "assistantContext", "shotKey"),
-    compositionPath: confinedPath(
-      optionalString(record.compositionPath, "assistantContext.compositionPath", 4096),
-      "assistantContext.compositionPath",
-    ),
+    compositionPath:
+      record.compositionPath === null
+        ? null
+        : readProjectRelativePath(record, "assistantContext", "compositionPath"),
     selectionId: optionalString(record.selectionId, "assistantContext.selectionId", 200),
     playheadFrame: readNullableInt(record, "assistantContext", "playheadFrame", {
       min: 0,

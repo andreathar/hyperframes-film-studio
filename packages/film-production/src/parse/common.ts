@@ -71,6 +71,28 @@ export function readString(
   return value;
 }
 
+// Lexical validation only. Filesystem access must separately confine the opened
+// descriptor to the project root; these checks cannot detect symlinks.
+export function readProjectRelativePath(
+  record: Record<string, unknown>,
+  fieldPath: string,
+  key: string,
+): string {
+  const value = readString(record, fieldPath, key, { required: true, max: 4096 });
+  if (
+    /[\\:]/.test(value) ||
+    value.includes("\0") ||
+    value.split("/").some((part) => !part || part === "." || part === "..")
+  ) {
+    throw new FilmContractError(
+      "invalid",
+      `${fieldPath}.${key}`,
+      `${fieldPath}.${key} must be a project-relative path`,
+    );
+  }
+  return value;
+}
+
 export function readInt(
   record: Record<string, unknown>,
   fieldPath: string,

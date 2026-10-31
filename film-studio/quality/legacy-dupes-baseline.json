@@ -1,0 +1,11 @@
+{
+  "kind": "dupes",
+  "clone_groups": [
+    "packages/film-production/src/legacy/kling-handoff.mjs:266-271|packages/film-production/src/legacy/placement.mjs:176-181",
+    "packages/film-production/src/legacy/job-store.mjs:158-163|packages/film-production/src/legacy/job-store.mjs:171-176",
+    "packages/film-production/src/legacy/jobs.mjs:5-13|packages/film-production/src/legacy/kling-handoff.mjs:36-44",
+    "packages/film-production/src/legacy/inspector-jobs.mjs:3-10|packages/film-production/src/legacy/review.mjs:20-27",
+    "scripts/film-production/inspector-browser.mjs:62-67|scripts/film-production/inspector-jobs-browser.mjs:29-34",
+    "scripts/film-production/inspector-browser.mjs:56-61|scripts/film-production/inspector-jobs-browser.mjs:18-28"
+  ]
+}

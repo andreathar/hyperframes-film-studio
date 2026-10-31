@@ -1,6 +1,13 @@
 {
   "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/config-schema.json",
+  "audit": {
+    "healthBaseline": "film-studio/quality/legacy-health-baseline.json",
+    "dupesBaseline": "film-studio/quality/legacy-dupes-baseline.json",
+  },
   "entry": [
+    "film-studio/inspector/app.mjs",
+    // The inspector server serves this stylesheet through its fixed asset allowlist.
+    "film-studio/inspector/style.css",
     // IconButton, Tabs and cn are exported before their first consumer exists.
     "packages/studio/src/components/ui/index.ts",
     "packages/producer/src/**/*.test.ts",
@@ -83,13 +90,6 @@
   ],
   "ignorePatterns": [
     "docs/**",
-    // The film fork's companion inspector, CLIs and audited service algorithms
-    // are exercised by node:test, not by the workspace import graph. fallow's
-    // origin/main base treats that whole fork as new; the algorithms stay
-    // unchanged, so they are not rewritten to satisfy a fresh complexity score.
-    "film-studio/**",
-    "scripts/film-production/**",
-    "packages/film-production/src/legacy/**",
     // Chrome browser binaries downloaded by puppeteer — not project source.
     "chrome/**",
     // Standalone spike scripts and benchmark runners used during R&D.

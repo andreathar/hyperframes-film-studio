@@ -48,6 +48,7 @@ async function probe(path) {
       "format=duration:stream=codec_type,duration,width,height",
       "-of",
       "json",
+      "--",
       path,
     ],
     { timeout: 30000, maxBuffer: 1024 * 1024 },

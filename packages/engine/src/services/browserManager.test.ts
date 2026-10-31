@@ -835,6 +835,7 @@ describe("resolveBrowserGpuMode", () => {
     });
 
     it("auto mode says the check did not finish when the probe page times out", async () => {
+      vi.stubEnv("WAYLAND_DISPLAY", undefined);
       vi.useFakeTimers();
       try {
         neverAnsweringProbe();
@@ -852,6 +853,7 @@ describe("resolveBrowserGpuMode", () => {
     });
 
     it("explicit 'hardware' after a timeout stays unverified and never claims software", async () => {
+      vi.stubEnv("WAYLAND_DISPLAY", undefined);
       vi.useFakeTimers();
       try {
         neverAnsweringProbe();

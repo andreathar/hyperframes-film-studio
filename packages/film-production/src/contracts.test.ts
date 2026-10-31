@@ -1,17 +1,10 @@
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, mkdirSync, readFileSync, readdirSync, symlinkSync } from "node:fs";
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, test } from "vitest";
-import {
-  FilmContractError,
-  PROMPT_SECTIONS,
-  SCENE_AUTHORING_INSTRUCTIONS,
-  parseFilmCommand,
-  parseSceneBrief,
-  scenePattern,
-} from "./contracts.js";
+import { FilmContractError, parseFilmCommand, parseSceneBrief } from "./contracts.js";
 
 const dialogue = "Já chega — fica.";
 
@@ -100,11 +93,6 @@ describe("scene contracts", () => {
   test("keeps exact dialogue bytes and rejects unknown fields", () => {
     const parsed = parseSceneBrief(brief());
     expect(parsed.dialogue[0]?.text).toBe(dialogue);
-    expect(PROMPT_SECTIONS.map((section) => section.title).join("\n")).toContain(
-      "Reference grounding",
-    );
-    expect(scenePattern("restrained-dialogue").requiresVoice).toBe(true);
-    expect(SCENE_AUTHORING_INSTRUCTIONS).toContain("Copy dialogue text exactly");
     expect(() => parseSceneBrief({ ...brief(), surprise: true })).toThrow(FilmContractError);
   });
 
@@ -161,38 +149,38 @@ describe("scene contracts", () => {
     ).toThrow(/cannot select/);
   });
 
-  test("browser sources do not import node builtins", () => {
-    const root = fileURLToPath(new URL(".", import.meta.url));
-    const files = ["browser.ts", "contracts.ts", "model.ts"].map((name) => join(root, name));
-    files.push(...walk(join(root, "parse")));
-    const source = files.map((file) => readFileSync(file, "utf8")).join("\n");
-    expect(source).not.toContain("node:");
-    const bundle = readFileSync(join(root, "../dist/browser.js"), "utf8");
+  test("built browser bundle parses scene briefs without node builtins", async () => {
+    const bundleUrl = new URL("../dist/browser.js", import.meta.url);
+    const bundle = readFileSync(bundleUrl, "utf8");
     expect(bundle).not.toContain("node:");
     expect(bundle).not.toContain("child_process");
+    const { parseSceneBrief: parseBuiltBrief } = await import(bundleUrl.href);
+    expect(parseBuiltBrief(brief()).dialogue[0]?.text).toBe(dialogue);
   });
 
   test("node resolves the built contracts export", () => {
     const packageDir = fileURLToPath(new URL("..", import.meta.url));
     const consumer = mkdtempSync(join(tmpdir(), "film-contracts-"));
-    mkdirSync(join(consumer, "node_modules/@hyperframes"), { recursive: true });
-    symlinkSync(packageDir, join(consumer, "node_modules/@hyperframes/film-production"));
-    const result = spawnSync(
-      process.execPath,
-      [
-        "--input-type=module",
-        "-e",
-        "import { PROMPT_SECTIONS, parseSceneBrief } from '@hyperframes/film-production/contracts'; if (PROMPT_SECTIONS.length !== 7 || typeof parseSceneBrief !== 'function') process.exit(2);",
-      ],
-      { encoding: "utf8", cwd: consumer },
-    );
-    expect(result.status, result.stderr).toBe(0);
+    try {
+      mkdirSync(join(consumer, "node_modules/@hyperframes"), { recursive: true });
+      symlinkSync(packageDir, join(consumer, "node_modules/@hyperframes/film-production"));
+      const result = spawnSync(
+        process.execPath,
+        [
+          "--input-type=module",
+          "-e",
+          `import assert from 'node:assert/strict';
+          import { FilmContractError, parseSceneBrief } from '@hyperframes/film-production/contracts';
+          const input = JSON.parse(process.argv[1]);
+          assert.equal(parseSceneBrief(input).dialogue[0].text, 'Já chega — fica.');
+          assert.throws(() => parseSceneBrief({ ...input, surprise: true }), FilmContractError);`,
+          JSON.stringify(brief()),
+        ],
+        { encoding: "utf8", cwd: consumer },
+      );
+      expect(result.status, result.stderr).toBe(0);
+    } finally {
+      rmSync(consumer, { recursive: true, force: true });
+    }
   });
 });
-
-function walk(directory: string): string[] {
-  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
-    const path = join(directory, entry.name);
-    return entry.isDirectory() ? walk(path) : [path];
-  });
-}

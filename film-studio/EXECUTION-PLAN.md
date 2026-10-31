@@ -8,7 +8,7 @@
 
 **Tech Stack:** Existing Bun workspace, ESM/TypeScript, React/dockview, Hono, current workspace tsup/Vitest, Node filesystem/process primitives, existing FFmpeg/Hyperframes renderer. No new paid AI backend. Preserve audited ESM service algorithms during package extraction; do not simultaneously rewrite them into another state framework.
 
-**Spec:** `film-studio/PRODUCTION-DESIGN.md` (review candidate; new product implementation starts after its single producer review). Independent builder check found nothing important left; private receipt `.film-workspace/production-planning/BUILDER-CHECK.md`.
+**Spec:** `film-studio/PRODUCTION-DESIGN.md` (review candidate; new product implementation starts after its single producer review). Independent builder review found no important unanswered design questions; its private receipt is retained in the operator workspace.
 
 ## Global Constraints
 
@@ -99,7 +99,7 @@ Broader workspace run exposed failures outside the changed scope; do not relabel
 ## Task 2 — Durable project lifecycle, revision continuity and candidate intake
 
 **Owner:** domain worker. **Files:** new `src/project/{store,revisions,catalog,migration,attempts}.ts`, typed project parsers and `src/project/*.test.ts`; root wrappers retain compatibility.
-**Consumes:** frozen contracts. **Produces:** `openProject`, `migrateLegacyProject`, `dispatchFilmCommand`, `registerCandidate`, `createAttempt`, implementing FilmPort.
+**Consumes:** frozen contracts. **Produces:** `openProject`, legacy-project migration, project command dispatch, `registerCandidate`, `createAttempt`, implementing FilmPort.
 
 - [ ] RED fixtures: restart after review save, add a take without losing old history, unrelated board-text update, changed reference bytes, stale concurrent mutation, interrupted publication, terminal failure/new attempt, unknown outcome/no duplicate, same native task bound once.
 - [ ] Use locked atomic project state plus immutable content-addressed source/evidence blobs. Write blobs first, then publish references/revision; orphan blobs are harmless. Preserve legacy inputs; migration writes a new destination and never invents approval/compilation provenance.
@@ -110,7 +110,7 @@ Broader workspace run exposed failures outside the changed scope; do not relabel
 ## Task 3 — Scene schema, patterns and deterministic Kling candidate compiler
 
 **Owner:** compiler worker. **Files:** new `src/scene/{schema,compile,patterns,diagnostics}.ts`, `src/native/{snapshot,validate,serialize,releaseProfile}.ts` and their tests/fixtures; no domain store or transport edits.
-**Consumes:** SceneBriefV1, verified reference bindings, source/review identity, optional CapabilitySnapshotV1, film release profile. **Produces:** `parseSceneBrief`, `compileScene`, `validateNativeCandidate`, `serializeCanonicalArgs` as specified.
+**Consumes:** SceneBriefV1, verified reference bindings, source/review identity, optional CapabilitySnapshotV1, film release profile. **Produces:** `parseSceneBrief`, `compileScene`, native-candidate validation, canonical argument serialization as specified.
 
 - [ ] RED fixtures: exact Unicode dialogue, reordered object keys/determinism, invalid/overlapping action timing, contradictory camera, unknown required voice, missing references, unsupported sound/motion combination, wrong output arithmetic and malformed/unknown fields.
 - [ ] Implement editable pattern data and prompt ordering from the spec. Adapt Argon pure compiler concepts with provenance/licensing retained; remove hardcoded model lists, time bounds and dialogue mutation. Distinguish prose lens/camera intent from native controls.

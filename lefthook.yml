@@ -37,7 +37,7 @@ pre-commit:
       # env -u is safe in non-worktree contexts (no-op when var is unset).
       # fallow reuses one base-snapshot cache per checkout; `audit-cache prune` drops caches unused for a day,
       # including those of removed checkouts. The commit gets the audit's own status.
-      run: env -u GIT_DIR -u GIT_INDEX_FILE -u GIT_WORK_TREE sh -c 'node_modules/.bin/fallow audit --base origin/main --fail-on-issues; status=$?; node_modules/.bin/fallow audit-cache prune --max-age-days 1 > /dev/null; exit $status'
+      run: env -u GIT_DIR -u GIT_INDEX_FILE -u GIT_WORK_TREE sh -c 'node_modules/.bin/fallow audit --base origin/main --fail-on-issues --fail-on-baseline-growth; status=$?; node_modules/.bin/fallow audit-cache prune --max-age-days 1 > /dev/null; exit $status'
     - name: cli-process-ownership
       glob: "packages/cli/src/**/*.ts"
       run: bun run check:cli-process-ownership

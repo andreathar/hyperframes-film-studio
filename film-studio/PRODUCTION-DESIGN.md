@@ -95,7 +95,7 @@ No paid request, upload, real model inference or creative selection is authorize
 
 ## Current sources
 
-- Local: public Studio AskAgent/selection/dock/tool seams; shared Hono adapter; audited film services; Argon pure compiler/preflight; Movies `kling_contract.py`, `kling_release.py`, `kling_batch.py`.
+- Local: public Studio AskAgent/selection/dock/tool seams; shared Hono adapter; audited film services; Argon pure compiler/preflight; the canonical Movies contract, release and batch-runner modules in its external checkout.
 - [Codex structured CLI output](https://learn.chatgpt.com/docs/non-interactive-mode#create-structured-outputs-with-a-schema), [app-server](https://learn.chatgpt.com/docs/app-server).
 - [Claude programmatic CLI](https://code.claude.com/docs/en/headless), [Agent SDK integration restriction](https://code.claude.com/docs/en/agent-sdk/overview#get-started).
 - Context7 official Kling API documentation was consulted for API concepts only; selected CLI/account schemas and the canonical runner govern this product's native request.

@@ -1,0 +1,106 @@
+{
+  "kind": "health",
+  "finding_counts": {
+    "film-studio/inspector/app.mjs": {
+      "complexity_critical": {
+        "count": 1
+      },
+      "crap_critical": {
+        "count": 1
+      }
+    },
+    "film-studio/inspector/jobs.mjs": {
+      "complexity_moderate": {
+        "count": 1
+      }
+    },
+    "packages/film-production/src/legacy/import-movies.mjs": {
+      "complexity_critical": {
+        "count": 1
+      },
+      "complexity_moderate": {
+        "count": 1
+      },
+      "crap_critical": {
+        "count": 1
+      },
+      "crap_moderate": {
+        "count": 2
+      }
+    },
+    "packages/film-production/src/legacy/inspector-server.mjs": {
+      "complexity_critical": {
+        "count": 1
+      },
+      "crap_critical": {
+        "count": 1
+      }
+    },
+    "packages/film-production/src/legacy/job-store.mjs": {
+      "complexity_high": {
+        "count": 1
+      },
+      "crap_high": {
+        "count": 1
+      }
+    },
+    "packages/film-production/src/legacy/jobs.mjs": {
+      "complexity_critical": {
+        "count": 1
+      },
+      "crap_critical": {
+        "count": 1
+      },
+      "crap_high": {
+        "count": 1
+      }
+    },
+    "packages/film-production/src/legacy/kling-handoff.mjs": {
+      "complexity_critical": {
+        "count": 1
+      },
+      "crap_critical": {
+        "count": 1
+      }
+    },
+    "packages/film-production/src/legacy/manifest.mjs": {
+      "complexity_critical": {
+        "count": 1
+      },
+      "crap_critical": {
+        "count": 1
+      }
+    },
+    "packages/film-production/src/legacy/placement.mjs": {
+      "complexity_high": {
+        "count": 1
+      },
+      "crap_high": {
+        "count": 1
+      }
+    },
+    "packages/film-production/src/legacy/prepare.mjs": {
+      "complexity_moderate": {
+        "count": 1
+      }
+    },
+    "packages/film-production/src/legacy/review.mjs": {
+      "complexity_critical": {
+        "count": 1
+      },
+      "crap_critical": {
+        "count": 1
+      }
+    }
+  },
+  "runtime_coverage_findings": [],
+  "target_keys": [
+    "packages/film-production/src/legacy/job-store.mjs:high impact",
+    "packages/film-production/src/legacy/manifest.mjs:high impact",
+    "packages/film-production/src/legacy/review.mjs:high impact",
+    "packages/film-production/src/legacy/inspector-server.mjs:complexity",
+    "packages/film-production/src/legacy/kling-handoff.mjs:complexity",
+    "packages/film-production/src/legacy/jobs.mjs:high impact",
+    "packages/film-production/src/legacy/import-movies.mjs:complexity"
+  ]
+}
