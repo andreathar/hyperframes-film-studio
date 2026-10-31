@@ -11,3 +11,5 @@ Research: [source consolidation report](../docs/research/2026-10-31-film-studio-
 | [Shot review state](../.omo/evidence/film-review-state-code-review.md)     | [Review delivery](REVIEW-DELIVERY.md), commit `4b12f3089`.                                                                                             |
 | [Production inspector](../.omo/evidence/film-inspector-code-review.md)     | [Inspector delivery](INSPECTOR-DELIVERY.md), commit `21e1ddefd`.                                                                                       |
 | [Durable job ledger](../.omo/evidence/film-provider-jobs-code-review.md)   | [Job delivery](JOBS-DELIVERY.md), commit `edb6a469c`; descriptor confinement, nonregular-file and publication regressions cover the reported findings. |
+
+The [Kling handoff review](../.omo/evidence/kling-handoff-code-review.md) records the initial relocation finding. Its resolution, current stationary-ancestor boundary and canonical parity evidence are in [handoff delivery](KLING-HANDOFF-DELIVERY.md), implementation commit `84ec48ba0`.
