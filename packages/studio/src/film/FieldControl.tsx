@@ -33,7 +33,13 @@ function EditableLine({
   return (
     <div className="flex flex-col gap-1">
       <span className={headingClass}>{label}</span>
-      <TextArea aria-label={label} rows={2} value={text} onCommit={onCommit} />
+      <TextArea
+        aria-label={label}
+        className="text-step-12"
+        rows={2}
+        value={text}
+        onCommit={onCommit}
+      />
     </div>
   );
 }

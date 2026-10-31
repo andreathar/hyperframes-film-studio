@@ -327,6 +327,97 @@ describe("Production and Assistant actions", () => {
   });
 });
 
+describe("dirty draft across shots", () => {
+  async function type(el: HTMLTextAreaElement, text: string) {
+    const set = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, "value")?.set;
+    await act(async () => {
+      set?.call(el, text);
+      el.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+  }
+
+  it("never writes a draft typed on shot A into shot B's brief", async () => {
+    const briefA = sceneBrief();
+    const briefB: SceneBriefV1 = { ...sceneBrief("Another line."), shotKey: "plan:S2" };
+    const shotB = { ...shot("Another line."), shotKey: "plan:S2" };
+    const onBriefChange = vi.fn<(brief: SceneBriefV1) => void>();
+    const { host, render } = await mount(
+      <ProductionPanel {...productionProps({ brief: briefA, onBriefChange })} />,
+    );
+    expandAll(host);
+    const area = host.querySelector<HTMLTextAreaElement>('textarea[aria-label="Framing"]');
+    if (!area) throw new Error("missing framing field");
+    await type(area, "Typed on shot A");
+    await render(
+      <ProductionPanel {...productionProps({ shot: shotB, brief: briefB, onBriefChange })} />,
+    );
+    expandAll(host);
+    const next = host.querySelector<HTMLTextAreaElement>('textarea[aria-label="Framing"]');
+    await act(async () => {
+      next?.dispatchEvent(new FocusEvent("focusout", { bubbles: true }));
+      next?.blur();
+    });
+    await act(async () => {
+      root?.unmount();
+      root = null;
+    });
+    for (const [written] of onBriefChange.mock.calls) {
+      expect(written.shotKey).toBe("plan:S1");
+    }
+    expect(next?.value).not.toContain("Typed on shot A");
+  });
+});
+
+describe("film text size", () => {
+  // The text size lives on the control or its wrapper box; the nearest step class wins.
+  function stepOf(el: Element): string | null {
+    const owner = el.closest('[class*="text-step-"]');
+    return owner?.className.match(/text-step-\d+/)?.[0] ?? null;
+  }
+  const controls = (root: ParentNode) => [
+    ...root.querySelectorAll('textarea, [role="combobox"], [role="option"]'),
+  ];
+
+  it("sets every production field and select to 12px", async () => {
+    const { host } = await mount(
+      <ProductionPanel {...productionProps({ snapshot: snapshot(), brief: sceneBrief() })} />,
+    );
+    expandAll(host);
+    const found = controls(host);
+    expect(found.some((el) => el.tagName === "TEXTAREA")).toBe(true);
+    expect(found.some((el) => el.getAttribute("role") === "combobox")).toBe(true);
+    expect(found.map(stepOf).filter((step) => step !== "text-step-12")).toEqual([]);
+    expect(host.querySelector('[class~="text-[11px]"]')).toBeNull();
+  });
+
+  it("sets the assistant instruction to 12px", async () => {
+    const { host } = await mount(<AssistantPanel {...assistantProps()} />);
+    const found = controls(host);
+    expect(found.length).toBeGreaterThan(0);
+    expect(found.map(stepOf).filter((step) => step !== "text-step-12")).toEqual([]);
+  });
+
+  it("sets open Select popup items to 12px", async () => {
+    const { host } = await mount(
+      <ProductionPanel {...productionProps({ snapshot: snapshot(), brief: sceneBrief() })} />,
+    );
+    expandAll(host);
+    await click(host.querySelector('[aria-label="Sound strategy"]'));
+    const items = [...document.querySelectorAll('[role="option"]')];
+    expect(items.length).toBeGreaterThan(0);
+    expect(items.map(stepOf).filter((step) => step !== "text-step-12")).toEqual([]);
+  });
+});
+
+describe("PatternChoice heading", () => {
+  it("is a plain headed group, not a collapsible section", async () => {
+    const { host } = await mount(<PatternChoice pattern={null} onPick={vi.fn()} />);
+    const heading = [...host.querySelectorAll("h4")].find((h) => h.textContent === "Pattern");
+    expect(heading).toBeDefined();
+    expect(host.querySelector("[aria-expanded]")).toBeNull();
+  });
+});
+
 describe("PatternChoice keyboard", () => {
   const ids = SCENE_PATTERNS.map((pattern) => pattern.id);
   const last = ids.length - 1;

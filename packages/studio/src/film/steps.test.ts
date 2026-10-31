@@ -137,5 +137,6 @@ describe("planSteps", () => {
     const direction = plan.steps.find((step) => step.id === "direction");
     expect(direction?.state).toBe("current");
     expect(direction?.hint).toMatch(/apply/i);
+    expect(direction?.hint).toContain("Editing the fields alone does not apply it");
   });
 });

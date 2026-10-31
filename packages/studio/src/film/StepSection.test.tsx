@@ -49,13 +49,15 @@ describe("StepSection", () => {
   it("opens the current step and folds done and later steps", () => {
     render(step("current"));
     expect(host.textContent).toContain("Body content");
-    expect(host.querySelector('[aria-label="Current step"]')).not.toBeNull();
+    expect(host.querySelector("[data-step-glyph]")?.getAttribute("aria-hidden")).toBe("true");
+    expect(host.querySelector('[role="img"]')).toBeNull();
+    expect(toggle().getAttribute("aria-label")).toContain("current step");
     render(step("done"));
     expect(host.textContent).not.toContain("Body content");
-    expect(host.querySelector('[aria-label="Done"]')).not.toBeNull();
+    expect(host.querySelector("[data-step-glyph]")?.getAttribute("aria-hidden")).toBe("true");
     render(step("later"));
     expect(host.textContent).not.toContain("Body content");
-    expect(host.querySelector('[aria-label="Later"]')).not.toBeNull();
+    expect(host.querySelector("[data-step-glyph]")?.getAttribute("aria-hidden")).toBe("true");
   });
 
   it("re-folds when the state changes after mount", () => {
@@ -70,7 +72,8 @@ describe("StepSection", () => {
   it("shows the summary on the header and names what blocks a step", () => {
     render(step("blocked", "shot"));
     expect(host.textContent).toContain("Summary text");
-    expect(host.querySelector('[aria-label="Blocked by Film project"]')).not.toBeNull();
+    expect(toggle().getAttribute("aria-label")).toContain("blocked by film project");
+    expect(host.querySelector("[data-step-glyph]")?.getAttribute("aria-hidden")).toBe("true");
   });
 
   it("keeps the same text field node when the step state changes", () => {

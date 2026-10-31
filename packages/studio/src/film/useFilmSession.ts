@@ -31,14 +31,11 @@ const READINESS: AssistantReadinessView = {
 
 const noop = () => {};
 
-const NEXT_BLOCKED = "Needs a film project. Connecting one arrives with the film host.";
-
 export function useFilmSession(showToast: (message: string, tone?: "error" | "info") => void): {
   production: ProductionPanelProps;
   assistant: AssistantPanelProps;
 } {
   const [instruction, setInstruction] = useState("");
-  const onNextStep = useCallback(() => showToast(NEXT_BLOCKED, "info"), [showToast]);
   const onCancel = useCallback(() => setInstruction(""), []);
   const onCopyHandoff = useCallback(() => {
     void copyHandoff(instruction, showToast);
@@ -52,7 +49,6 @@ export function useFilmSession(showToast: (message: string, tone?: "error" | "in
       onBriefChange: noop,
       onApplyProposal: noop,
       onPrepare: noop,
-      onNextStep,
     },
     assistant: {
       contextLabel: "No film project · no shot · revision unavailable",

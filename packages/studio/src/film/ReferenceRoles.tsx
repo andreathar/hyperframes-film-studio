@@ -40,6 +40,8 @@ function RoleSelect({
         label={`Brief role for ${referenceId}`}
         value={binding.role}
         options={ROLE_OPTIONS}
+        className="text-step-12"
+        itemClassName="text-step-12"
         onCommit={(value) => changeRole(brief, referenceId, value, onBriefChange)}
       />
       <span className={mutedClass}>{REFERENCE_ROLE_TERMS[binding.role].hint}</span>

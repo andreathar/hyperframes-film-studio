@@ -191,7 +191,7 @@ export const PATTERN_NONE_HINT =
 export const PATTERN_NEEDS_LABEL = "Needs pictures for";
 
 export const PROPOSAL_HINT =
-  "The assistant wrote a proposal. Apply it, or edit the direction yourself.";
+  "The assistant wrote a proposal. Apply it to make it yours. Editing the fields alone does not apply it.";
 
 /** Why an action cannot run yet, in the words shown next to its button. */
 export const BLOCKED_TERMS = {

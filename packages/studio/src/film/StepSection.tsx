@@ -38,7 +38,7 @@ export function StepSection({ step, children }: { step: StepView; children?: Rea
       toggleLabel={`${label}, ${glyph.label.toLowerCase()}`}
       accessory={
         <span className="flex items-center gap-1.5">
-          <span role="img" aria-label={glyph.label} data-step-glyph={step.state}>
+          <span aria-hidden="true" data-step-glyph={step.state}>
             {glyph.mark}
           </span>
           <span className={mutedClass}>{step.summary}</span>

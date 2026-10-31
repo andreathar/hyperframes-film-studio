@@ -1,4 +1,4 @@
-import { Button } from "../components/ui";
+import { BlockedButton } from "./BlockedButton";
 import { mutedClass } from "./chrome";
 import type { NextAction } from "./steps";
 
@@ -9,9 +9,15 @@ export function NextStep({ next, onAct }: { next: NextAction; onAct: () => void 
       <h3 className="text-step-12 font-semibold text-panel-text-0">{next.title}</h3>
       <p className={mutedClass}>{next.hint}</p>
       <div>
-        <Button type="button" size="sm" variant="primary" onClick={onAct}>
+        <BlockedButton
+          type="button"
+          size="sm"
+          variant="primary"
+          reason={next.reason}
+          onClick={onAct}
+        >
           {next.actionLabel}
-        </Button>
+        </BlockedButton>
       </div>
     </section>
   );

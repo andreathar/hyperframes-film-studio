@@ -27,6 +27,8 @@ export function ChoiceSelect({
         label={`${modelId} ${choice.label}`}
         value={choice.selected}
         options={options}
+        className="text-step-12"
+        itemClassName="text-step-12"
         onCommit={(value) => {
           const apply = choice.apply;
           if (!brief || !apply) return;

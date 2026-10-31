@@ -5,8 +5,7 @@ import {
 } from "@hyperframes/film-production/browser";
 import type { KeyboardEvent } from "react";
 import { Button, Popover } from "../components/ui";
-import { Section } from "../components/editor/propertyPanelPrimitives";
-import { mutedClass } from "./chrome";
+import { headingClass, mutedClass } from "./chrome";
 import {
   PATTERN_MORE_TERM,
   PATTERN_NEEDS_LABEL,
@@ -134,9 +133,10 @@ export function PatternChoice({
   onPick: (id: ScenePatternId) => void;
 }) {
   return (
-    <Section title="Pattern" icon={null}>
+    <div className="flex flex-col gap-2">
+      <h4 className={headingClass}>Pattern</h4>
       <PatternButtons selected={pattern?.id ?? null} onPick={onPick} />
       <PatternHelp pattern={pattern} />
-    </Section>
+    </div>
   );
 }

@@ -32,6 +32,8 @@ function SoundStrategyField({
         label="Sound strategy"
         value={brief.sound.strategy}
         options={STRATEGY_OPTIONS}
+        className="text-step-12"
+        itemClassName="text-step-12"
         onCommit={(value) => {
           if (!isSoundStrategy(value)) return;
           onBriefChange(withSoundStrategy(brief, value));
@@ -57,7 +59,13 @@ function SectionBody({
   return (
     <div className="flex flex-col gap-2">
       {fields.map((field) => (
-        <FieldControl key={field.key} field={field} brief={brief} onBriefChange={onBriefChange} />
+        // Keyed by shot so a dirty draft commits (on unmount) with its own shot's brief.
+        <FieldControl
+          key={`${shot.shotKey}:${field.key}`}
+          field={field}
+          brief={brief}
+          onBriefChange={onBriefChange}
+        />
       ))}
       {id === "dialogue-sound" ? (
         <SoundStrategyField brief={brief} onBriefChange={onBriefChange} />

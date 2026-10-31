@@ -32,6 +32,7 @@ function InstructionField({
       <span className={headingClass}>Instruction</span>
       <TextArea
         aria-label="Instruction"
+        className="text-step-12"
         rows={4}
         value={value}
         onDraft={onInstructionChange}

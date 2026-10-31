@@ -5,6 +5,7 @@ import {
   type ReferenceRole,
   type SceneBriefV1,
 } from "@hyperframes/film-production/browser";
+import { productionReasons } from "./actionReasons";
 import { unappliedProposal } from "./proposal";
 import {
   NEXT_ACTION_TERMS,
@@ -31,6 +32,8 @@ export interface NextAction {
   title: string;
   hint: string;
   actionLabel: string;
+  /** Why the action cannot run now, or null when it can. */
+  reason: string | null;
 }
 
 export interface StepInput {
@@ -151,6 +154,7 @@ export function planSteps(input: StepInput): { steps: StepView[]; next: NextActi
         title: `Next: ${lowerFirst(NEXT_ACTION_TERMS[current.id])}`,
         hint: current.hint,
         actionLabel: NEXT_ACTION_TERMS[current.id],
+        reason: productionReasons({ connected: input.shot !== null, hasProposal: false }).prepare,
       }
     : null;
   return { steps, next };

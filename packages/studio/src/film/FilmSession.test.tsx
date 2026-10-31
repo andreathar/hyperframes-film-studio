@@ -44,13 +44,17 @@ describe("disconnected film panels", () => {
     const card = host.querySelector('section[aria-label="Next step"]');
     expect(card?.textContent).toContain("Next: connect a film project");
     expect(card?.querySelectorAll("button")).toHaveLength(1);
+    const nextButton = card?.querySelector("button");
+    expect(nextButton?.getAttribute("aria-disabled")).toBe("true");
+    expect(card?.textContent).toContain("Needs a film project");
     const open = host.querySelectorAll('button[aria-expanded="true"]');
     expect(open).toHaveLength(1);
     expect(open[0]?.textContent).toContain("Film project");
     act(() => {
-      card?.querySelector("button")?.click();
+      nextButton?.click();
+      nextButton?.dispatchEvent(new MouseEvent("click", { bubbles: true, detail: 0 }));
     });
-    expect(showToast).toHaveBeenCalledWith(expect.stringContaining("Needs a film project"), "info");
+    expect(showToast).not.toHaveBeenCalled();
   });
 
   it("keeps Prepare and Send blocked while no film host is connected", () => {

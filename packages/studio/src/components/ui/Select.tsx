@@ -27,6 +27,8 @@ export interface SelectProps {
   onTrack?: () => void;
   disabled?: boolean;
   className?: string;
+  /** Extra classes for each popup item, e.g. a larger text size. */
+  itemClassName?: string;
   "data-preview-state"?: PreviewState;
 }
 
@@ -38,6 +40,7 @@ export function Select({
   onTrack,
   disabled,
   className,
+  itemClassName,
   "data-preview-state": previewState,
 }: SelectProps) {
   return (
@@ -96,6 +99,7 @@ export function Select({
                     "data-[highlighted]:bg-hover data-[highlighted]:text-text-0",
                     "data-[selected]:text-text-0",
                     "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-40",
+                    itemClassName,
                   )}
                 >
                   <BaseSelect.ItemText className="truncate">{option.label}</BaseSelect.ItemText>
