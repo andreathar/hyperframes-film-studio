@@ -6,6 +6,8 @@ Current scope: **local intake, explicit candidate review, a production inspector
 
 Open the [production inspector](INSPECTOR.md) to search imported shots, read direction notes, inspect local media and propose mappings, reference assignments and candidate takes. It uses the same project-bound review contract as `film:review`. Download the review to save session changes; preparing an edit remains a separate explicit step.
 
+Use the [local job ledger](JOBS.md) to retain prepared generation intent and reconcile external result receipts with source/review provenance, duplicate checks and verified local output hashes. It records candidate observations; live provider execution remains a later integration.
+
 ## Prepare an edit
 
 From the fork checkout:

@@ -61,3 +61,14 @@ bun run film:inspect --import .film-workspace/import-v1/import.json --workspace 
 Open the printed loopback URL to search shots, inspect direction notes and propose mappings, reference assignments and candidate takes. Every change requires a reason and uses the same revision-checked review service. Local previews require the optional workspace and unchanged imported media hashes.
 
 Session changes stay in memory. Use **Download review** to save them, then add `--state <saved-review.json>` on a later startup to resume against the same import. **Reload session** refreshes the browser from the running server. This companion screen does not submit provider jobs or change the timeline. See the fork's `film-studio/INSPECTOR.md` for startup, persistence and preview limits.
+
+## Track prepared jobs and external results
+
+```sh
+bun run film:jobs --import .film-workspace/import-v1/import.json --store .film-workspace/jobs-v1 --operation init
+bun run film:jobs --import .film-workspace/import-v1/import.json --store .film-workspace/jobs-v1
+```
+
+The checkout-local `film:jobs` command creates a private durable ledger; its default operation only shows saved state. `prepare` binds explicitly authored generation intent to a shot and saved review. `observe` records a matching external receipt, verifying any supplied local output hashes. Both require a current `--expected-revision` and a reason. Duplicate intent, conflicting external IDs, stale writes and invalid result paths are refused.
+
+Routes are handoff labels; this stage does not call providers, compile vendor payloads, load models or grant execution/creative approval. Unknown outcomes stay on the same job for explicit reconciliation. Output bytes remain candidate evidence and are not placed on the timeline. The complete request/receipt schemas, commands and recovery limits are in the fork's `film-studio/JOBS.md`.
