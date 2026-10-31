@@ -108,7 +108,9 @@ afterEach(() => {
 // group and [design|layers|renders|variables] into another; dockview shows
 // only the active tab's content per group. `slideshow` is never part of the
 // default build — StudioRightPanels opens it itself when the file is one.
-const DEFAULT_OPEN = PANEL_IDS.filter((id) => id !== "slideshow");
+const DEFAULT_OPEN = PANEL_IDS.filter(
+  (id) => id !== "slideshow" && id !== "production" && id !== "assistant",
+);
 const DEFAULT_VISIBLE = ["preview", "timeline", "compositions", "design"];
 
 describe("Dock on React 19", () => {

@@ -10,6 +10,9 @@
     "film-studio/inspector/style.css",
     // IconButton, Tabs and cn are exported before their first consumer exists.
     "packages/studio/src/components/ui/index.ts",
+    // Film panels are the Studio surface. The parent dock wires them, and the
+    // workspace dependency lands with that wiring.
+    "packages/studio/src/film/index.ts",
     "packages/producer/src/**/*.test.ts",
     // Studio's browser-journey helpers are plain .mjs under tests/e2e; their unit tests live beside them.
     "packages/studio/tests/e2e/**/*.test.mjs",

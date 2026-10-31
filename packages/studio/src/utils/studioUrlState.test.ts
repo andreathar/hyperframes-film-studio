@@ -36,6 +36,8 @@ describe("normalizeStudioUrlPanelTab", () => {
   it("accepts slideshow and variables as valid tabs", () => {
     expect(normalizeStudioUrlPanelTab("slideshow")).toBe("slideshow");
     expect(normalizeStudioUrlPanelTab("variables")).toBe("variables");
+    expect(normalizeStudioUrlPanelTab("production")).toBe("production");
+    expect(normalizeStudioUrlPanelTab("assistant")).toBe("assistant");
   });
 });
 

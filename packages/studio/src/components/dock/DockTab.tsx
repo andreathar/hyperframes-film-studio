@@ -3,7 +3,9 @@ import {
   Aperture,
   BracketsCurly,
   ChartBarHorizontal,
+  ChatCircle,
   Code,
+  FilmStrip,
   FilmSlate,
   Image,
   Layout,
@@ -31,6 +33,8 @@ const TAB_ICONS: Record<PanelId, Icon> = {
   variables: BracketsCurly,
   slideshow: Presentation,
   motionBlur: Aperture,
+  production: FilmStrip,
+  assistant: ChatCircle,
 };
 
 /**
