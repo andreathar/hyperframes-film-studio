@@ -35,6 +35,8 @@ const VALID_TABS: RightPanelTab[] = [
   "slideshow",
   "variables",
   "motionBlur",
+  "production",
+  "assistant",
 ];
 
 /**

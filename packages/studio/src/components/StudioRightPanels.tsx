@@ -9,6 +9,7 @@ import { RenderQueuePanel } from "./renders/RenderQueuePanel";
 import { SlideshowPanel } from "./panels/SlideshowPanel";
 import { VariablesPanel } from "./panels/VariablesPanel";
 import { MotionBlurPanel } from "./panels/MotionBlurPanel";
+import { FilmDockPanels } from "../film/FilmDockPanels";
 import { Dock } from "./dock/Dock";
 import { useDockLayoutStore } from "./dock/dockLayoutStore";
 import type { RenderJob } from "./renders/useRenderQueue";
@@ -309,6 +310,7 @@ export const StudioRightPanels = memo(function StudioRightPanels({
           recordEdit={recordEdit}
         />
       </Dock.Panel>
+      <FilmDockPanels showToast={showToast} />
       <Dock.Panel id="slideshow">
         <SlideshowPanel
           scenes={slideshowScenes}
