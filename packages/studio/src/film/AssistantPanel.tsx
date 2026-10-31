@@ -1,6 +1,8 @@
 import { memo } from "react";
 import type { DialogueLineV1, SceneBriefV1 } from "@hyperframes/film-production/browser";
 import { Button, TextArea } from "../components/ui";
+import { BlockedButton } from "./BlockedButton";
+import { assistantReasons, type AssistantReasons } from "./actionReasons";
 import { headingClass, mutedClass, panelClass } from "./chrome";
 import { READINESS_TERMS } from "./glossary";
 import type { AssistantPanelProps, AssistantReadinessView } from "./types";
@@ -40,13 +42,13 @@ function InstructionField({
 }
 
 function AssistantActions({
-  canApply,
+  reasons,
   onSend,
   onCancel,
   onCopyHandoff,
   onApply,
 }: {
-  canApply: boolean;
+  reasons: AssistantReasons;
   onSend: () => void;
   onCancel: () => void;
   onCopyHandoff: () => void;
@@ -54,26 +56,30 @@ function AssistantActions({
 }) {
   return (
     <div className="flex flex-wrap gap-1.5">
-      <Button type="button" size="sm" variant="primary" onClick={onSend}>
+      <BlockedButton
+        type="button"
+        size="sm"
+        variant="primary"
+        reason={reasons.send}
+        onClick={onSend}
+      >
         Send
-      </Button>
+      </BlockedButton>
       <Button type="button" size="sm" variant="ghost" onClick={onCancel}>
         Cancel
       </Button>
       <Button type="button" size="sm" variant="ghost" onClick={onCopyHandoff}>
         Copy handoff
       </Button>
-      <Button
+      <BlockedButton
         type="button"
         size="sm"
         variant="secondary"
-        disabled={!canApply}
-        onClick={() => {
-          if (canApply) onApply();
-        }}
+        reason={reasons.apply}
+        onClick={onApply}
       >
         Apply
-      </Button>
+      </BlockedButton>
     </div>
   );
 }
@@ -145,7 +151,7 @@ export const AssistantPanel = memo(function AssistantPanel({
       <ReadinessLine readiness={readiness} />
       <InstructionField value={draftInstruction} onInstructionChange={onInstructionChange} />
       <AssistantActions
-        canApply={visible !== null}
+        reasons={assistantReasons({ readiness, hasProposal: visible !== null })}
         onSend={onSend}
         onCancel={onCancel}
         onCopyHandoff={onCopyHandoff}

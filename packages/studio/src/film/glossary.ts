@@ -181,3 +181,9 @@ export const PATTERN_FIRST_HINT =
 
 export const PROPOSAL_HINT =
   "The assistant wrote a proposal. Apply it, or edit the direction yourself.";
+
+/** Why an action cannot run yet, in the words shown next to its button. */
+export const BLOCKED_TERMS = {
+  noProject: "Needs a film project",
+  noProposal: "Needs a suggestion from the assistant first",
+} as const;

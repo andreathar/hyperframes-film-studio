@@ -26,7 +26,7 @@ export interface ButtonBaseProps extends ButtonHTMLAttributes<HTMLButtonElement>
   "data-preview-state"?: PreviewState;
 }
 
-interface ButtonProps extends ButtonBaseProps {
+export interface ButtonProps extends ButtonBaseProps {
   loading?: boolean;
   icon?: ReactNode;
 }

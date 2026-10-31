@@ -5,11 +5,12 @@ import {
   type ScenePatternId,
   type ScenePatternV1,
 } from "@hyperframes/film-production/browser";
-import { Button } from "../components/ui";
 import { withPattern } from "./briefEdit";
 import { headingClass, mutedClass, panelClass } from "./chrome";
 import { DiagnosticsList } from "./DiagnosticsList";
 import { NativeParameters } from "./NativeParameters";
+import { BlockedButton } from "./BlockedButton";
+import { productionReasons } from "./actionReasons";
 import { unappliedProposal } from "./proposal";
 import { PatternChoice } from "./PatternChoice";
 import { usePinnedPattern } from "./patternPin";
@@ -43,30 +44,39 @@ function pickPattern(
 
 function ProductionActions({
   brief,
+  connected,
   onPrepare,
   onApplyProposal,
 }: {
   brief: SceneBriefV1 | null;
+  connected: boolean;
   onPrepare: () => void;
   onApplyProposal: (brief: SceneBriefV1) => void;
 }) {
   const proposal = unappliedProposal(brief);
+  const reasons = productionReasons({ connected, hasProposal: proposal !== null });
   return (
     <div className="flex flex-wrap gap-1.5" role="group" aria-label="Production actions">
-      <Button type="button" size="sm" variant="secondary" onClick={onPrepare}>
-        Prepare
-      </Button>
-      <Button
+      <BlockedButton
         type="button"
         size="sm"
         variant="secondary"
-        disabled={proposal === null}
+        reason={reasons.prepare}
+        onClick={onPrepare}
+      >
+        Prepare
+      </BlockedButton>
+      <BlockedButton
+        type="button"
+        size="sm"
+        variant="secondary"
+        reason={reasons.applyProposal}
         onClick={() => {
           if (proposal) onApplyProposal(proposal);
         }}
       >
         Apply proposal
-      </Button>
+      </BlockedButton>
     </div>
   );
 }
@@ -99,7 +109,12 @@ export const ProductionPanel = memo(function ProductionPanel({
     <div className={panelClass} aria-label="Production">
       <h2 className="text-step-12 font-medium text-panel-text-0">Production</h2>
       {next && <NextStep next={next} onAct={() => onNextStep?.(next.step)} />}
-      <ProductionActions brief={brief} onPrepare={onPrepare} onApplyProposal={onApplyProposal} />
+      <ProductionActions
+        brief={brief}
+        connected={connected}
+        onPrepare={onPrepare}
+        onApplyProposal={onApplyProposal}
+      />
       <ShotSummary shot={shot} />
       <StepSection step={step("shot")} />
       <StepSection step={step("references")}>

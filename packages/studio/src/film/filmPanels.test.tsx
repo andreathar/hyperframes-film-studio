@@ -45,6 +45,12 @@ function productionProps(overrides: Partial<ProductionPanelProps> = {}): Product
   };
 }
 
+const readyReadiness = {
+  provider: "claude-external",
+  state: "ready",
+  evidence: "Signed in.",
+} as const;
+
 function assistantProps(overrides: Partial<AssistantPanelProps> = {}): AssistantPanelProps {
   return {
     contextLabel: "Table · plan:S1 · rev 2",
@@ -153,8 +159,12 @@ describe("ProductionPanel", () => {
       "Native parameters",
     ]);
     // Actions sit above the steps so they never fold away.
-    const text = host.textContent ?? "";
-    expect(text.indexOf("Prepare")).toBeLessThan(text.indexOf(dialogue));
+    const actions = host.querySelector('[role="group"][aria-label="Production actions"]');
+    const firstStep = host.querySelector("button[aria-expanded]");
+    if (!actions || !firstStep) throw new Error("missing actions or first step");
+    expect(actions.compareDocumentPosition(firstStep) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(
+      0,
+    );
   });
 
   it("keeps the dialogue exact when a pattern is chosen", async () => {
@@ -231,7 +241,9 @@ describe("AssistantPanel", () => {
   it("does not apply a proposal when Send is clicked", async () => {
     const onApply = vi.fn();
     const onSend = vi.fn();
-    const { host } = await mount(<AssistantPanel {...assistantProps({ onApply, onSend })} />);
+    const { host } = await mount(
+      <AssistantPanel {...assistantProps({ onApply, onSend, readiness: readyReadiness })} />,
+    );
     expect(host.querySelector("[data-proposal-dialogue]")?.textContent).toBe(dialogue);
     expect(host.querySelector("[data-current-dialogue]")?.textContent).toBe(
       "A line already in the cut.",
@@ -239,6 +251,16 @@ describe("AssistantPanel", () => {
     await click(button(host, "Send"));
     expect(onSend).toHaveBeenCalledTimes(1);
     expect(onApply).not.toHaveBeenCalled();
+  });
+
+  it("blocks Send with the readiness words until the assistant is ready", async () => {
+    const onSend = vi.fn();
+    const { host } = await mount(<AssistantPanel {...assistantProps({ onSend })} />);
+    const send = button(host, "Send");
+    expect(send?.getAttribute("aria-disabled")).toBe("true");
+    expect(send?.closest("div")?.textContent).toContain("Claude works in your own session");
+    await click(send);
+    expect(onSend).not.toHaveBeenCalled();
   });
 
   it("drops the visible proposal when the context changes and keeps the instruction", async () => {
@@ -252,7 +274,7 @@ describe("AssistantPanel", () => {
     expect(host.querySelector("textarea")?.value).toBe("Hold the look left.");
     expect(onApply).not.toHaveBeenCalled();
     expect(onInstructionChange).not.toHaveBeenCalled();
-    expect(button(host, "Apply")?.hasAttribute("disabled")).toBe(true);
+    expect(button(host, "Apply")?.getAttribute("aria-disabled")).toBe("true");
   });
 
   it("keeps Apply disabled until a proposal exists", async () => {
@@ -260,7 +282,7 @@ describe("AssistantPanel", () => {
     const { host } = await mount(
       <AssistantPanel {...assistantProps({ proposal: null, onApply })} />,
     );
-    expect(button(host, "Apply")?.hasAttribute("disabled")).toBe(true);
+    expect(button(host, "Apply")?.getAttribute("aria-disabled")).toBe("true");
     await click(button(host, "Apply"));
     expect(onApply).not.toHaveBeenCalled();
   });
@@ -274,7 +296,7 @@ describe("Production and Assistant actions", () => {
     const { host } = await mount(
       <>
         <ProductionPanel {...productionProps({ onPrepare })} />
-        <AssistantPanel {...assistantProps({ onSend, onApply })} />
+        <AssistantPanel {...assistantProps({ onSend, onApply, readiness: readyReadiness })} />
       </>,
     );
     const prepare = button(host, "Prepare");

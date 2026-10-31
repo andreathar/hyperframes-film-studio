@@ -66,15 +66,15 @@ describe("disconnected film panels", () => {
     expandAll(host);
     const prepare = buttonNamed(host, "Prepare");
     const send = buttonNamed(host, "Send");
+    expect(prepare.getAttribute("aria-disabled")).toBe("true");
+    expect(send.getAttribute("aria-disabled")).toBe("true");
+    expect(prepare.closest("div")?.textContent).toContain("Needs a film project");
+    expect(send.closest("div")?.textContent).toContain("Assistant not responding");
     act(() => {
       prepare.click();
       send.click();
     });
-    expect(showToast).toHaveBeenCalledWith(
-      expect.stringContaining("Prepare stays blocked"),
-      "info",
-    );
-    expect(showToast).toHaveBeenCalledWith(expect.stringContaining("Send stays blocked"), "info");
+    expect(showToast).not.toHaveBeenCalled();
     expect(showToast.mock.calls.some(([message]) => String(message).includes("Applied"))).toBe(
       false,
     );
