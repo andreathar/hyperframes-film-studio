@@ -66,10 +66,16 @@ function AssistantActions({
       >
         Send
       </BlockedButton>
-      <Button type="button" size="sm" variant="ghost" onClick={onCancel}>
+      <Button type="button" size="sm" variant="ghost" className="text-step-12" onClick={onCancel}>
         Cancel
       </Button>
-      <Button type="button" size="sm" variant="ghost" onClick={onCopyHandoff}>
+      <Button
+        type="button"
+        size="sm"
+        variant="ghost"
+        className="text-step-12"
+        onClick={onCopyHandoff}
+      >
         Copy handoff
       </Button>
       <BlockedButton

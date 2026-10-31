@@ -34,6 +34,7 @@ function PatternButton({
       tabIndex={tabStop ? 0 : -1}
       data-pattern-id={id}
       size="sm"
+      className="text-step-12"
       variant={pressed ? "secondary" : "ghost"}
       onClick={() => onPick(id)}
     >
@@ -107,7 +108,13 @@ function PatternHelp({ pattern }: { pattern: ScenePatternV1 | null }) {
         side="bottom"
         align="end"
         trigger={
-          <Button type="button" size="sm" variant="ghost" aria-label={PATTERN_MORE_TERM.hint}>
+          <Button
+            type="button"
+            size="sm"
+            variant="ghost"
+            className="text-step-12"
+            aria-label={PATTERN_MORE_TERM.hint}
+          >
             {PATTERN_MORE_TERM.label}
           </Button>
         }

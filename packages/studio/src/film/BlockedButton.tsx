@@ -15,6 +15,8 @@ export interface BlockedButtonProps extends ButtonProps {
 export function BlockedButton({ reason, ...props }: BlockedButtonProps) {
   const reasonId = useId();
   const blocked = reason !== null;
+  // Button's sm size is 11px; film text is never below 12px.
+  const sized = props.size === "sm" ? cn("text-step-12", props.className) : props.className;
   // One tree shape in both states, so unblocking never remounts (and unfocuses) the button.
   return (
     <div className="flex flex-col items-start gap-0.5">
@@ -24,11 +26,11 @@ export function BlockedButton({ reason, ...props }: BlockedButtonProps) {
             {...props}
             aria-disabled="true"
             aria-describedby={reasonId}
-            className={cn("opacity-40 cursor-not-allowed", props.className)}
+            className={cn("opacity-40 cursor-not-allowed", sized)}
             onClick={(event) => event.preventDefault()}
           />
         ) : (
-          <Button {...props} />
+          <Button {...props} className={sized} />
         )}
       </Tooltip>
       {blocked ? (

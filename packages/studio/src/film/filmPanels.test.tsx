@@ -375,7 +375,7 @@ describe("film text size", () => {
     return owner?.className.match(/text-step-\d+/)?.[0] ?? null;
   }
   const controls = (root: ParentNode) => [
-    ...root.querySelectorAll('textarea, [role="combobox"], [role="option"]'),
+    ...root.querySelectorAll('textarea, [role="combobox"], [role="option"], button'),
   ];
 
   it("sets every production field and select to 12px", async () => {
