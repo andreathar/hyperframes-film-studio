@@ -61,27 +61,43 @@ describe("choicesForModel", () => {
     expect(resolution).toEqual({ ...brief, output: { ...brief.output, width: 1280, height: 720 } });
   });
 
-  it("rejects an unparseable duration by returning the brief unchanged", () => {
+  const notPositiveWhole = ["", " ", "0", "-5", "0x10", "1e2", "7.5", "12px", "abc", "NaN"];
+
+  it("rejects a duration that is not a positive whole number, returning the brief unchanged", () => {
     const brief = sceneBrief();
     const apply = choice("duration-frames").apply;
-    for (const bad of ["abc", "7.5", "NaN", "12px"]) {
-      expect(apply?.(brief, bad), bad).toBe(brief);
+    for (const bad of notPositiveWhole) {
+      expect(apply?.(brief, bad), JSON.stringify(bad)).toBe(brief);
     }
   });
 
-  it("rejects an unparseable resolution by returning the brief unchanged", () => {
+  it("rejects resolutions whose operands fail the numeric check (shape is valid)", () => {
     const brief = sceneBrief();
     const apply = choice("resolution").apply;
-    for (const bad of [
-      "abc",
-      "1280",
+    const numeric = [
+      "1280×",
+      "×720",
+      "×",
       "1280×abc",
-      "x720",
-      "1280×720×24",
+      "abc×720",
       "1280.5×720",
-      "1280x720",
-    ]) {
-      expect(apply?.(brief, bad), bad).toBe(brief);
+      "1280×0",
+      "0×720",
+      "-5×720",
+      "1280× ",
+      "0x10×720",
+      "1e2×720",
+    ];
+    for (const bad of numeric) {
+      expect(apply?.(brief, bad), JSON.stringify(bad)).toBe(brief);
+    }
+  });
+
+  it("rejects resolutions with the wrong shape (not exactly two parts)", () => {
+    const brief = sceneBrief();
+    const apply = choice("resolution").apply;
+    for (const bad of ["", "abc", "1280", "x720", "1280×720×24", "1280x720"]) {
+      expect(apply?.(brief, bad), JSON.stringify(bad)).toBe(brief);
     }
   });
 });

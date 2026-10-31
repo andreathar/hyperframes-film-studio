@@ -15,17 +15,23 @@ function formatResolution(width: number, height: number): string {
   return `${width}${MARK}${height}`;
 }
 
+/** Positive decimal integers only; "", "0", "-5", "0x10", "1e2", "7.5" and "12px" are rejected. */
+function parsePositiveInt(text: string | undefined): number | undefined {
+  if (text === undefined || !/^[1-9][0-9]*$/.test(text)) return undefined;
+  return Number(text);
+}
+
 function applyDuration(brief: SceneBriefV1, value: string): SceneBriefV1 {
-  const durationFrames = Number(value);
-  if (!Number.isInteger(durationFrames)) return brief;
+  const durationFrames = parsePositiveInt(value);
+  if (durationFrames === undefined) return brief;
   return { ...brief, output: { ...brief.output, durationFrames } };
 }
 
 function applyResolution(brief: SceneBriefV1, value: string): SceneBriefV1 {
   const parts = value.split(MARK);
-  const width = Number(parts[0]);
-  const height = Number(parts[1]);
-  if (parts.length !== 2 || !Number.isInteger(width) || !Number.isInteger(height)) return brief;
+  const width = parsePositiveInt(parts[0]);
+  const height = parsePositiveInt(parts[1]);
+  if (parts.length !== 2 || width === undefined || height === undefined) return brief;
   return { ...brief, output: { ...brief.output, width, height } };
 }
 
