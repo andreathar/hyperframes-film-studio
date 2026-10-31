@@ -22,11 +22,12 @@ async function confined(root, path) {
     throw new Error("Job evidence escapes workspace");
   return actual;
 }
-async function fileDigest(path, limit, collect = false, root) {
+async function fileDigest(path, limit, collect = false, root, copyTo) {
   const handle = await open(
     path,
     constants.O_RDONLY | constants.O_NONBLOCK | (constants.O_NOFOLLOW ?? 0),
   );
+  let copy;
   try {
     const info = await handle.stat();
     if (!info.isFile() || info.size > limit)
@@ -38,6 +39,7 @@ async function fileDigest(path, limit, collect = false, root) {
       if (!rel || isAbsolute(rel) || rel.split(sep)[0] === "..")
         throw new Error("Opened job evidence escapes workspace");
     }
+    if (copyTo) copy = await open(copyTo, "wx", 0o600);
     const hash = createHash("sha256"),
       chunks = [];
     let size = 0;
@@ -45,12 +47,17 @@ async function fileDigest(path, limit, collect = false, root) {
       size += chunk.length;
       if (size > limit) throw new Error("Job evidence exceeds size limit");
       hash.update(chunk);
+      if (copy) await copy.writeFile(chunk);
       if (collect) chunks.push(chunk);
     }
     if (size === 0) throw new Error("Empty job evidence");
     return { sha256: hash.digest("hex"), bytes: collect ? Buffer.concat(chunks) : null };
   } finally {
-    await handle.close();
+    try {
+      if (copy) await copy.close();
+    } finally {
+      await handle.close();
+    }
   }
 }
 /** Current local bytes only. A receipt remains a supplied observation, not provider authentication. */
@@ -156,5 +163,18 @@ export async function verifyJobMedia(workspace, path, expectedSha256) {
     actual = await confined(root, path),
     proof = await fileDigest(actual, 2 * 1024 * 1024 * 1024, false, root);
   if (proof.sha256 !== expectedSha256) throw new Error("Current reference hash mismatch");
+  return { path, sha256: proof.sha256 };
+}
+
+/** Copy pinned, hash-checked candidate bytes only into a caller-owned new staging file. */
+export async function copyJobMedia(workspace, path, expectedSha256, destination) {
+  if (process.platform !== "linux")
+    throw new Error("Verified media copy requires Linux descriptor paths");
+  if (typeof expectedSha256 !== "string" || !/^[a-f0-9]{64}$/.test(expectedSha256))
+    throw new Error("Expected media hash required");
+  const root = await realpath(workspace),
+    actual = await confined(root, path),
+    proof = await fileDigest(actual, 2 * 1024 * 1024 * 1024, false, root, destination);
+  if (proof.sha256 !== expectedSha256) throw new Error("Current candidate hash mismatch");
   return { path, sha256: proof.sha256 };
 }

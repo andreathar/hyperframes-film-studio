@@ -79,3 +79,10 @@ Routes are handoff labels; this stage does not call providers, compile vendor pa
 The checkout-local `bun run film:kling-handoff` command previews or exports one blocked candidate from a prepared Kling video job. Supply the current store revision/request fingerprint, saved review, explicit native settings, canonical workspace and film path. It preserves the recorded model/prompt and rechecks local reference hashes.
 
 Exported `runner-spec.json` retains null authorization and a submission block. The existing Movies producer release runner remains responsible for exact-payload approval, live capability checks, quotes/upload scope and submission. No provider calls occur here. Linux descriptor verification and Python 3 standard-library canonical hashing are required. See the fork's `film-studio/KLING-HANDOFF.md` for the full command/settings contract and `film-studio/TASKS.md` for remaining integration work.
+
+
+## Place reviewed takes into a new edit
+
+`bun run film:place --import <import.json> --review <review.json> --describe` prints the exact binding fields and selected candidate IDs for an authored cut plan. Add `--plan <cut.json>` for a read-only compiled preview; add both `--workspace <canonical-root>` and `--output <new-directory>` to prepare the new composition.
+
+Shot order, trims, rate, frame timing and separate audio placement are explicit. Current selected take hashes and actual stream coverage are checked. Original IDs, full source direction and plan/review provenance remain in `placement.json`; existing timeline edits are never replaced. This creates a candidate edit, not creative approval. See the fork's `film-studio/PLACEMENT.md` and tracked `TASKS.md`.

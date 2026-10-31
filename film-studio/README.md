@@ -10,6 +10,8 @@ Use the [local job ledger](JOBS.md) to retain prepared generation intent and rec
 
 The [Kling producer handoff](KLING-HANDOFF.md) exports a verified, blocked candidate from a prepared job for the existing film release runner. See [the task checklist](TASKS.md) for completed modules and remaining live/timeline integration.
 
+Use [explicit candidate placement](PLACEMENT.md) to turn selected takes and an authored frame-based cut plan into a new editable composition. It checks current media and retains original IDs/direction provenance while preserving existing edits.
+
 ## Prepare an edit
 
 From the fork checkout:
