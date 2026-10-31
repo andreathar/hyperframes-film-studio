@@ -1,0 +1,244 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-10-31T03:37:16.337146+00:00",
+  "scope": "Source audit and dated-artifact review; no fresh runtime acceptance",
+  "pathConvention": "Paths relative to the named source checkout; no credentials or live data copied",
+  "repositories": [
+    {
+      "checkout": "hyperframes",
+      "head": "164d6c7a36eba26e9126b364beab98437e2eeec7",
+      "branch": "main",
+      "initialPorcelainPathEntryCount": 0,
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "e26b3822cfd7e4d6c780fd3c919f650d973a99763f4f147ae5f3080250757909"
+        },
+        {
+          "path": "LICENSE",
+          "sha256": "4259155fb06f127687ee7b0a8a3682d45132db0f2da26cbc0b7a2d1e796436b8"
+        },
+        {
+          "path": "skills/hyperframes/SKILL.md",
+          "sha256": "96f3793bd677dde345c5aca4aa6484334100a154e8a5d9e2ad07d69c9b9e2b0e"
+        },
+        {
+          "path": "skills/media-use/references/setup-providers.md",
+          "sha256": "4aa68405654ad2215f5612bd036a9e14c37133e3c433b5f532dfcd5d57674096"
+        },
+        {
+          "path": "docs/guides/with-codex.mdx",
+          "sha256": "dd05e62214a3f6cb42e98b65d30b2255d5f77d6bb9f5ddc497c0117d05a0ada2"
+        },
+        {
+          "path": "docs/studio-app/connect-your-agent.mdx",
+          "sha256": "a02009b1307a8bd248d4c1041daf153012f32ba71e4a01cc9c8dad72e173d833"
+        },
+        {
+          "path": "packages/cli/src/timeline/describeProject.ts",
+          "sha256": "edb0ff01b1a12f197c99214d61fc7bae5ef41d33324dda9de43774a469f3913d"
+        },
+        {
+          "path": "packages/cli/src/timeline/a2Mutations.ts",
+          "sha256": "6ce3c24c1d036315dbf114633953c74dd21fae58c0ccaaad8de412ecbcc36750"
+        }
+      ]
+    },
+    {
+      "checkout": "openreel-video",
+      "head": "4585f6d7d1bbc31203f0934d399aed7567f0135f",
+      "branch": "feat/ai-film-pipeline",
+      "initialPorcelainPathEntryCount": 0,
+      "files": [
+        {
+          "path": "CLAUDE.md",
+          "sha256": "ea9f06fe062a3c86ccf6184a208fc2d49cbf4615843d09904a36311d68810e3b"
+        },
+        {
+          "path": "LICENSE",
+          "sha256": "aba370832aa9192b4b41ce4ecf5b2795f55f141b5e5f17b74243b1ed3a02576d"
+        },
+        {
+          "path": "docs/film-production.md",
+          "sha256": "416f10cc70dba9212060c3a84c45e5d4ab78ff172f35cdd92575fa5c5e150229"
+        },
+        {
+          "path": "packages/core/src/script/production.ts",
+          "sha256": "db6c3c9a0726d12de96daac7ebef5b12b34e9adbe895d712ed6e316dfd88c63d"
+        },
+        {
+          "path": "packages/core/src/script/timeline-builder.ts",
+          "sha256": "ffb3056a2e8f23803d75576e7c564af78af3767df6ee34a2c72f61a44b868f2f"
+        },
+        {
+          "path": "packages/core/src/script/assemble.ts",
+          "sha256": "abb12a0c97b83a2666e3d63224bb2ce268c97a412b90d1dee291a3db14a69472"
+        },
+        {
+          "path": "packages/core/src/script/production.test.ts",
+          "sha256": "9d3c10aa3a58336b95ce49c3c363f22fef96a1dfb17fe9219c90c5bd50daf9d1"
+        }
+      ]
+    },
+    {
+      "checkout": "Movies_Projects",
+      "head": "8eff06adfef47a94cf90f210a5d0f907bcf9de12",
+      "branch": "main",
+      "initialPorcelainPathEntryCount": 304,
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "43042ebe198fb0b77440364211b84e622f75aa9f87b94c6a84543310bc0dd44b"
+        },
+        {
+          "path": "workspace.json",
+          "sha256": "51ad1405210474ee26636052149c5b25b9446dc480c6f1fbd0022c38569d20ee"
+        },
+        {
+          "path": "docs/PRODUCTION_PLAN.md",
+          "sha256": "c11ebc69539df03eb5b3315e4ca34c161482603b89477e6f30e9c000855d74cb"
+        },
+        {
+          "path": "projects/andre-time-travel/memory/STATE.md",
+          "sha256": "1e6d6b2b40b9c40f52c1e9e58b4b58e5d219c20ee6106869f46e0f6be73f8a03"
+        },
+        {
+          "path": "projects/andre-time-travel/manifest.json",
+          "sha256": "e0a34cb3b6733b288b7be9bf327ac92e01999ed5d5be6f73c9035fe0e0afd4be"
+        },
+        {
+          "path": "projects/andre-time-travel/tasks/board.json",
+          "sha256": "597be4c1d709601a1062367832d9dc6bc0a2aa08c9b582e1aeacdb98ca5ffcda"
+        },
+        {
+          "path": "projects/andre-time-travel/00_brief/approvals.json",
+          "sha256": "1ce842faf2adb30ed70c02e8f13190a337d0505a10ad63aa1a790c02cc668e51"
+        },
+        {
+          "path": "projects/andre-time-travel/05_storyboard/source/production-plan.json",
+          "sha256": "4defe04b45599e5cad08b20e5e726dc6874df3d61f75543d50d3a56da236135e"
+        },
+        {
+          "path": "scripts/kling_batch.py",
+          "sha256": "50e80555303dd5d559465e48ccf1619a4533393a1d080e0db064621ec067a5d8"
+        }
+      ]
+    },
+    {
+      "checkout": "argon-studio",
+      "head": "7003b8c9a419774fb62cb038b1a44bafd009aac3",
+      "branch": "main",
+      "initialPorcelainPathEntryCount": 0,
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "af5c3115de3eb280c03b99390844bef547356c5f1053c657b0183b4e401d82ec"
+        },
+        {
+          "path": "README.md",
+          "sha256": "5d0925b98d96c9d44ed186c84973684cce5d5cd21de29ed4fee524d67ae72c22"
+        },
+        {
+          "path": "docs/COMFYUI_REFERENCE_FRAMES.md",
+          "sha256": "b5216682313c6b7b236b9822b1309d83eea3c20409d2763132ef3f4dfacd37d3"
+        },
+        {
+          "path": "docs/references/README.md",
+          "sha256": "6762312f72163983c814eeb3348459e09844eae96dac609faeb397704b8015e6"
+        },
+        {
+          "path": "packages/prompt-compiler/src/router.ts",
+          "sha256": "b3ce9ea76f04a2a447ce104d0808835003803782f7414a87a130385ed6990113"
+        },
+        {
+          "path": "packages/prompt-compiler/src/preflight.ts",
+          "sha256": "4febef1666a8958d2d7a5f92fed1dcc92d1b577b95a9caac5781214be027ef19"
+        },
+        {
+          "path": "packages/shared-types/src/shot.ts",
+          "sha256": "ae14189fb0577f7710a02ea5b9a3c48d613895e19e434547f16dd361a2eb8633"
+        },
+        {
+          "path": "apps/studio-server/src/routes/takes.ts",
+          "sha256": "7d538d9a29622f8b344ea01af19f5e16148769d51d9172791a503b1e2d5747b4"
+        },
+        {
+          "path": "packages/openreel-bridge/src/to-edl.ts",
+          "sha256": "57093d34184f2f64a54f9df2c5bc556a7ae1f544f6019c7161aa2cf47a58b648"
+        },
+        {
+          "path": "apps/studio-server/src/codirector/client.ts",
+          "sha256": "48bd44c1118814e3125bfb668735d28ecc2ea6116f623b22e58c78ec75852bec"
+        },
+        {
+          "path": "apps/studio-server/src/codirector/transcript.ts",
+          "sha256": "16e2b46682659e293c6f0e1307daee38cb948d4f2a7bf584aa35a44f4a081c63"
+        },
+        {
+          "path": "goals/argon-auto-edit/execution-ledger-dialogue-motion.md",
+          "sha256": "2e399a322bcb1a2b81da397e15288b50190852adc245f7845fdc5f92b8e14a60"
+        }
+      ]
+    },
+    {
+      "checkout": "codex_argon_studio",
+      "head": "155c819ee3b59a33410aad05fdef69ec53fa203c",
+      "branch": "codex/argon-studio",
+      "initialPorcelainPathEntryCount": 1,
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "f25f6639a271bded72a0f14a9779a7b2593d74e3d0671516b3199a92030df172"
+        },
+        {
+          "path": "PRODUCT.md",
+          "sha256": "d6f5303808b982a63e497fc9a8b3bc1f358212d8f558ba9b81d6c4314f876d59"
+        },
+        {
+          "path": "DESIGN.md",
+          "sha256": "af63268c5d7a71ae9dd8e47834bba0b4c3da89a84bf232a4e1e3b61cc02d2031"
+        },
+        {
+          "path": "docs/use-cases.md",
+          "sha256": "7842ede97066eedcd695b25b2b92cf868bba93d790be983cffcf9d75224e230b"
+        },
+        {
+          "path": "docs/contracts/authority.md",
+          "sha256": "c99a838f5a1bd587d71bff7a86d3695a7064347301e09278b4a06618c71575db"
+        },
+        {
+          "path": "docs/contracts/platform-rules.md",
+          "sha256": "855b54cf8c7c871134c8755715e05433e6043244d9d85b27b0c325ed46f597df"
+        },
+        {
+          "path": "docs/contracts/acceptance.md",
+          "sha256": "35c6c467b0c409208f54063a9f608851d3a2448a3ef8da84c8b6866bd9be1db5"
+        },
+        {
+          "path": "docs/references/editors.md",
+          "sha256": "3f47b380cab180fd704037728d7254611e9205f0dbc55879eb0e5e8ffe85653c"
+        },
+        {
+          "path": "apps/studio-server/src/studio/references.ts",
+          "sha256": "d3fcb9951c37dde5bf2a67773771854a42ebb18e1f758059d4016c168ee7ad13"
+        },
+        {
+          "path": "apps/studio-server/src/studio/queue.ts",
+          "sha256": "3601a4100e4d77bcac5cf5338fc24ae97d9d5e2b2510717e7a20cdb293188803"
+        },
+        {
+          "path": "apps/studio-server/src/local-models/service.ts",
+          "sha256": "32f4a3af906624ea9acf6b6de4a7e908313bc741772e82b4d770aaffe4beaf4a"
+        },
+        {
+          "path": "docs/reports/CODEX_DELIVERY_REPORT.md",
+          "sha256": "d15841d4073a7ea867eec23245e5ef1cbde67b000fe3e966192aeba485e96ab9"
+        },
+        {
+          "path": "vendor/openreel/THIRD_PARTY_NOTICES.txt",
+          "sha256": "de111e9c51f7e6e6bc17de2baa280b2280586f43f2613d307d0887dc0749d245"
+        }
+      ]
+    }
+  ]
+}
