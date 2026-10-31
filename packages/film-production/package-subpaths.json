@@ -20,6 +20,12 @@
       "types": "./dist/contracts.d.ts",
       "environments": ["browser", "bun", "node"]
     },
+    "./compile": {
+      "source": "./src/compile.ts",
+      "runtime": "./dist/compile.js",
+      "types": "./dist/compile.d.ts",
+      "environments": ["bun", "node"]
+    },
     "./legacy": {
       "source": "./src/legacy/index.mjs",
       "runtime": "./src/legacy/index.mjs",
