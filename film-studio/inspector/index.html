@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Production inspector · Hyperframes film studio</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script type="module" src="/app.mjs"></script>
+  </head>
+  <body>
+    <a class="skip" href="#detail">Skip to shot details</a>
+    <header>
+      <div>
+        <p class="eyebrow">Hyperframes / Film studio</p>
+        <h1>Production inspector</h1>
+        <p id="project">Loading project…</p>
+      </div>
+      <div class="session">
+        <strong id="revision">Review revision —</strong
+        ><a class="button" id="download" href="/api/review" download>Download review</a
+        ><span id="save-note">Session changes stay here until downloaded.</span>
+      </div>
+    </header>
+    <div id="error" role="alert" hidden></div>
+    <p id="status" role="status" class="status"></p>
+    <main class="workspace">
+      <aside class="rail" aria-label="Shot browser">
+        <div class="rail-head">
+          <h2>Shots <span id="count"></span></h2>
+          <label for="search">Find a shot</label
+          ><input id="search" type="search" placeholder="Search ID, title or direction" /><label
+            for="source"
+            >Source</label
+          ><select id="source">
+            <option value="all">All sources</option>
+            <option value="plan">Visual plan</option>
+            <option value="manifest">Legacy manifest</option>
+          </select>
+        </div>
+        <nav id="shots" aria-label="Imported shots"></nav>
+      </aside>
+      <section id="detail" class="detail" aria-label="Shot details" tabindex="-1">
+        <p>Select a shot to inspect its direction.</p>
+      </section>
+    </main>
+    <section class="findings" aria-labelledby="findings-title">
+      <div class="section-heading">
+        <h2 id="findings-title">Reconciliation findings</h2>
+        <span id="finding-count"></span>
+      </div>
+      <p>
+        Resolve source conflicts deliberately. A candidate selection does not approve footage or
+        authorize generation.
+      </p>
+      <ul id="diagnostics"></ul>
+    </section>
+    <footer>Local review companion · Source records and timeline remain unchanged.</footer>
+  </body>
+</html>

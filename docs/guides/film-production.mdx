@@ -51,3 +51,13 @@ It reports shot/reference/take counts, missing media, changed hashes and unresol
 ## Map shots and assign candidates
 
 `bun run film:review --import <private-import.json>` creates an empty local review state. Explicit commands can link plan/legacy shots, assign references with their declared roles and hashes, and select compatible candidate takes. Project identity, import fingerprint, revision and history are checked. Changing a mapping invalidates its dependent candidate selection. Use a new output file for each saved review. This stage does not approve footage, create jobs or alter the timeline; see the fork's `film-studio/REVIEW.md` for the command contract.
+
+## Use the production inspector
+
+```sh
+bun run film:inspect --import .film-workspace/import-v1/import.json --workspace /path/to/Movies_Projects --port 9362
+```
+
+Open the printed loopback URL to search shots, inspect direction notes and propose mappings, reference assignments and candidate takes. Every change requires a reason and uses the same revision-checked review service. Local previews require the optional workspace and unchanged imported media hashes.
+
+Session changes stay in memory. Use **Download review** to save them, then add `--state <saved-review.json>` on a later startup to resume against the same import. **Reload session** refreshes the browser from the running server. This companion screen does not submit provider jobs or change the timeline. See the fork's `film-studio/INSPECTOR.md` for startup, persistence and preview limits.

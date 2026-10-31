@@ -2,7 +2,9 @@
 
 This fork adds a local preparation step to Hyperframes. Describe selected takes and an edit in a JSON manifest, then create an editable composition with verified local media. Use Claude Code or Codex to work with the files through the account you already use. Preparation and local rendering do not require HeyGen generation.
 
-Current scope: **one picture track, independently timed audio tracks, source trims, constant playback rate, shot/take IDs and direction notes**. This is the first consolidation stage. Provider generation, approval management, automatic ComfyUI execution and a production inspector UI are not implemented here yet.
+Current scope: **local intake, explicit candidate review, a production inspector, one picture track, independently timed audio tracks, source trims, constant playback rate, shot/take IDs and direction notes**. Provider generation, approval management and automatic ComfyUI execution remain subsequent work.
+
+Open the [production inspector](INSPECTOR.md) to search imported shots, read direction notes, inspect local media and propose mappings, reference assignments and candidate takes. It uses the same project-bound review contract as `film:review`. Download the review to save session changes; preparing an edit remains a separate explicit step.
 
 ## Prepare an edit
 
