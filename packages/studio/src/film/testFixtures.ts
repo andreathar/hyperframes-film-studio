@@ -1,3 +1,4 @@
+import { act } from "react";
 import type { CapabilitySnapshotV1, SceneBriefV1 } from "@hyperframes/film-production/browser";
 import type { ProductionShot } from "./types";
 
@@ -122,4 +123,15 @@ export function snapshot(): CapabilitySnapshotV1 {
       },
     ],
   };
+}
+
+/** Opens every folded section, nested ones included, as a person would. */
+export function expandAll(host: ParentNode): void {
+  for (let pass = 0; pass < 4; pass += 1) {
+    const folded = [...host.querySelectorAll<HTMLElement>('button[aria-expanded="false"]')];
+    if (folded.length === 0) return;
+    act(() => {
+      for (const control of folded) control.click();
+    });
+  }
 }

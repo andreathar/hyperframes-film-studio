@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { SCENE_AUTHORING_INSTRUCTIONS } from "@hyperframes/film-production/browser";
 import { copyTextToClipboard } from "../utils/clipboard";
-import type {
-  AssistantPanelProps,
-  AssistantReadinessView,
-  ProductionPanelProps,
-  ProductionShot,
+import {
+  DISCONNECTED_SHOT_KEY,
+  type AssistantPanelProps,
+  type AssistantReadinessView,
+  type ProductionPanelProps,
+  type ProductionShot,
 } from "./types";
 
 const DISCONNECTED_SHOT: ProductionShot = {
-  shotKey: "unconnected",
+  shotKey: DISCONNECTED_SHOT_KEY,
   title: "No shot connected",
   direction: {
     camera: "",
@@ -29,6 +30,7 @@ const READINESS: AssistantReadinessView = {
 };
 
 const PREPARE_BLOCKED = "Prepare stays blocked until this project is connected to the film ledger.";
+const NEXT_BLOCKED = "Needs a film project. Connecting one arrives with the film host.";
 const SEND_BLOCKED =
   "Send stays blocked until an assistant host is connected. Copy handoff is available.";
 
@@ -46,6 +48,7 @@ export function useFilmSession(showToast: (message: string, tone?: "error" | "in
       onBriefChange: () => {},
       onApplyProposal: () => {},
       onPrepare: () => showToast(PREPARE_BLOCKED, "info"),
+      onNextStep: () => showToast(NEXT_BLOCKED, "info"),
     },
     assistant: {
       contextLabel: "No film project · no shot · revision unavailable",

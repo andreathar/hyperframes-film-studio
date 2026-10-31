@@ -4,6 +4,7 @@ import type {
   ReferenceRole,
   SoundStrategyV1,
 } from "@hyperframes/film-production/browser";
+import type { StepId } from "./steps";
 
 export interface Term {
   label: string;
@@ -136,4 +137,41 @@ export const SECTION_TERMS: Record<PromptSectionId, Term> = {
     label: "Keep consistent, keep out",
     hint: "What must stay the same from shot to shot, and what must never appear.",
   },
+};
+
+export const STEP_TERMS: Record<StepId, Term> = {
+  shot: {
+    label: "Film project",
+    hint: "Connect a film project and pick the shot to work on.",
+  },
+  references: {
+    label: "Reference pictures",
+    hint: "The pictures Kling should match for people, objects and places.",
+  },
+  direction: {
+    label: "Direction",
+    hint: "Describe how the shot looks, moves and sounds.",
+  },
+  prompt: {
+    label: "Prompt",
+    hint: "Prepare the words that will be sent to Kling.",
+  },
+  takes: {
+    label: "Takes",
+    hint: "Try the shot and look at what comes back.",
+  },
+  place: {
+    label: "Place in the cut",
+    hint: "Put the take you like on the timeline.",
+  },
+};
+
+/** The imperative that follows "Next:" on the Next card, and the button label. */
+export const NEXT_ACTION_TERMS: Record<StepId, string> = {
+  shot: "Connect a film project",
+  references: "Add the missing pictures",
+  direction: "Write the direction",
+  prompt: "Prepare the prompt",
+  takes: "Make a take",
+  place: "Place a take in the cut",
 };

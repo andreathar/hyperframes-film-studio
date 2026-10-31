@@ -1,3 +1,4 @@
+import type { StepId } from "./steps";
 import type {
   AssistantReadinessV1,
   CapabilitySnapshotV1,
@@ -23,6 +24,9 @@ export interface ProductionShot extends Omit<
   references: ShotReference[];
 }
 
+/** The placeholder shotKey while no film project is connected. */
+export const DISCONNECTED_SHOT_KEY = "unconnected";
+
 export interface ProductionPanelProps {
   shot: ProductionShot;
   brief: SceneBriefV1 | null;
@@ -31,6 +35,12 @@ export interface ProductionPanelProps {
   onBriefChange: (brief: SceneBriefV1) => void;
   onApplyProposal: (brief: SceneBriefV1) => void;
   onPrepare: () => void;
+  /** Takes made for this shot. Absent until the film host reports them. */
+  takes?: number;
+  /** Whether a take is already on the timeline. */
+  placed?: boolean;
+  /** The Next card's one action. */
+  onNextStep?: (step: StepId) => void;
 }
 
 /** Provider status as the host reported it. The panel does not invent a ready state. */

@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import {
   scenePattern,
   type SceneBriefV1,
@@ -16,7 +16,10 @@ import { usePinnedPattern } from "./patternPin";
 import { PromptSections } from "./PromptSections";
 import { ReferenceRoles } from "./ReferenceRoles";
 import { ShotSummary } from "./ShotSummary";
-import type { ProductionPanelProps } from "./types";
+import { NextStep } from "./NextStep";
+import { StepSection } from "./StepSection";
+import { planSteps, type StepId, type StepView } from "./steps";
+import { DISCONNECTED_SHOT_KEY, type ProductionPanelProps } from "./types";
 
 function shownPattern(
   picked: ScenePatternId | null,
@@ -88,32 +91,52 @@ export const ProductionPanel = memo(function ProductionPanel({
   onBriefChange,
   onApplyProposal,
   onPrepare,
+  takes = 0,
+  placed = false,
+  onNextStep,
 }: ProductionPanelProps) {
   const [picked, pick] = usePinnedPattern(shot.shotKey);
   const pattern = shownPattern(picked, brief);
+  const connected = shot.shotKey !== DISCONNECTED_SHOT_KEY;
+  const { steps, next } = useMemo(
+    () => planSteps({ shot: connected ? shot : null, brief, compilation, takes, placed }),
+    [connected, shot, brief, compilation, takes, placed],
+  );
+  const step = (id: StepId): StepView => {
+    const found = steps.find((candidate) => candidate.id === id);
+    if (!found) throw new Error(`missing step ${id}`);
+    return found;
+  };
   return (
     <div className={panelClass} aria-label="Production">
       <h2 className="text-step-12 font-medium text-panel-text-0">Production</h2>
+      {next && <NextStep next={next} onAct={() => onNextStep?.(next.step)} />}
       <ShotSummary shot={shot} />
-      <Section title="Reference roles" icon={null}>
-        <ReferenceRoles shot={shot} brief={brief} onBriefChange={onBriefChange} />
-      </Section>
-      <PatternChoice
-        pattern={pattern}
-        onPick={(id) => pickPattern(id, brief, pick, onBriefChange)}
-      />
-      <PromptSections
-        shot={shot}
-        brief={brief}
-        prompt={compilation?.prompt ?? null}
-        onBriefChange={onBriefChange}
-      />
-      <DiagnosticsList compilation={compilation} />
-      <Section title="Native parameters" icon={null}>
-        <p className={mutedClass}>Account controls from the current snapshot.</p>
-        <NativeParameters snapshot={snapshot} brief={brief} onBriefChange={onBriefChange} />
-      </Section>
-      <ProductionActions brief={brief} onPrepare={onPrepare} onApplyProposal={onApplyProposal} />
+      <StepSection step={step("references")}>
+        <Section title="Reference roles" icon={null}>
+          <ReferenceRoles shot={shot} brief={brief} onBriefChange={onBriefChange} />
+        </Section>
+        <PatternChoice
+          pattern={pattern}
+          onPick={(id) => pickPattern(id, brief, pick, onBriefChange)}
+        />
+      </StepSection>
+      <StepSection step={step("direction")}>
+        <PromptSections
+          shot={shot}
+          brief={brief}
+          prompt={compilation?.prompt ?? null}
+          onBriefChange={onBriefChange}
+        />
+      </StepSection>
+      <StepSection step={step("prompt")}>
+        <DiagnosticsList compilation={compilation} />
+        <Section title="Native parameters" icon={null}>
+          <p className={mutedClass}>Account controls from the current snapshot.</p>
+          <NativeParameters snapshot={snapshot} brief={brief} onBriefChange={onBriefChange} />
+        </Section>
+        <ProductionActions brief={brief} onPrepare={onPrepare} onApplyProposal={onApplyProposal} />
+      </StepSection>
     </div>
   );
 });

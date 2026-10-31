@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import type { CompilationV1, SceneBriefV1 } from "@hyperframes/film-production/browser";
 import { AssistantPanel, ProductionPanel } from "./index";
 import type { AssistantPanelProps, ProductionPanelProps } from "./types";
-import { dialogue, sceneBrief, shot, snapshot } from "./testFixtures";
+import { dialogue, expandAll, sceneBrief, shot, snapshot } from "./testFixtures";
 import { resolveVisibleProposal, type ProposalMemory } from "./visibleProposal";
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
@@ -136,6 +136,7 @@ describe("resolveVisibleProposal", () => {
 describe("ProductionPanel", () => {
   it("renders the shot dialogue unchanged, including accents", async () => {
     const { host } = await mount(<ProductionPanel {...productionProps()} />);
+    expandAll(host);
     expect(host.querySelector("[data-shot-dialogue]")?.textContent).toBe(dialogue);
     expectOrder(host.textContent ?? "", [
       dialogue,
@@ -160,6 +161,7 @@ describe("ProductionPanel", () => {
     const { host } = await mount(
       <ProductionPanel {...productionProps({ brief, onBriefChange })} />,
     );
+    expandAll(host);
     await click(button(host, "Listening reaction"));
     expect(host.querySelector("[data-shot-dialogue]")?.textContent).toBe(dialogue);
     expect(host.textContent).toContain("Stay on the listener. Do not whip back to the speaker.");
@@ -177,6 +179,7 @@ describe("ProductionPanel", () => {
     const { host } = await mount(
       <ProductionPanel {...productionProps({ brief: null, snapshot: null })} />,
     );
+    expandAll(host);
     const html = host.innerHTML.toLowerCase();
     for (const name of bannedModels) expect(html).not.toContain(name);
     expect(host.textContent).toContain("The account snapshot is unresolved.");

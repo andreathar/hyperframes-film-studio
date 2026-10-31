@@ -7,7 +7,7 @@ import type { SceneBriefV1 } from "@hyperframes/film-production/browser";
 import { ChoiceSelect, NativeParameters } from "./NativeParameters";
 import { ProductionPanel } from "./index";
 import type { NativeChoice } from "./nativeChoices";
-import { sceneBrief, shot, snapshot } from "./testFixtures";
+import { expandAll, sceneBrief, shot, snapshot } from "./testFixtures";
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
 
@@ -95,6 +95,7 @@ describe("film panels on Studio primitives", () => {
         onPrepare={vi.fn()}
       />,
     );
+    expandAll(host);
     expect(host.querySelector("textarea[data-ui-input]")).not.toBeNull();
     expect(document.querySelectorAll("select, textarea:not([data-ui-input])")).toHaveLength(0);
   });
@@ -103,6 +104,7 @@ describe("film panels on Studio primitives", () => {
     const onBriefChange = vi.fn<(brief: SceneBriefV1) => void>();
     const onPrepare = vi.fn();
     const { host } = await mount(<ProductionPanel {...panelProps({ onBriefChange, onPrepare })} />);
+    expandAll(host);
     const field = firstField(host);
     await typeInto(field, "A new visible line.");
     const prepare = [...host.querySelectorAll("button")].find(
@@ -123,6 +125,7 @@ describe("film panels on Studio primitives", () => {
     const onBriefChange = vi.fn<(brief: SceneBriefV1) => void>();
     const props = panelProps({ onBriefChange });
     const { host, render } = await mount(<ProductionPanel {...props} />);
+    expandAll(host);
     await typeInto(firstField(host), "Typed then switched away.");
     expect(onBriefChange).not.toHaveBeenCalled();
     await render(<div />);
