@@ -217,6 +217,12 @@ describe("ProductionPanel", () => {
 });
 
 describe("AssistantPanel", () => {
+  it("shows readiness in plain words, not the raw state", async () => {
+    const { host } = await mount(<AssistantPanel {...assistantProps()} />);
+    expect(host.textContent).toContain("Claude works in your own session");
+    expect(host.textContent).not.toContain("external-handoff");
+  });
+
   it("does not apply a proposal when Send is clicked", async () => {
     const onApply = vi.fn();
     const onSend = vi.fn();

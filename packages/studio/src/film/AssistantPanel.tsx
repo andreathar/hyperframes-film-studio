@@ -2,15 +2,18 @@ import { memo } from "react";
 import type { DialogueLineV1, SceneBriefV1 } from "@hyperframes/film-production/browser";
 import { Button, TextArea } from "../components/ui";
 import { headingClass, mutedClass, panelClass } from "./chrome";
+import { READINESS_TERMS } from "./glossary";
 import type { AssistantPanelProps, AssistantReadinessView } from "./types";
 import { useVisibleProposal } from "./visibleProposal";
 
 function ReadinessLine({ readiness }: { readiness: AssistantReadinessView }) {
+  const term = READINESS_TERMS[readiness.state];
   return (
     <p>
       <span className="text-panel-text-4">Readiness </span>
-      <span className="text-panel-text-0">{readiness.state}</span>
+      <span className="text-panel-text-0">{term.label}</span>
       <span className="text-panel-text-3"> {readiness.evidence}</span>
+      <span className={mutedClass}> {term.hint}</span>
     </p>
   );
 }

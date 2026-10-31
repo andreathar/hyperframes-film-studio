@@ -4,7 +4,7 @@ import { Select } from "../components/ui";
 import { headingClass, mutedClass } from "./chrome";
 import { choicesForModel, type NativeChoice } from "./nativeChoices";
 
-function ChoiceSelect({
+export function ChoiceSelect({
   modelId,
   choice,
   brief,

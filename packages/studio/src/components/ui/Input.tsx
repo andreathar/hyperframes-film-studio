@@ -119,24 +119,27 @@ export interface TextAreaProps extends Omit<
   ComponentPropsWithoutRef<"textarea">,
   "value" | "onChange" | "className"
 > {
-  /** The committed value. A draft lives inside until blur. */
+  /** The committed value. A draft lives inside until blur or unmount. */
   value: string;
-  /** Called with the draft on blur, only when it really changed. */
+  /** Called with the draft on blur or unmount, only when it really changed. */
   onCommit: (next: string) => void;
-  /** Called with every edit, for callers that keep the draft elsewhere. */
+  /**
+   * Called with every edit, for callers that keep the draft elsewhere.
+   * Live drafts: Escape does not revert, because the caller already has the text.
+   */
   onDraft?: (next: string) => void;
-  /** Called once per committed change, for design-input telemetry. */
-  onTrack?: () => void;
   invalid?: boolean;
   className?: string;
 }
 
-/** Multiline Input: same box and text look, Escape abandons, blur commits (Enter adds a line). */
+/**
+ * Multiline Input: same box and text look. Blur (or unmount while dirty) commits and Enter adds a
+ * line. Escape abandons the draft unless `onDraft` is set.
+ */
 export function TextArea({
   value,
   onCommit,
   onDraft,
-  onTrack,
   invalid,
   disabled,
   className,
@@ -146,17 +149,30 @@ export function TextArea({
   const [draft, setDraft] = useState(value);
   const valueRef = useRef(value);
   valueRef.current = value;
+  const draftRef = useRef(draft);
+  draftRef.current = draft;
+  const commitRef = useRef(onCommit);
+  commitRef.current = onCommit;
   const dirtyRef = useRef(false);
 
   useEffect(() => {
     if (!dirtyRef.current) setDraft(value);
   }, [value]);
 
+  // No blur fires when a focused field unmounts, so a dirty draft is committed here.
+  useEffect(
+    () => () => {
+      if (dirtyRef.current && draftRef.current !== valueRef.current) {
+        commitRef.current(draftRef.current);
+      }
+    },
+    [],
+  );
+
   const commit = (next: string) => {
     dirtyRef.current = false;
     if (next === valueRef.current) return;
     onCommit(next);
-    onTrack?.();
   };
 
   return (
@@ -178,13 +194,12 @@ export function TextArea({
         }}
         onBlur={() => commit(draft)}
         onKeyDown={(event) => {
-          if (event.key === "Escape") {
-            event.preventDefault();
-            event.stopPropagation();
-            dirtyRef.current = false;
-            setDraft(valueRef.current);
-            event.currentTarget.blur();
-          }
+          if (event.key !== "Escape" || onDraft) return;
+          event.preventDefault();
+          event.stopPropagation();
+          dirtyRef.current = false;
+          setDraft(valueRef.current);
+          event.currentTarget.blur();
         }}
         {...props}
       />
