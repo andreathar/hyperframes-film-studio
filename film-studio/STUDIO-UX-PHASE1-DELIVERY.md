@@ -78,3 +78,4 @@ Not verified: how the panels look in a running app. No reviewer judged the visua
   - schema bounds are not checked;
   - Input and TextArea duplicate their draft logic (extract a `useDraft` hook).
 - **Test hygiene:** non-film editor tests make happy-dom iframe requests to `localhost:3000`, which fail with `ECONNREFUSED`. They should be stubbed to keep tests network-free.
+- **Empty-project splash:** with the dev server up but no projects in `packages/studio/data/projects` (for example in a fresh worktree), Studio still says "Waiting for preview server… run npm run dev" (`StudioSplash.tsx`, shown from `App.tsx:498-499`). The empty state should say where projects are looked for and how to add one.
