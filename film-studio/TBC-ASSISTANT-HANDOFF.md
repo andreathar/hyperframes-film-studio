@@ -1,11 +1,7 @@
 # tbc assistant slice: handoff to the coordinator
 
-Branch `film/tbc-assistant`, local only (never pushed). Feature commit `b0f063cb3`.
-This is the Studio half of tbc-forge Plan 2 (`docs/superpowers/plans/2026-10-31-studio-read-api.md`, Task 9 there). The tbc-forge half is on tbc-forge's `feat/studio-read-api` branch (`tbc serve`, assistant and apply routes).
-
-## Base: `film/studio-ux`, not `main`
-
-`film/studio-ux` (`5b2cf20eb`, UX phase 1, unmerged) rewrites the same Production and Assistant panels and `FilmDockPanels.tsx`. Building on `main` would have meant a conflict with that branch at merge time. Merge `film/studio-ux` first; then this branch adds one commit on top of it.
+On `main`. Feature commit `227b2c96b`, on top of UX phase 1 (`film/studio-ux`, merged into `main` with it).
+This is the Studio half of tbc-forge Plan 2 (`docs/superpowers/plans/2026-10-31-studio-read-api.md`, Task 9 there). The tbc-forge half (`tbc serve`, assistant and apply routes) is on tbc-forge's `main`.
 
 ## What it adds
 
@@ -31,7 +27,7 @@ Rules the panels hold:
 - When tbc refuses an apply (409 stale, 422 with issues), the card shows the reason and the issues.
 - Nothing in Studio locks a look, approves, passes an approval id or picks a take.
 
-## Checks run at `b0f063cb3`
+## Checks run at `227b2c96b`
 
 From `packages/studio`:
 
@@ -41,11 +37,11 @@ bunx vitest run                          # 734 files pass, 1 skipped; 8365 tests
 bunx tsc --noEmit                        # exit 0
 ```
 
-From the worktree root: `bunx oxlint packages/studio` (0 warnings, 0 errors). `bunx oxfmt --check packages/studio/src/film` exits 0. `fallow audit --base origin/main --fail-on-issues` reports no issues in 59 changed files. The lefthook pre-commit (lint, format, fallow, typecheck) passed on the commit.
+From the repository root: `bunx oxlint packages/studio` (0 warnings, 0 errors). `bunx oxfmt --check packages/studio/src/film` exits 0. `fallow audit --base origin/main --fail-on-issues` reports no issues in 59 changed files. The lefthook pre-commit (lint, format, fallow, typecheck) passed on the commit.
 
 Smoke test against a real server: `tbc serve projects/andre-time-travel/manifest.json --port 4399 --no-assistant` from tbc-forge, then this branch's `client.ts` called it with Origin `http://127.0.0.1:5190`. Health, 41 shot rows and the G-01 context (beat E1, feeling calm, 6 continuity entities, 5 prompt segments, 7 issues) all passed the client's shape guards. Not exercised against a real server: POST routes, a real assistant turn (that would run the signed-in Claude CLI) and look thumbnails (no look is locked yet).
 
-## Setup a fresh worktree needs
+## Setup a fresh checkout needs
 
 The vitest config resolves workspace packages through their `node` export, which points at `dist/`. Build these first, in this order:
 
@@ -59,7 +55,7 @@ cd ../studio-server && bun run build
 ## Running it
 
 1. In tbc-forge: `bun packages/cli/src/main.ts serve projects/andre-time-travel/manifest.json` (port 4317, loopback only). Studio's dev origin `http://127.0.0.1:5190` is allowed by default (tbc-forge `67e077d`).
-2. In this worktree: `cd packages/studio && bun run dev`, then open `http://127.0.0.1:5190`. Use the same host spelling: `localhost` and `127.0.0.1` are separate origins, and both are allowed.
+2. In hyperframes-film-studio: `cd packages/studio && bun run dev`, then open `http://127.0.0.1:5190`. Use the same host spelling: `localhost` and `127.0.0.1` are separate origins, and both are allowed.
 
 ## Not in this slice
 
